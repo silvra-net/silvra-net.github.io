@@ -2,29 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/explorer/logo.png" />
-    <title>Helix Explorer</title>
-    <meta
-      name="description"
-      content="Block explorer for Helix (HLX), a post-quantum Layer-1 blockchain. Blocks, transactions, accounts, validators and the commit certificate behind every block."
-    />
+    <title>Helix Explorer moved</title>
+    <link rel="canonical" href="https://explorer.silvra.net/" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content="0; url=https://explorer.silvra.net/" />
     <script>
-      // Applied before first paint so the page never flashes the wrong theme. Mirrors
-      // src/theme.ts — an explicit choice wins over the OS preference in both directions.
-      try {
-        var t = localStorage.getItem("helix-theme");
-        if (t === "light" || t === "dark") {
-          document.documentElement.setAttribute("data-theme", t);
-        }
-      } catch (e) {
-        /* private mode: fall through to the OS preference */
-      }
+      // The header link in the site bundle still points at /explorer/. This page keeps that
+      // link working until the site is rebuilt with the new address; the meta refresh above
+      // is what does the work if scripting is off.
+      location.replace("https://explorer.silvra.net/" + location.search + location.hash);
     </script>
-    <script type="module" crossorigin src="/explorer/assets/index-DU1lF6mC.js"></script>
-    <link rel="stylesheet" crossorigin href="/explorer/assets/index-6yly-It2.css">
   </head>
   <body>
-    <div id="root"></div>
+    <p>The Helix Explorer now lives at
+      <a href="https://explorer.silvra.net/">explorer.silvra.net</a>.</p>
   </body>
 </html>
