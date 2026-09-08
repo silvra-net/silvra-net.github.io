@@ -25,6 +25,9 @@ export default function Contact() {
             <a className="btn" href={`https://${t("contact.helix")}`} rel="noreferrer noopener" target="_blank">
               {t("contact.helix")}
             </a>
+            <a className="btn" href="https://discord.gg/98gZj6TqVv" rel="noreferrer noopener" target="_blank">
+              {t("contact.discord")}
+            </a>
           </div>
         </div>
       </Section>

@@ -31,10 +31,18 @@ export default function Reveal({ children, delay = 0 }: { children: ReactNode; d
           io.disconnect();
         }
       },
-      { rootMargin: "0px 0px -10% 0px" },
+      { rootMargin: "200px 0px 0px 0px" },
     );
     io.observe(el);
-    return () => io.disconnect();
+
+    // Backstop: content that has waited this long is content the visitor cannot see appearing,
+    // so there is nothing left to reveal — only something left to hide by mistake.
+    const failsafe = setTimeout(() => setShown(true), 3000);
+
+    return () => {
+      io.disconnect();
+      clearTimeout(failsafe);
+    };
   }, [shown]);
 
   return (

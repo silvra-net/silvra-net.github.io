@@ -101,6 +101,13 @@ h3 { font-size: 19px; }
   color: transparent;
   -webkit-text-stroke: 1px var(--muted);
 }
+/* Over footage the hairline disappears into whatever frame is behind it. */
+.hero .title-shadow { -webkit-text-stroke-width: 1.5px; -webkit-text-stroke-color: var(--text); }
+/* No text-stroke support means transparent text, which means no word at all. */
+@supports not (-webkit-text-stroke: 1px black) {
+  .title-shadow { color: var(--muted); }
+  .hero .title-shadow { color: var(--text); }
+}
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
@@ -132,15 +139,39 @@ h3 { font-size: 19px; }
 .dot.ok { background: var(--ok); }
 .dot.off { background: var(--muted); }
 
-/* ---------- shell ---------- */
+/* ---------- shell ----------
+   Two rows, after the pattern of a corporate site: a quiet meta strip for the things you set
+   once — language, appearance, the explorer — and below it the row that actually navigates.
+   Separating them keeps the main row to what it is for and stops the language control from
+   competing with the pages. */
 .site-header {
   position: sticky; top: 0; z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
 }
-.site-header .inner { display: flex; align-items: center; gap: 20px; height: 60px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; }
+.meta-row { border-bottom: 1px solid var(--border); }
+.meta-inner { display: flex; align-items: center; justify-content: flex-end; gap: 14px; height: 34px; }
+.meta-link { color: var(--muted); text-decoration: none; font-size: 12px; }
+.meta-link:hover { color: var(--text); }
+.meta-sep { width: 1px; height: 14px; background: var(--border); }
+.meta-btn {
+  background: transparent; border: none; color: var(--muted);
+  font-size: 13px; cursor: pointer; padding: 2px 4px; line-height: 1;
+}
+.meta-btn:hover { color: var(--text); }
+
+.lang { display: flex; align-items: center; }
+.lang-btn {
+  background: transparent; border: none; color: var(--muted);
+  font-size: 12px; letter-spacing: 0.04em; cursor: pointer; padding: 2px 5px;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active { color: var(--accent); font-weight: 600; }
+.lang-sep { color: var(--border); font-size: 12px; }
+
+.main-row { display: flex; align-items: center; gap: 20px; height: 64px; }
+.brand { display: flex; align-items: center; text-decoration: none; }
 .brand img { height: 24px; width: auto; }
 .site-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .nav-link {
@@ -149,17 +180,80 @@ h3 { font-size: 19px; }
 }
 .nav-link:hover { background: var(--surface-2); color: var(--text); }
 .nav-link.active { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
-.nav-toggle { display: none; }
+.nav-toggle {
+  display: none; margin-left: auto;
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 14px; font-size: 14px; cursor: pointer;
+}
 
 @media (max-width: 900px) {
   .site-nav {
-    display: none; position: absolute; top: 60px; left: 0; right: 0;
+    display: none; position: absolute; left: 0; right: 0;
     flex-direction: column; align-items: stretch; gap: 2px;
     background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px;
   }
   .site-nav.open { display: flex; }
-  .nav-toggle { display: inline-flex; margin-left: auto; }
+  .nav-toggle { display: inline-flex; }
 }
+
+/* The logo artwork is white, which disappears on a light ground. Inverting it is right for a
+   monochrome mark and keeps one file instead of two. */
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .brand img { filter: invert(1); } }
+:root[data-theme="light"] .brand img { filter: invert(1); }
+
+/* ---------- hero ----------
+   Full-bleed: the video runs to both edges of the window, with the words over it. The scrim is
+   not decoration — white text on an unknown frame of video is unreadable without it, and the
+   token gradient keeps it the page's own black rather than a second one. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 68vh;
+  display: flex;
+  align-items: center;
+  /* The hero stays dark in both themes. The footage is dark, and light text over dark film is
+     the only combination that reads at every frame — a light scrim would have to hide the video
+     to make black text work, which defeats having it. Redefining the tokens here rather than
+     hardcoding colours means the buttons, eyebrow and lead inside follow without knowing. */
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0c0c0c;
+  --surface-2: #171717;
+  --border: #262626;
+  --text: #f5f5f5;
+  --muted: #a3a3a3;
+  --accent: #ffffff;
+  --accent-ink: #000000;
+  color: var(--text);
+}
+.hero-media { position: absolute; inset: 0; z-index: -2; }
+.hero-media .media { width: 100%; height: 100%; object-fit: cover; }
+.hero::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.86) 42%, rgba(0, 0, 0, 0.35) 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, transparent 40%);
+}
+.hero-body { padding: 120px 0 96px; max-width: 44rem; }
+
+/* ---------- split bands ---------- */
+.split { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; border-top: 1px solid var(--border); }
+.split.flip .split-media { order: 2; }
+.split-media { position: relative; min-height: 320px; background: var(--surface-2); }
+.split-media .media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.split-body { display: flex; align-items: center; background: var(--surface); }
+.split-inner { padding: 64px 48px; max-width: 34rem; }
+@media (max-width: 900px) {
+  .split { grid-template-columns: 1fr; }
+  .split.flip .split-media { order: 0; }
+  .split-inner { padding: 40px 24px; }
+}
+
+/* A phone screenshot is a tall object; it is shown whole, not cropped to a band. */
+.shot-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
+.shot-row img { border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+@media (max-width: 700px) { .shot-row { grid-template-columns: 1fr; max-width: 22rem; margin: 0 auto; } }
 
 .site-footer { border-top: 1px solid var(--border); padding: 48px 0 32px; color: var(--muted); font-size: 14px; }
 .footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--gap); }
@@ -192,10 +286,26 @@ h3 { font-size: 19px; }
 }
 
 /* A dot grid behind the hero only. Built from the border token, so it is a texture in both
-   themes and never a colour of its own. */
-.hero-grid {
+   themes and never a colour of its own.
+
+   It lives in a pseudo-element rather than on the section: a mask applies to everything the
+   element paints, so masking the section faded out its own heading — the second line of the
+   hero title was being cut in half by its own background texture. */
+.hero-grid { position: relative; isolation: isolate; }
+.hero-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
   background-size: 32px 32px;
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 75%);
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 75%);
 }
+
+/* Node metrics: four across on a desktop, wrapping to two on a phone. A fixed four-column grid
+   squeezed "158.548" into about seventy pixels. */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 16px; }
+.metric-label { font-size: 13px; color: var(--muted); }
+.metric-value { font-family: var(--mono); font-size: 22px; font-weight: 600; }

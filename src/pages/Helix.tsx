@@ -54,6 +54,9 @@ export default function Helix() {
           >
             {t("helix.cta.github")}
           </a>
+          <a className="btn" href="https://discord.gg/98gZj6TqVv" rel="noreferrer noopener" target="_blank">
+            {t("helix.cta.discord")}
+          </a>
         </div>
       </Section>
     </>

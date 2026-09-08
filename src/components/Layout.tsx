@@ -10,7 +10,7 @@ const PAGES = [
   { to: "/messenger", key: "nav.messenger" },
   { to: "/helix", key: "nav.helix" },
   { to: "/mission", key: "nav.mission" },
-  { to: "/kontakt", key: "nav.contact" },
+  { to: "/contact", key: "nav.contact" },
 ];
 
 function ThemeToggle() {
@@ -30,7 +30,7 @@ function ThemeToggle() {
   return (
     <button
       type="button"
-      className="btn"
+      className="meta-btn"
       aria-label={t("nav.theme")}
       onClick={() => {
         const next = dark ? "light" : "dark";
@@ -43,13 +43,30 @@ function ThemeToggle() {
   );
 }
 
+/**
+ * Both languages side by side, current one marked — rather than a button showing the other one.
+ * A toggle labelled "EN" is ambiguous about whether that is the state or the action; two labels
+ * with one of them active is not.
+ */
 function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n();
-  const other: Lang = lang === "de" ? "en" : "de";
+  const langs: Lang[] = ["de", "en"];
   return (
-    <button type="button" className="btn" onClick={() => setLang(other)} aria-label={t("nav.switchLang")}>
-      {other.toUpperCase()}
-    </button>
+    <div className="lang" role="group" aria-label={t("nav.switchLang")}>
+      {langs.map((l, i) => (
+        <span key={l}>
+          {i > 0 && <span className="lang-sep" aria-hidden="true">|</span>}
+          <button
+            type="button"
+            className={l === lang ? "lang-btn active" : "lang-btn"}
+            aria-current={l === lang}
+            onClick={() => setLang(l)}
+          >
+            {l.toUpperCase()}
+          </button>
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -64,14 +81,26 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <header className="site-header">
-        <div className="container inner">
-          <Link to="/" className="brand">
-            <img src={logo} alt="Silvra" />
+        {/* Meta row: what you set once and then forget — language, appearance, the explorer. */}
+        <div className="meta-row">
+          <div className="container meta-inner">
+            <a className="meta-link" href="/explorer/">
+              {t("nav.explorer")}
+            </a>
+            <span className="meta-sep" aria-hidden="true" />
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
+        </div>
+
+        <div className="container main-row">
+          <Link to="/" className="brand" aria-label="Silvra">
+            <img src={logo} alt="" />
           </Link>
 
           <button
             type="button"
-            className="btn nav-toggle"
+            className="nav-toggle"
             aria-expanded={open}
             aria-label={open ? t("nav.close") : t("nav.open")}
             onClick={() => setOpen((v) => !v)}
@@ -89,11 +118,6 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {t(p.key)}
               </NavLink>
             ))}
-            <a className="nav-link" href="/explorer/">
-              {t("nav.explorer")}
-            </a>
-            <LanguageSwitcher />
-            <ThemeToggle />
           </nav>
         </div>
       </header>
@@ -110,7 +134,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <div className="footer-col">
               <h4>{t("footer.pages")}</h4>
               <Link to="/mission">{t("nav.mission")}</Link>
-              <Link to="/kontakt">{t("nav.contact")}</Link>
+              <Link to="/contact">{t("nav.contact")}</Link>
             </div>
             <div className="footer-col">
               <h4>{t("footer.products")}</h4>

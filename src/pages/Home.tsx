@@ -5,8 +5,15 @@ import type { Item } from "../components/Cards";
 import Groups from "../components/Groups";
 import Testnet from "../components/Testnet";
 import Ticker from "../components/Ticker";
+import Split from "../components/Split";
+import Media from "../components/Media";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
+import intro from "../assets/silvra-intro.mp4";
+import introPoster from "../assets/silvra-intro-poster.jpg";
+import craft from "../assets/silvra-craft.mp4";
+import craftPoster from "../assets/silvra-craft-poster.jpg";
+import showcase from "../assets/showcase-phone.webp";
 
 export default function Home() {
   const { t, list } = useI18n();
@@ -14,8 +21,11 @@ export default function Home() {
 
   return (
     <>
-      <section className="section hero-grid" style={{ paddingTop: 80 }}>
-        <div className="container">
+      <section className="hero">
+        <div className="hero-media">
+          <Media src={intro} poster={introPoster} alt="" />
+        </div>
+        <div className="container hero-body">
           <p className="eyebrow">{t("home.hero.eyebrow")}</p>
           <h1>
             {t("home.hero.titleLine1")} <span className="title-shadow">{t("home.hero.titleShadow")}</span>{" "}
@@ -30,17 +40,19 @@ export default function Home() {
               {t("home.hero.ctaSecondary")}
             </Link>
           </div>
-          <div style={{ marginTop: 40 }}>
-            <Ticker items={list<string>("home.ticker.items")} />
-          </div>
         </div>
       </section>
 
-      <Section
-        eyebrow={t("home.autopilot.eyebrow")}
-        title={t("home.autopilot.title")}
-        subtitle={t("home.autopilot.subtitle")}
-      >
+      <div className="section" style={{ paddingTop: 32, paddingBottom: 32 }}>
+        <div className="container">
+          <Ticker items={list<string>("home.ticker.items")} />
+        </div>
+      </div>
+
+      <Split media={<img className="media" src={showcase} alt="" />}>
+        <p className="eyebrow">{t("home.autopilot.eyebrow")}</p>
+        <h2>{t("home.autopilot.title")}</h2>
+        <p className="lead">{t("home.autopilot.subtitle")}</p>
         <div className="btn-row">
           <Link className="btn primary" to="/messenger">
             {t("home.autopilot.ctaPrimary")}
@@ -49,7 +61,7 @@ export default function Home() {
             {t("home.autopilot.ctaSecondary")}
           </Link>
         </div>
-      </Section>
+      </Split>
 
       <Section>
         <Testnet />
@@ -64,9 +76,11 @@ export default function Home() {
         <Cards items={list<Item>("home.projects.items")} columns={2} />
       </Section>
 
-      <Section eyebrow={t("home.why.eyebrow")} title={t("home.why.title")}>
+      <Split media={<Media src={craft} poster={craftPoster} alt="" />} flip>
+        <p className="eyebrow">{t("home.why.eyebrow")}</p>
+        <h2>{t("home.why.title")}</h2>
         {list<string>("home.why.paragraphs").map((p) => (
-          <p className="muted" key={p.slice(0, 40)} style={{ maxWidth: "70ch" }}>
+          <p className="muted" key={p.slice(0, 40)}>
             {p}
           </p>
         ))}
@@ -77,7 +91,7 @@ export default function Home() {
             </span>
           ))}
         </div>
-      </Section>
+      </Split>
 
       <Section eyebrow={t("home.principles.eyebrow")} title={t("home.principles.title")}>
         <Groups path="home.principles" />
@@ -89,7 +103,7 @@ export default function Home() {
           <a className="btn primary" href={`mailto:${t("home.contact.email")}`}>
             {t("home.contact.email")}
           </a>
-          <Link className="btn" to="/kontakt">
+          <Link className="btn" to="/contact">
             {t("nav.contact")}
           </Link>
         </div>

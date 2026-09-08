@@ -1,10 +1,12 @@
 import Section from "../components/Section";
+import Split from "../components/Split";
 import Cards from "../components/Cards";
 import type { Item } from "../components/Cards";
 import Groups from "../components/Groups";
 import CryptoDemo from "../components/CryptoDemo";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
+import chatPreview from "../assets/chat-preview.webp";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
 import profilDe from "../assets/Profil_DE.webp";
@@ -47,7 +49,13 @@ export default function Messenger() {
         </p>
       </Section>
 
-      <Section eyebrow={t("messenger.pillars.eyebrow")} title={t("messenger.pillars.title")}>
+      <Split media={<img className="media" src={chatPreview} alt="" />} flip>
+        <p className="eyebrow">{t("messenger.pillars.eyebrow")}</p>
+        <h2>{t("messenger.pillars.title")}</h2>
+        <p className="muted">{t("messenger.intro.body")}</p>
+      </Split>
+
+      <Section title={t("messenger.pillars.title")}>
         <Cards items={list<Item>("messenger.pillars.items")} />
       </Section>
 
@@ -67,7 +75,7 @@ export default function Messenger() {
         title={t("messenger.screens.title")}
         subtitle={t("messenger.screens.subtitle")}
       >
-        <div className="grid three">
+        <div className="shot-row">
           {screens.map((s, i) => (
             <figure className="card" key={s.title} style={{ margin: 0 }}>
               <img src={shots[i]} alt={s.title} loading="lazy" style={{ borderRadius: 8 }} />

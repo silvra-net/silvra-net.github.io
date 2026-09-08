@@ -199,7 +199,7 @@
       "eyebrow": "Kontakt",
       "title": "Fragen zu\nunserer Arbeit?",
       "body": "Ob Sie mitentwickeln, einen Validator betreiben oder einfach wissen möchten, woran wir gerade sitzen — schreiben Sie uns.",
-      "email": "kontakt@silvra.net",
+      "email": "info@silvra.net",
       "helix": "node.silvra.net"
     },
     "ticker": {
@@ -421,7 +421,8 @@
       "eyebrow": "Mehr erfahren",
       "body": "Den öffentlichen Knoten, die Schnittstelle und aktuelle Blöcke findest du direkt auf node.silvra.net.",
       "link": "node.silvra.net",
-      "github": "GitHub"
+      "github": "GitHub",
+      "discord": "Discord"
     }
   },
   "mission": {
@@ -489,7 +490,7 @@
       "title": "Schreiben Sie uns",
       "body": "Wir lesen jede Nachricht. Bei technischen Fragen helfen wir gerne weiter oder verweisen auf die passende Dokumentation."
     },
-    "email": "kontakt@silvra.net",
+    "email": "info@silvra.net",
     "helix": "node.silvra.net",
     "cards": [
       {
@@ -510,7 +511,8 @@
           "Das Netz ist aktuell ein offenes Testnetz, HLX hat noch keinen Wert. Wir melden uns, sobald die öffentliche Validator-Dokumentation bereitsteht."
         ]
       }
-    ]
+    ],
+    "discord": "Discord"
   },
   "datenschutz": {
     "eyebrow": "Rechtliches",
@@ -519,7 +521,7 @@
     "sections": [
       {
         "title": "1. Verantwortlicher",
-        "body": "Verantwortlich für die Datenverarbeitung auf dieser Website ist Silvra. Die vollständigen Angaben zum Betreiber finden Sie im Impressum. Sie erreichen uns jederzeit unter kontakt@silvra.net."
+        "body": "Verantwortlich für die Datenverarbeitung auf dieser Website ist Silvra. Die vollständigen Angaben zum Betreiber finden Sie im Impressum. Sie erreichen uns jederzeit unter info@silvra.net."
       },
       {
         "title": "2. Grundsätzliches",
@@ -547,7 +549,7 @@
       },
       {
         "title": "8. Ihre Rechte",
-        "body": "Sie haben das Recht auf Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Berichtigung, Löschung und Einschränkung der Verarbeitung sowie auf Datenübertragbarkeit. Sie können der Verarbeitung jederzeit widersprechen. Zudem besteht das Recht auf Beschwerde bei einer zuständigen Datenschutz-Aufsichtsbehörde. Wenden Sie sich dazu an kontakt@silvra.net."
+        "body": "Sie haben das Recht auf Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Berichtigung, Löschung und Einschränkung der Verarbeitung sowie auf Datenübertragbarkeit. Sie können der Verarbeitung jederzeit widersprechen. Zudem besteht das Recht auf Beschwerde bei einer zuständigen Datenschutz-Aufsichtsbehörde. Wenden Sie sich dazu an info@silvra.net."
       },
       {
         "title": "9. Änderungen dieser Erklärung",
@@ -566,7 +568,7 @@
       },
       {
         "title": "Kontakt",
-        "body": "E-Mail: kontakt@silvra.net"
+        "body": "E-Mail: info@silvra.net"
       },
       {
         "title": "Art des Angebots",

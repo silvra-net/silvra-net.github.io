@@ -199,7 +199,7 @@
       "eyebrow": "Contact",
       "title": "Questions about\nour work?",
       "body": "Whether you want to contribute, run a validator, or simply know what we are working on — write to us.",
-      "email": "kontakt@silvra.net",
+      "email": "info@silvra.net",
       "helix": "node.silvra.net"
     },
     "ticker": {
@@ -421,7 +421,8 @@
       "eyebrow": "Learn more",
       "body": "You can find the public node, the interface and current blocks directly at node.silvra.net.",
       "link": "node.silvra.net",
-      "github": "GitHub"
+      "github": "GitHub",
+      "discord": "Discord"
     }
   },
   "mission": {
@@ -489,7 +490,7 @@
       "title": "Write to us",
       "body": "We read every message. For technical questions we are happy to help or point you to the right documentation."
     },
-    "email": "kontakt@silvra.net",
+    "email": "info@silvra.net",
     "helix": "node.silvra.net",
     "cards": [
       {
@@ -510,7 +511,8 @@
           "The network is currently an open testnet; HLX has no value yet. We'll reach out once the public validator documentation is ready."
         ]
       }
-    ]
+    ],
+    "discord": "Discord"
   },
   "datenschutz": {
     "eyebrow": "Legal",
@@ -519,7 +521,7 @@
     "sections": [
       {
         "title": "1. Controller",
-        "body": "Silvra is responsible for the processing of personal data on this website. You can find the full operator details in the legal notice (Impressum). You can reach us at any time at kontakt@silvra.net."
+        "body": "Silvra is responsible for the processing of personal data on this website. You can find the full operator details in the legal notice (Impressum). You can reach us at any time at info@silvra.net."
       },
       {
         "title": "2. General",
@@ -547,7 +549,7 @@
       },
       {
         "title": "8. Your rights",
-        "body": "You have the right to access your stored personal data, to have it rectified or erased, to restrict its processing and to data portability. You may object to the processing at any time. You also have the right to lodge a complaint with a competent data protection supervisory authority. Contact us at kontakt@silvra.net for this."
+        "body": "You have the right to access your stored personal data, to have it rectified or erased, to restrict its processing and to data portability. You may object to the processing at any time. You also have the right to lodge a complaint with a competent data protection supervisory authority. Contact us at info@silvra.net for this."
       },
       {
         "title": "9. Changes to this policy",
@@ -566,7 +568,7 @@
       },
       {
         "title": "Contact",
-        "body": "Email: kontakt@silvra.net"
+        "body": "Email: info@silvra.net"
       },
       {
         "title": "Nature of this project",

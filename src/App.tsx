@@ -29,7 +29,7 @@ export default function App() {
           <Route path="/messenger" element={<Messenger />} />
           <Route path="/helix" element={<Helix />} />
           <Route path="/mission" element={<Mission />} />
-          <Route path="/kontakt" element={<Contact />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/impressum" element={<Impressum />} />
           {/* /privacy is deliberately absent: it is served as a static, JS-free page from
               public/privacy/ and is linked with a plain <a>, so it stays readable even if this

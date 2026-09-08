@@ -64,13 +64,11 @@ export default function Testnet() {
       </div>
 
       {metrics.length > 0 ? (
-        <div className="grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+        <div className="metrics">
           {metrics.map((m) => (
             <div key={m.label}>
-              <div className="small muted">{m.label}</div>
-              <div className="mono" style={{ fontSize: 22, fontWeight: 600 }}>
-                {m.node}
-              </div>
+              <div className="metric-label">{m.label}</div>
+              <div className="metric-value">{m.node}</div>
             </div>
           ))}
         </div>
