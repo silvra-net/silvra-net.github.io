@@ -25,7 +25,7 @@ export default function Messenger() {
     <>
       <Section eyebrow={t("messenger.eyebrow")} title={t("messenger.title")} subtitle={t("messenger.subtitle")}>
         <div className="btn-row">
-          <a className="btn primary" href="https://play.google.com/store" rel="noreferrer noopener" target="_blank">
+          <a className="btn primary" href="https://play.google.com/store/apps/details?id=net.silvra.spark" rel="noreferrer noopener" target="_blank">
             {t("messenger.playStore")}
           </a>
         </div>
@@ -104,7 +104,7 @@ export default function Messenger() {
 
       <Section title={t("messenger.download.title")} subtitle={t("messenger.download.body")}>
         <div className="btn-row">
-          <a className="btn primary" href="https://play.google.com/store" rel="noreferrer noopener" target="_blank">
+          <a className="btn primary" href="https://play.google.com/store/apps/details?id=net.silvra.spark" rel="noreferrer noopener" target="_blank">
             {t("messenger.playStore")}
           </a>
         </div>

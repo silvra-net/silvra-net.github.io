@@ -558,23 +558,19 @@
   "impressum": {
     "eyebrow": "Legal",
     "title": "Imprint",
-    "subtitle": "Information according to § 5 TMG. Please replace with the actual operator details.",
+    "subtitle": "Details about the provider of this website.",
     "sections": [
       {
-        "title": "Operator",
-        "body": "Silvra\nSample Street 1\n12345 Sample City\nGermany"
+        "title": "Provider",
+        "body": "Silvra"
       },
       {
         "title": "Contact",
         "body": "Email: kontakt@silvra.net"
       },
       {
-        "title": "Responsible for content",
-        "body": "John Doe\nSample Street 1\n12345 Sample City"
-      },
-      {
-        "title": "Note",
-        "body": "This page contains placeholder imprint details. Please enter the correct legal information before the website is publicly available."
+        "title": "Nature of this project",
+        "body": "Silvra is a non-commercial project. It is not operated as a business, and the projects presented here are not run with the intention of making a profit."
       }
     ]
   },

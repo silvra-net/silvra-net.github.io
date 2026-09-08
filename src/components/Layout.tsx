@@ -122,7 +122,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               <h4>{t("footer.legal")}</h4>
               <Link to="/impressum">Impressum</Link>
               {/* Plain anchor: the privacy policy is a static page, not a route. */}
-              <a href="/datenschutz/">Datenschutz</a>
+              <a href="/privacy/">Datenschutz</a>
             </div>
           </div>
           <div className="footer-bottom">{t("footer.copyright", { year: new Date().getFullYear() })}</div>

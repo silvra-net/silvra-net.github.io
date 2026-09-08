@@ -558,23 +558,19 @@
   "impressum": {
     "eyebrow": "Rechtliches",
     "title": "Impressum",
-    "subtitle": "Angaben gemäß § 5 TMG. Bitte durch die tatsächlichen Betreiberdaten ersetzen.",
+    "subtitle": "Angaben zum Anbieter dieser Website.",
     "sections": [
       {
-        "title": "Betreiber",
-        "body": "Silvra\nMusterstraße 1\n12345 Musterstadt\nDeutschland"
+        "title": "Anbieter",
+        "body": "Silvra"
       },
       {
         "title": "Kontakt",
         "body": "E-Mail: kontakt@silvra.net"
       },
       {
-        "title": "Verantwortlich für den Inhalt",
-        "body": "Max Mustermann\nMusterstraße 1\n12345 Musterstadt"
-      },
-      {
-        "title": "Hinweis",
-        "body": "Diese Seite enthält Platzhalter für Impressumsangaben. Bitte die korrekten rechtlichen Daten eintragen, bevor die Website öffentlich erreichbar ist."
+        "title": "Art des Angebots",
+        "body": "Silvra ist ein nicht-gewerbliches Projekt. Es wird kein Geschäftsbetrieb geführt und mit den hier vorgestellten Projekten keine Gewinnerzielungsabsicht verfolgt."
       }
     ]
   },

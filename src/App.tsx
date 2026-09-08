@@ -31,9 +31,10 @@ export default function App() {
           <Route path="/mission" element={<Mission />} />
           <Route path="/kontakt" element={<Contact />} />
           <Route path="/impressum" element={<Impressum />} />
-          {/* /datenschutz is deliberately absent: it is served as a static, JS-free page from
-              public/datenschutz/ and is linked with a plain <a>, so it stays readable even if
-              this bundle never loads. */}
+          {/* /privacy is deliberately absent: it is served as a static, JS-free page from
+              public/privacy/ and is linked with a plain <a>, so it stays readable even if this
+              bundle never loads. public/datenschutz/ redirects there for links already in the
+              wild — the Play Store listing among them. */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
