@@ -31,6 +31,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+
+      # Guards the two failures this rebuild actually hit: a key present in one language only,
+      # and a component asking for a path the dictionary does not have — both of which render
+      # as a raw dotted path on the page rather than failing loudly.
+      - run: npm test
+
       - run: npm run build
 
       # Pages has no index.html fallback of its own: /mission exists only in the browser, so a

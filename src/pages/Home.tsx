@@ -4,6 +4,7 @@ import Cards from "../components/Cards";
 import type { Item } from "../components/Cards";
 import Groups from "../components/Groups";
 import Testnet from "../components/Testnet";
+import Ticker from "../components/Ticker";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 
@@ -13,7 +14,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="section" style={{ paddingTop: 80 }}>
+      <section className="section hero-grid" style={{ paddingTop: 80 }}>
         <div className="container">
           <p className="eyebrow">{t("home.hero.eyebrow")}</p>
           <h1>
@@ -29,12 +30,8 @@ export default function Home() {
               {t("home.hero.ctaSecondary")}
             </Link>
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 40 }}>
-            {list<string>("home.ticker.items").map((item) => (
-              <span className="badge" key={item}>
-                {item}
-              </span>
-            ))}
+          <div style={{ marginTop: 40 }}>
+            <Ticker items={list<string>("home.ticker.items")} />
           </div>
         </div>
       </section>

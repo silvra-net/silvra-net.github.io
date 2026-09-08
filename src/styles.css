@@ -168,3 +168,34 @@ h3 { font-size: 19px; }
 .footer-col a { display: block; text-decoration: none; padding: 3px 0; }
 .footer-col a:hover { color: var(--text); }
 .footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; }
+
+/* ---------- motion ----------
+   The whole animation budget: content fades in once on first sight, and the ticker drifts.
+   Both stop entirely under prefers-reduced-motion — the page must be complete without them. */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.reveal.shown { opacity: 1; transform: none; }
+
+.ticker { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.ticker-track { display: flex; width: max-content; animation: ticker 40s linear infinite; }
+.ticker-run { display: flex; gap: 8px; padding-right: 8px; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .ticker-track { animation: none; }
+  .ticker { mask-image: none; overflow-x: auto; }
+}
+
+/* A dot grid behind the hero only. Built from the border token, so it is a texture in both
+   themes and never a colour of its own. */
+.hero-grid {
+  background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 75%);
+}

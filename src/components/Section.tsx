@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Reveal from "./Reveal";
 
 interface Props {
   eyebrow?: string;
@@ -13,10 +14,12 @@ export default function Section({ eyebrow, title, subtitle, id, children }: Prop
   return (
     <section className="section" id={id}>
       <div className="container">
+        <Reveal>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         {title && <h2>{title}</h2>}
         {subtitle && <p className="lead">{subtitle}</p>}
         {children}
+        </Reveal>
       </div>
     </section>
   );

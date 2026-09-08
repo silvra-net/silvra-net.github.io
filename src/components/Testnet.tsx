@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "../i18n";
+import CountUp from "./CountUp";
 
 /** The public node's status endpoint. Same origin the explorer reads, and the only place these
  *  numbers come from — nothing here is cached or precomputed on our side. */
@@ -45,10 +46,10 @@ export default function Testnet() {
 
   const metrics = status
     ? [
-        { label: t("home.testnet.stats.height"), value: status.height.toLocaleString("de-DE") },
-        { label: "Peers", value: String(status.peer_count) },
-        { label: "Mempool", value: String(status.mempool_size) },
-        { label: t("home.testnet.stats.status"), value: status.is_syncing ? "Sync" : t("home.testnet.stats.statusLive") },
+        { label: t("home.testnet.stats.height"), node: <CountUp value={status.height} /> },
+        { label: "Peers", node: <>{status.peer_count}</> },
+        { label: "Mempool", node: <>{status.mempool_size}</> },
+        { label: t("home.testnet.stats.status"), node: <>{status.is_syncing ? "Sync" : t("home.testnet.stats.statusLive")}</> },
       ]
     : [];
 
@@ -68,7 +69,7 @@ export default function Testnet() {
             <div key={m.label}>
               <div className="small muted">{m.label}</div>
               <div className="mono" style={{ fontSize: 22, fontWeight: 600 }}>
-                {m.value}
+                {m.node}
               </div>
             </div>
           ))}
