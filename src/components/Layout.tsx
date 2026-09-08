@@ -84,7 +84,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         {/* Meta row: what you set once and then forget — language, appearance, the explorer. */}
         <div className="meta-row">
           <div className="container meta-inner">
-            <a className="meta-link" href="/explorer/">
+            <a className="meta-link" href="https://explorer.silvra.net/">
               {t("nav.explorer")}
             </a>
             <span className="meta-sep" aria-hidden="true" />
@@ -140,7 +140,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               <h4>{t("footer.products")}</h4>
               <Link to="/messenger">{t("nav.messenger")}</Link>
               <Link to="/helix">{t("nav.helix")}</Link>
-              <a href="/explorer/">{t("nav.explorer")}</a>
+              <a href="https://explorer.silvra.net/">{t("nav.explorer")}</a>
             </div>
             <div className="footer-col">
               <h4>{t("footer.legal")}</h4>

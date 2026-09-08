@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Section from "../components/Section";
+import PageHeader from "../components/PageHeader";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 
@@ -8,7 +8,7 @@ export default function NotFound() {
   useSeo(t("meta.notFound.title"), t("meta.notFound.description"));
 
   return (
-    <Section title={t("notFound.title")} subtitle={t("notFound.body")}>
+    <PageHeader title={t("notFound.title")} subtitle={t("notFound.body")}>
       <div className="btn-row">
         <Link className="btn primary" to="/">
           {t("notFound.cta")}
@@ -20,6 +20,6 @@ export default function NotFound() {
           {t("nav.helix")}
         </Link>
       </div>
-    </Section>
+    </PageHeader>
   );
 }

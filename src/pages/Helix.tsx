@@ -1,9 +1,15 @@
+import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
+import Split from "../components/Split";
 import Cards from "../components/Cards";
 import type { Item } from "../components/Cards";
 import Testnet from "../components/Testnet";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
+import helixLogo from "../assets/helix-logo.webp";
+
+const DISCORD = "https://discord.gg/98gZj6TqVv";
 
 export default function Helix() {
   const { t, list } = useI18n();
@@ -11,15 +17,24 @@ export default function Helix() {
 
   return (
     <>
-      <Section eyebrow={t("helix.eyebrow")} title={t("helix.title")} subtitle={t("helix.subtitle")} />
+      <PageHeader eyebrow={t("helix.eyebrow")} title={t("helix.title")} subtitle={t("helix.subtitle")}>
+        <div className="btn-row">
+          <a className="btn primary" href="https://explorer.silvra.net/">
+            {t("nav.explorer")}
+          </a>
+          <a className="btn" href={DISCORD} rel="noreferrer noopener" target="_blank">
+            {t("helix.cta.discord")}
+          </a>
+        </div>
+      </PageHeader>
 
-      <Section eyebrow={t("helix.intro.eyebrow")} title={t("helix.intro.title")}>
-        <p className="muted" style={{ maxWidth: "70ch" }}>
-          {t("helix.intro.body")}
-        </p>
-      </Section>
+      <Split media={<img className="media contain" src={helixLogo} alt="" />}>
+        <p className="eyebrow">{t("helix.intro.eyebrow")}</p>
+        <h2>{t("helix.intro.title")}</h2>
+        <p className="muted">{t("helix.intro.body")}</p>
+      </Split>
 
-      <Section>
+      <Section title={t("helix.testnet.title")}>
         <Testnet />
       </Section>
 
@@ -33,30 +48,28 @@ export default function Helix() {
             {p}
           </p>
         ))}
-        <p className="card" style={{ marginTop: 24 }}>
+        <p className="card" style={{ marginTop: 24, maxWidth: "70ch" }}>
           {t("helix.honesty.highlight")}
         </p>
       </Section>
 
       <Section eyebrow={t("helix.cta.eyebrow")} subtitle={t("helix.cta.body")}>
         <div className="btn-row">
-          <a className="btn primary" href="/explorer/">
+          <a className="btn primary" href="https://explorer.silvra.net/">
             {t("nav.explorer")}
           </a>
           <a className="btn" href={`https://${t("helix.cta.link")}`} rel="noreferrer noopener" target="_blank">
             {t("helix.cta.link")}
           </a>
-          <a
-            className="btn"
-            href="https://github.com/silvra-net"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
+          <a className="btn" href="https://github.com/silvra-net" rel="noreferrer noopener" target="_blank">
             {t("helix.cta.github")}
           </a>
-          <a className="btn" href="https://discord.gg/98gZj6TqVv" rel="noreferrer noopener" target="_blank">
+          <a className="btn" href={DISCORD} rel="noreferrer noopener" target="_blank">
             {t("helix.cta.discord")}
           </a>
+          <Link className="btn" to="/messenger">
+            {t("nav.messenger")}
+          </Link>
         </div>
       </Section>
     </>

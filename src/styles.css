@@ -309,3 +309,24 @@ h3 { font-size: 19px; }
 .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 16px; }
 .metric-label { font-size: 13px; color: var(--muted); }
 .metric-value { font-family: var(--mono); font-size: 22px; font-weight: 600; }
+
+/* ---------- subpage opening ----------
+   The same dot texture as the home hero, at a quieter size, and in a pseudo-element for the
+   same reason: a mask on the section itself would fade the heading it exists to frame. */
+.page-header { position: relative; isolation: isolate; padding: 80px 0 64px; border-bottom: 1px solid var(--border); }
+.page-header::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at 15% 0%, #000 30%, transparent 72%);
+  mask-image: radial-gradient(ellipse 70% 80% at 15% 0%, #000 30%, transparent 72%);
+}
+.page-header h1 { font-size: clamp(30px, 4.5vw, 46px); }
+.page-header .lead { margin-bottom: 0; }
+.page-header .btn-row { margin-top: 28px; }
+
+/* A logo is not a photograph: cropping it to fill a band cuts the wordmark off, so logo panels
+   contain the artwork and sit on the panel colour instead. */
+.split-media .media.contain { object-fit: contain; padding: 48px; background: var(--surface-2); }
+@media (max-width: 900px) { .split-media .media.contain { padding: 32px; } }

@@ -1,3 +1,4 @@
+import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
@@ -17,7 +18,9 @@ export default function Impressum() {
   useSeo(t("meta.impressum.title"), t("meta.impressum.description"));
 
   return (
-    <Section eyebrow={t("impressum.eyebrow")} title={t("impressum.title")} subtitle={t("impressum.subtitle")}>
+    <>
+      <PageHeader eyebrow={t("impressum.eyebrow")} title={t("impressum.title")} subtitle={t("impressum.subtitle")} />
+      <Section>
       <dl className="card" style={{ margin: 0, maxWidth: "56ch" }}>
         {list<Block>("impressum.sections").map((s, i) => (
           <div key={s.title} style={{ marginTop: i === 0 ? 0 : 24 }}>
@@ -29,6 +32,7 @@ export default function Impressum() {
           </div>
         ))}
       </dl>
-    </Section>
+      </Section>
+    </>
   );
 }

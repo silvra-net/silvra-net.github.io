@@ -1,3 +1,4 @@
+import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import Split from "../components/Split";
 import Cards from "../components/Cards";
@@ -7,6 +8,7 @@ import CryptoDemo from "../components/CryptoDemo";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import chatPreview from "../assets/chat-preview.webp";
+import messengerLogo from "../assets/messenger-logo.webp";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
 import profilDe from "../assets/Profil_DE.webp";
@@ -25,23 +27,34 @@ export default function Messenger() {
 
   return (
     <>
-      <Section eyebrow={t("messenger.eyebrow")} title={t("messenger.title")} subtitle={t("messenger.subtitle")}>
+      <PageHeader
+        eyebrow={t("messenger.eyebrow")}
+        title={t("messenger.title")}
+        subtitle={t("messenger.subtitle")}
+      >
         <div className="btn-row">
-          <a className="btn primary" href="https://play.google.com/store/apps/details?id=net.silvra.spark" rel="noreferrer noopener" target="_blank">
+          <a
+            className="btn primary"
+            href="https://play.google.com/store/apps/details?id=net.silvra.spark"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
             {t("messenger.playStore")}
           </a>
         </div>
-      </Section>
+      </PageHeader>
 
-      <Section title={t("messenger.status.title")} subtitle={t("messenger.status.body")}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <Split media={<img className="media contain" src={messengerLogo} alt="" />}>
+        <h2>{t("messenger.status.title")}</h2>
+        <p className="muted">{t("messenger.status.body")}</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 20 }}>
           {list<string>("messenger.status.badges").map((b) => (
             <span className="badge" key={b}>
               {b}
             </span>
           ))}
         </div>
-      </Section>
+      </Split>
 
       <Split media={<img className="media" src={chatPreview} alt="" />} flip>
         <p className="eyebrow">{t("messenger.intro.eyebrow")}</p>
