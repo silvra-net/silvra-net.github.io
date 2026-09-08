@@ -37,13 +37,9 @@ jobs:
       # as a raw dotted path on the page rather than failing loudly.
       - run: npm test
 
+      # `npm run build` ends in scripts/prerender.mjs, which writes a directory per route and
+      # the 404.html fallback — so this runs the same way here as it does locally.
       - run: npm run build
-
-      # Pages has no index.html fallback of its own: /mission exists only in the browser, so a
-      # hard refresh asks for a file that was never built. 404.html is what Pages serves in that
-      # case, and an identical copy of the app hands the request to the client router.
-      # Note this also makes real 404s render the app's NotFound page, which is the intent.
-      - run: cp dist/index.html dist/404.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
