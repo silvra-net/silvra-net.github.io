@@ -43,19 +43,13 @@ export default function Messenger() {
         </div>
       </Section>
 
-      <Section eyebrow={t("messenger.intro.eyebrow")} title={t("messenger.intro.title")}>
-        <p className="muted" style={{ maxWidth: "70ch" }}>
-          {t("messenger.intro.body")}
-        </p>
-      </Section>
-
       <Split media={<img className="media" src={chatPreview} alt="" />} flip>
-        <p className="eyebrow">{t("messenger.pillars.eyebrow")}</p>
-        <h2>{t("messenger.pillars.title")}</h2>
+        <p className="eyebrow">{t("messenger.intro.eyebrow")}</p>
+        <h2>{t("messenger.intro.title")}</h2>
         <p className="muted">{t("messenger.intro.body")}</p>
       </Split>
 
-      <Section title={t("messenger.pillars.title")}>
+      <Section eyebrow={t("messenger.pillars.eyebrow")} title={t("messenger.pillars.title")}>
         <Cards items={list<Item>("messenger.pillars.items")} />
       </Section>
 

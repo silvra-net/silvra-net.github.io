@@ -41,6 +41,17 @@ for (const theme of THEMES) {
 
     for (const path of PAGES) {
       await page.goto(BASE + path, { waitUntil: "load" });
+
+      // Walk the page so lazy images load and Reveal fires; then return to the top for the shot.
+      await page.evaluate(async () => {
+        const step = window.innerHeight;
+        for (let y = 0; y < document.body.scrollHeight; y += step) {
+          window.scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 120));
+        }
+        window.scrollTo(0, 0);
+      });
+      await page.waitForLoadState("load");
       // Long enough for Reveal's failsafe: a full-page shot never scrolls, so nothing intersects
       // and only the timer makes the lower sections visible.
       await page.waitForTimeout(3500);
