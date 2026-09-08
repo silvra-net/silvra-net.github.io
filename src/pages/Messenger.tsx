@@ -44,7 +44,7 @@ export default function Messenger() {
         </div>
       </PageHeader>
 
-      <Split media={<img className="media contain" src={messengerLogo} alt="" />}>
+      <Split media={<img className="media contain" data-icon src={messengerLogo} alt="" />}>
         <h2>{t("messenger.status.title")}</h2>
         <p className="muted">{t("messenger.status.body")}</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 20 }}>

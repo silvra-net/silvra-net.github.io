@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n";
 import type { Lang } from "../i18n";
 import { getTheme, resolvedTheme, setTheme } from "../theme";
-import logo from "../assets/logo-header.png";
+import icon from "../assets/silvra-icon.png";
 import type { ReactNode } from "react";
 
 const PAGES = [
@@ -95,7 +95,8 @@ export default function Layout({ children }: { children: ReactNode }) {
 
         <div className="container main-row">
           <Link to="/" className="brand" aria-label="Silvra">
-            <img src={logo} alt="" />
+            <img src={icon} alt="" />
+            <span className="brand-name">Silvra</span>
           </Link>
 
           <button

@@ -7,7 +7,7 @@ import type { Item } from "../components/Cards";
 import Testnet from "../components/Testnet";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
-import helixLogo from "../assets/helix-logo.webp";
+import helixIcon from "../assets/helix-icon.png";
 
 const DISCORD = "https://discord.gg/98gZj6TqVv";
 
@@ -28,7 +28,7 @@ export default function Helix() {
         </div>
       </PageHeader>
 
-      <Split media={<img className="media contain" src={helixLogo} alt="" />}>
+      <Split media={<img className="media contain" data-icon src={helixIcon} alt="" />}>
         <p className="eyebrow">{t("helix.intro.eyebrow")}</p>
         <h2>{t("helix.intro.title")}</h2>
         <p className="muted">{t("helix.intro.body")}</p>

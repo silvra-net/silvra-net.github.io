@@ -196,10 +196,17 @@ h3 { font-size: 19px; }
   .nav-toggle { display: inline-flex; }
 }
 
-/* The logo artwork is white, which disappears on a light ground. Inverting it is right for a
-   monochrome mark and keeps one file instead of two. */
-@media (prefers-color-scheme: light) { :root:not([data-theme]) .brand img { filter: invert(1); } }
-:root[data-theme="light"] .brand img { filter: invert(1); }
+/* The mark is the app's own icon: a black tile with a white letter. It is never inverted —
+   that would show a logo the product does not have — so on a dark page it gets a hairline to
+   separate it from the background, exactly as an icon does on a dark home screen. */
+.brand { gap: 10px; }
+.brand img { height: 28px; width: 28px; border-radius: 7px; }
+.brand-name {
+  font-size: 17px; font-weight: 600; letter-spacing: 0.02em; color: var(--text);
+}
+:root .brand img { box-shadow: 0 0 0 1px var(--border); }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .brand img { box-shadow: none; } }
+:root[data-theme="light"] .brand img { box-shadow: none; }
 
 /* ---------- hero ----------
    Full-bleed: the video runs to both edges of the window, with the words over it. The scrim is
@@ -328,5 +335,8 @@ h3 { font-size: 19px; }
 
 /* A logo is not a photograph: cropping it to fill a band cuts the wordmark off, so logo panels
    contain the artwork and sit on the panel colour instead. */
-.split-media .media.contain { object-fit: contain; padding: 48px; background: var(--surface-2); }
+.split-media .media.contain { object-fit: contain; padding: 64px; background: var(--surface-2); }
+/* App icons are drawn with rounded corners everywhere they appear; a square-cornered tile
+   reads as a screenshot of the artwork rather than as the icon. */
+.split-media .media.contain[data-icon] { border-radius: 22%; }
 @media (max-width: 900px) { .split-media .media.contain { padding: 32px; } }
