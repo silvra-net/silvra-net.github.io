@@ -1,0 +1,170 @@
+/* Silvra web — the Helix shared design system, applied to a public site rather than an app.
+   Tokens are the same hexes as helix/gui/src/styles.css and the node's status board, so the
+   site, the wallet and the explorer read as one product: an achromatic grey scale, black
+   (light) or white (dark) as the only accent, and colour reserved for state.
+
+   Default :root is dark; the media query and the manual data-theme override carry light. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0c0c0c;
+  --surface-2: #171717;
+  --border: #262626;
+  --text: #f5f5f5;
+  --muted: #a3a3a3;
+  --accent: #ffffff;
+  --accent-ink: #000000;
+  --ok: #22c55e;
+  --ok-bg: #0d2114;
+  --bad: #ef4444;
+  --bad-bg: #241113;
+  --warn: #e0a44a;
+  --warn-bg: #241c0d;
+  --radius: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  /* Site-only: the page is wider than an app pane and needs a measure and a rhythm. */
+  --measure: 1120px;
+  --gap: 24px;
+  --section-y: 96px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #fafafa; --surface: #ffffff; --surface-2: #f5f5f5; --border: #e5e5e5;
+    --text: #0a0a0a; --muted: #737373; --accent: #000000; --accent-ink: #ffffff;
+    --ok: #15803d; --ok-bg: #e9f7ee; --bad: #c81e1e; --bad-bg: #fceaea;
+    --warn: #8a5a06; --warn-bg: #fdf4e3;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #000000; --surface: #0c0c0c; --surface-2: #171717; --border: #262626;
+  --text: #f5f5f5; --muted: #a3a3a3; --accent: #ffffff; --accent-ink: #000000;
+  --ok: #22c55e; --ok-bg: #0d2114; --bad: #ef4444; --bad-bg: #241113;
+  --warn: #e0a44a; --warn-bg: #241c0d;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #fafafa; --surface: #ffffff; --surface-2: #f5f5f5; --border: #e5e5e5;
+  --text: #0a0a0a; --muted: #737373; --accent: #000000; --accent-ink: #ffffff;
+  --ok: #15803d; --ok-bg: #e9f7ee; --bad: #c81e1e; --bad-bg: #fceaea;
+  --warn: #8a5a06; --warn-bg: #fdf4e3;
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, video { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+
+/* Keyboard focus must stay visible on both themes; the accent is the only colour that is
+   guaranteed to contrast against every surface token. */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.mono { font-family: var(--mono); }
+.container { width: 100%; max-width: var(--measure); margin: 0 auto; padding: 0 24px; }
+.section { padding: var(--section-y) 0; }
+.section + .section { border-top: 1px solid var(--border); }
+
+.eyebrow {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted); margin: 0 0 12px;
+}
+h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 600; }
+h1 { font-size: clamp(34px, 6vw, 60px); }
+h2 { font-size: clamp(26px, 4vw, 38px); }
+h3 { font-size: 19px; }
+.lead { font-size: 18px; color: var(--muted); max-width: 62ch; margin: 0 0 24px; }
+
+/* The shadowed word in the hero: the same emphasis the wallet gives with --accent, expressed
+   as an outline so a display-size word does not turn into a block of pure white. */
+.title-shadow {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--muted);
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 11px 18px; font-size: 14px; font-weight: 500;
+  text-decoration: none; cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
+.btn.primary:hover { opacity: 0.9; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px;
+}
+.grid { display: grid; gap: var(--gap); }
+.grid.two { grid-template-columns: repeat(2, 1fr); }
+.grid.three { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 860px) { .grid.two, .grid.three { grid-template-columns: 1fr; } }
+
+.badge {
+  display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 99px; padding: 4px 12px; font-size: 12px; color: var(--muted);
+  font-family: var(--mono);
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+.dot.ok { background: var(--ok); }
+.dot.off { background: var(--muted); }
+
+/* ---------- shell ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+.site-header .inner { display: flex; align-items: center; gap: 20px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; }
+.brand img { height: 24px; width: auto; }
+.site-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.nav-link {
+  color: var(--muted); text-decoration: none; font-size: 14px;
+  padding: 8px 12px; border-radius: 8px;
+}
+.nav-link:hover { background: var(--surface-2); color: var(--text); }
+.nav-link.active { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.nav-toggle { display: none; }
+
+@media (max-width: 900px) {
+  .site-nav {
+    display: none; position: absolute; top: 60px; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 2px;
+    background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px;
+  }
+  .site-nav.open { display: flex; }
+  .nav-toggle { display: inline-flex; margin-left: auto; }
+}
+
+.site-footer { border-top: 1px solid var(--border); padding: 48px 0 32px; color: var(--muted); font-size: 14px; }
+.footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--gap); }
+@media (max-width: 860px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
+.footer-col h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); margin: 0 0 12px; }
+.footer-col a { display: block; text-decoration: none; padding: 3px 0; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; }
