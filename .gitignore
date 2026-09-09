@@ -6,3 +6,5 @@ dist/
 .vite/
 shots/
 ref/
+audit.json
+look/

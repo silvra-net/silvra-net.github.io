@@ -49,7 +49,8 @@
     "close": "Navigation schließen",
     "missionTag": "Warum wir Silvra bauen",
     "theme": "Design wechseln",
-    "switchLang": "Sprache wechseln"
+    "switchLang": "Sprache wechseln",
+    "skip": "Zum Inhalt springen"
   },
   "footer": {
     "copyright": "© {{year}} Silvra — entwickelt & betrieben in der EU",

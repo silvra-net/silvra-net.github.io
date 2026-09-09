@@ -80,6 +80,13 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
+      {/* Nine tab stops separated a keyboard user from the content on every page. Visible only
+          when focused, which is the point: it is there for the people who need it and invisible
+          to everyone else. */}
+      <a className="skip-link" href="#main">
+        {t("nav.skip")}
+      </a>
+
       <header className="site-header">
         {/* Meta row: what you set once and then forget — language, appearance, the explorer. */}
         <div className="meta-row">
@@ -123,28 +130,32 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main>{children}</main>
+      {/* tabIndex -1 makes the target focusable so the jump actually moves focus;
+          without it the browser scrolls and the next Tab returns to the header. */}
+      <main id="main" tabIndex={-1}>
+        {children}
+      </main>
 
       <footer className="site-footer">
         <div className="container">
           <div className="footer-cols">
             <div className="footer-col">
-              <h4>Silvra</h4>
+              <h2>Silvra</h2>
               <p style={{ margin: 0, maxWidth: "36ch" }}>{t("footer.description")}</p>
             </div>
             <div className="footer-col">
-              <h4>{t("footer.pages")}</h4>
+              <h2>{t("footer.pages")}</h2>
               <Link to="/mission">{t("nav.mission")}</Link>
               <Link to="/contact">{t("nav.contact")}</Link>
             </div>
             <div className="footer-col">
-              <h4>{t("footer.products")}</h4>
+              <h2>{t("footer.products")}</h2>
               <Link to="/messenger">{t("nav.messenger")}</Link>
               <Link to="/helix">{t("nav.helix")}</Link>
               <a href="https://explorer.silvra.net/">{t("nav.explorer")}</a>
             </div>
             <div className="footer-col">
-              <h4>{t("footer.legal")}</h4>
+              <h2>{t("footer.legal")}</h2>
               <Link to="/impressum">Impressum</Link>
               {/* Plain anchor: the privacy policy is a static page, not a route. */}
               <a href="/privacy/">Datenschutz</a>

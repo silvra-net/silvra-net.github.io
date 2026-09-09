@@ -33,7 +33,11 @@
   :root:not([data-theme]) {
     color-scheme: light;
     --bg: #fafafa; --surface: #ffffff; --surface-2: #f5f5f5; --border: #e5e5e5;
-    --text: #0a0a0a; --muted: #737373; --accent: #000000; --accent-ink: #ffffff;
+    /* #737373 is the Helix light muted, and against --surface-2 it measures 4.35:1 — under the
+       4.5 floor for body text, which the 12px badges and captions are. Two steps darker clears
+       it at 4.80:1 and is indistinguishable side by side. The shared system carries the same
+       value and has the same gap. */
+    --text: #0a0a0a; --muted: #6b6b6b; --accent: #000000; --accent-ink: #ffffff;
     --ok: #15803d; --ok-bg: #e9f7ee; --bad: #c81e1e; --bad-bg: #fceaea;
     --warn: #8a5a06; --warn-bg: #fdf4e3;
   }
@@ -48,7 +52,7 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --bg: #fafafa; --surface: #ffffff; --surface-2: #f5f5f5; --border: #e5e5e5;
-  --text: #0a0a0a; --muted: #737373; --accent: #000000; --accent-ink: #ffffff;
+  --text: #0a0a0a; --muted: #6b6b6b; --accent: #000000; --accent-ink: #ffffff;
   --ok: #15803d; --ok-bg: #e9f7ee; --bad: #c81e1e; --bad-bg: #fceaea;
   --warn: #8a5a06; --warn-bg: #fdf4e3;
 }
@@ -265,7 +269,6 @@ h3 { font-size: 19px; }
 .site-footer { border-top: 1px solid var(--border); padding: 48px 0 32px; color: var(--muted); font-size: 14px; }
 .footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--gap); }
 @media (max-width: 860px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
-.footer-col h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); margin: 0 0 12px; }
 .footer-col a { display: block; text-decoration: none; padding: 3px 0; }
 .footer-col a:hover { color: var(--text); }
 .footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; }
@@ -340,3 +343,47 @@ h3 { font-size: 19px; }
    reads as a screenshot of the artwork rather than as the icon. */
 .split-media .media.contain[data-icon] { border-radius: 22%; }
 @media (max-width: 900px) { .split-media .media.contain { padding: 32px; } }
+
+main:focus { outline: none; }
+
+/* ---------- skip link ----------
+   Off-screen until focused, then a normal button at the top left. */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 120ms ease;
+}
+.skip-link:focus { top: 12px; }
+@media (prefers-reduced-motion: reduce) { .skip-link { transition: none; } }
+
+/* ---------- pointer targets ----------
+   The meta row's controls were 20x17 and 28x18 — under the 24px floor, and well under what a
+   thumb can hit. The padding grows the hit area without changing the type size, and on a touch
+   pointer it goes to the full 44px. */
+.meta-link, .meta-btn, .lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+}
+@media (pointer: coarse) {
+  .meta-inner { height: 48px; }
+  .meta-link, .meta-btn, .lang-btn { min-height: 44px; min-width: 44px; }
+  .nav-link { padding: 12px; }
+}
+
+/* Footer headings are h2 now; they must not inherit the h2 display size. */
+.footer-col h2 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text); margin: 0 0 12px; font-weight: 600; line-height: 1.4;
+}
