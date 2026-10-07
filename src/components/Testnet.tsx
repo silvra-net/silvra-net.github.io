@@ -1,87 +1,54 @@
-import { useEffect, useState } from "react";
 import { useI18n } from "../i18n";
+import { useNodeStatus } from "../lib/node";
 import CountUp from "./CountUp";
+import Icon from "./Icon";
+import { EXPLORER } from "../lib/links";
 
-/** The public node's status endpoint. Same origin the explorer reads, and the only place these
- *  numbers come from — nothing here is cached or precomputed on our side. */
-const NODE = "https://node.silvra.net";
-
-interface Status {
-  version: string;
-  height: number;
-  peer_count: number;
-  mempool_size: number;
-  is_syncing: boolean;
-}
-
-export default function Testnet() {
-  const { t } = useI18n();
-  const [status, setStatus] = useState<Status | null>(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      try {
-        const res = await fetch(`${NODE}/status`);
-        if (!res.ok) throw new Error(String(res.status));
-        const data = (await res.json()) as Status;
-        if (alive) {
-          setStatus(data);
-          setFailed(false);
-        }
-      } catch {
-        // A node that cannot be reached is reported as such rather than as a frozen number:
-        // a stale height that looks live is worse than an honest gap.
-        if (alive) setFailed(true);
-      }
-    };
-    void load();
-    const timer = setInterval(load, 10_000);
-    return () => {
-      alive = false;
-      clearInterval(timer);
-    };
-  }, []);
-
-  const metrics = status
-    ? [
-        { label: t("home.testnet.stats.height"), node: <CountUp value={status.height} /> },
-        { label: "Peers", node: <>{status.peer_count}</> },
-        { label: "Mempool", node: <>{status.mempool_size}</> },
-        { label: t("home.testnet.stats.status"), node: <>{status.is_syncing ? "Sync" : t("home.testnet.stats.statusLive")}</> },
-      ]
-    : [];
+/**
+ * The live state of the public node, as a panel. Every number is fetched from node.silvra.net;
+ * nothing here is cached or invented on our side, and an unreachable node says so.
+ */
+export default function Testnet({ explorer = true }: { explorer?: boolean }) {
+  const { t, lang } = useI18n();
+  const { status, failed } = useNodeStatus();
+  const locale = lang === "de" ? "de-DE" : "en-GB";
 
   return (
-    <div className="card">
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-        <span className={status && !failed ? "dot ok" : "dot off"} />
-        <strong>{t("home.testnet.title")}</strong>
-        <span className="small muted mono" style={{ marginLeft: "auto" }}>
-          {failed ? t("home.testnet.offline") : t("home.testnet.live")}
-        </span>
+    <div className="testnet">
+      <div className="testnet-head">
+        <span className={status && !failed ? "dot ok pulse" : "dot off"} />
+        <span className="testnet-title">{t("home.testnet.title")}</span>
+        <span className="testnet-source mono">{failed ? t("home.testnet.offline") : t("home.testnet.live")}</span>
       </div>
-
-      {metrics.length > 0 ? (
-        <div className="metrics">
-          {metrics.map((m) => (
-            <div key={m.label}>
-              <div className="metric-label">{m.label}</div>
-              <div className="metric-value">{m.node}</div>
-            </div>
-          ))}
+      <div className="testnet-height">
+        <span className="testnet-label">{t("home.testnet.stats.height")}</span>
+        <span className="testnet-big mono">{status ? <CountUp value={status.height} locale={locale} /> : failed ? "—" : "…"}</span>
+      </div>
+      <dl className="testnet-stats">
+        <div>
+          <dt>{t("home.testnet.stats.peers")}</dt>
+          <dd className="mono">{status ? status.peer_count : "—"}</dd>
         </div>
-      ) : (
-        <p className="muted small" style={{ margin: 0 }}>
-          {failed ? t("home.testnet.offline") : "…"}
-        </p>
-      )}
-
-      {status && (
-        <p className="small muted mono" style={{ margin: "20px 0 0" }}>
-          {t("home.testnet.public")} · v{status.version}
-        </p>
+        <div>
+          <dt>{t("home.testnet.stats.mempool")}</dt>
+          <dd className="mono">{status ? status.mempool_size : "—"}</dd>
+        </div>
+        <div>
+          <dt>{t("home.testnet.stats.status")}</dt>
+          <dd className="mono">
+            {status ? (status.is_syncing ? t("home.testnet.stats.statusSync") : t("home.testnet.stats.statusLive")) : "—"}
+          </dd>
+        </div>
+        <div>
+          <dt>{t("home.testnet.stats.version")}</dt>
+          <dd className="mono">{status ? `v${status.version}` : "—"}</dd>
+        </div>
+      </dl>
+      {explorer && (
+        <a className="testnet-link" href={EXPLORER}>
+          {t("home.testnet.explorer")}
+          <Icon name="arrowUpRight" size={16} />
+        </a>
       )}
     </div>
   );

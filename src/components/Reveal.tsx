@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 /**
  * Fade a block in the first time it comes into view.
@@ -10,8 +10,19 @@ import type { ReactNode } from "react";
  *
  * Visitors who ask for reduced motion get the content immediately, never a fade.
  */
-export default function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+export default function Reveal({
+  children,
+  delay = 0,
+  as: Tag = "div",
+  className,
+}: {
+  children: ReactNode;
+  delay?: number;
+  /** The element to render, so a revealed list item can still be the list item. */
+  as?: ElementType;
+  className?: string;
+}) {
+  const ref = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -46,8 +57,12 @@ export default function Reveal({ children, delay = 0 }: { children: ReactNode; d
   }, [shown]);
 
   return (
-    <div ref={ref} className={shown ? "reveal shown" : "reveal"} style={{ transitionDelay: `${delay}ms` }}>
+    <Tag
+      ref={ref}
+      className={`reveal${shown ? " shown" : ""}${className ? ` ${className}` : ""}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+    >
       {children}
-    </div>
+    </Tag>
   );
 }

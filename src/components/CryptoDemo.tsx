@@ -68,31 +68,39 @@ export default function CryptoDemo() {
   }, [key, input]);
 
   return (
-    <div className="card">
-      <input
-        className="btn"
-        style={{ width: "100%", fontFamily: "var(--font)", cursor: "text" }}
-        placeholder={t("messenger.crypto.placeholder")}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        aria-label={t("messenger.crypto.placeholder")}
-      />
-      <dl className="small mono" style={{ margin: "20px 0 0", wordBreak: "break-all" }}>
-        <dt className="muted">{t("messenger.crypto.keyLabel")}</dt>
-        <dd style={{ margin: "2px 0 12px" }}>{keyHex || "…"}</dd>
-        <dt className="muted">{t("messenger.crypto.nonceLabel")}</dt>
-        <dd style={{ margin: "2px 0 12px" }}>{nonce || "—"}</dd>
-        <dt className="muted">{t("messenger.crypto.ctLabel")}</dt>
-        <dd style={{ margin: "2px 0 0" }}>{cipher || "—"}</dd>
-      </dl>
-      {verified && (
-        <p className="small" style={{ color: "var(--ok)", margin: "16px 0 0" }}>
-          ✓ {t("messenger.crypto.verified")}
+    <div className="terminal">
+      <div className="terminal-bar" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+        <span className="mono">aes-256-gcm · webcrypto</span>
+      </div>
+      <div className="terminal-body">
+        <label className="terminal-input">
+          <span className="terminal-prompt mono" aria-hidden="true">
+            &gt;
+          </span>
+          <input
+            placeholder={t("messenger.crypto.placeholder")}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            maxLength={280}
+            aria-label={t("messenger.crypto.placeholder")}
+          />
+        </label>
+        <dl className="terminal-out mono">
+          <dt>{t("messenger.crypto.keyLabel")}</dt>
+          <dd>{keyHex || "…"}</dd>
+          <dt>{t("messenger.crypto.nonceLabel")}</dt>
+          <dd>{nonce || "—"}</dd>
+          <dt>{t("messenger.crypto.ctLabel")}</dt>
+          <dd className="terminal-cipher">{cipher || "—"}</dd>
+        </dl>
+        <p className={verified ? "terminal-ok" : "terminal-ok idle"} aria-live="polite">
+          {verified ? `✓ ${t("messenger.crypto.verified")}` : t("messenger.crypto.waiting")}
         </p>
-      )}
-      <p className="small muted" style={{ margin: "16px 0 0" }}>
-        {t("messenger.crypto.caption")}
-      </p>
+      </div>
+      <p className="terminal-caption">{t("messenger.crypto.caption")}</p>
     </div>
   );
 }

@@ -1,19 +1,41 @@
 import { Link } from "react-router-dom";
-import Section from "../components/Section";
-import Cards from "../components/Cards";
-import type { Item } from "../components/Cards";
-import Groups from "../components/Groups";
+import Gate from "../components/Gate";
+import Marquee from "../components/Marquee";
+import ScrollWords from "../components/ScrollWords";
+import Reveal from "../components/Reveal";
+import Scramble from "../components/Scramble";
+import Timeline from "../components/Timeline";
 import Testnet from "../components/Testnet";
-import Ticker from "../components/Ticker";
-import Split from "../components/Split";
-import Media from "../components/Media";
+import Photo from "../components/Photo";
+import Icon from "../components/Icon";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
-import intro from "../assets/silvra-intro.mp4";
-import introPoster from "../assets/silvra-intro-poster.jpg";
-import craft from "../assets/silvra-craft.mp4";
-import craftPoster from "../assets/silvra-craft-poster.jpg";
-import showcase from "../assets/showcase-phone.webp";
+import { DISCORD } from "../lib/links";
+
+interface Fact {
+  value: string;
+  label: string;
+  body: string;
+}
+interface Point {
+  title: string;
+  body: string;
+}
+interface Step {
+  when: string;
+  title: string;
+  body: string;
+}
+
+/** A section's small mono label: an index, a slash, a name — decrypted on first sight. */
+function Label({ index, text }: { index: string; text: string }) {
+  return (
+    <p className="label">
+      <span className="label-index">{index}</span>
+      <Scramble text={text} />
+    </p>
+  );
+}
 
 export default function Home() {
   const { t, list } = useI18n();
@@ -21,93 +43,212 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero">
-        <div className="hero-media">
-          <Media src={intro} poster={introPoster} alt="" />
+      <Gate />
+
+      {/* ---- 00 · Who we are ---- */}
+      <section className="section about" id="about">
+        <div className="container">
+          <Label index="00" text={t("home.about.label")} />
+          <ScrollWords className="statement" text={t("home.about.statement")} />
+          <div className="about-grid">
+            <Reveal>
+              <p className="lead">{t("home.about.body")}</p>
+              <div className="btn-row">
+                <Link className="btn primary" to="/mission">
+                  {t("home.about.cta")}
+                  <Icon name="arrowRight" size={16} />
+                </Link>
+              </div>
+            </Reveal>
+            <dl className="facts">
+              {list<Fact>("home.about.facts").map((f, i) => (
+                <Reveal key={f.label} delay={i * 80} className="fact">
+                  <dt>
+                    <span className="fact-value">{f.value}</span>
+                    <span className="fact-label">{f.label}</span>
+                  </dt>
+                  <dd>{f.body}</dd>
+                </Reveal>
+              ))}
+            </dl>
+          </div>
         </div>
-        <div className="container hero-body">
-          <p className="eyebrow">{t("home.hero.eyebrow")}</p>
-          <h1>
-            {t("home.hero.titleLine1")} <span className="title-shadow">{t("home.hero.titleShadow")}</span>{" "}
-            {t("home.hero.titleLine2")}
-          </h1>
-          <p className="lead">{t("home.hero.body")}</p>
-          <div className="btn-row">
-            <a className="btn primary" href="#projekte">
-              {t("home.hero.ctaPrimary")}
-            </a>
-            <Link className="btn" to="/mission">
-              {t("home.hero.ctaSecondary")}
+      </section>
+
+      <Marquee items={list<string>("home.marquee")} />
+
+      {/* ---- 01 · Two products, one foundation ---- */}
+      <section className="section">
+        <div className="container">
+          <Label index="01" text={t("home.stack.label")} />
+          <div className="section-head">
+            <h2>{t("home.stack.title")}</h2>
+            <p className="lead">{t("home.stack.lead")}</p>
+          </div>
+          <Reveal>
+            <div className="stack">
+              <div className="stack-products dark-zone">
+                <Link to="/messenger" className="stack-product stack-messenger">
+                  <span className="stack-kicker">{t("home.stack.messenger.kicker")}</span>
+                  <span className="stack-name">Silvra Messenger</span>
+                  <span className="stack-body">{t("home.stack.messenger.body")}</span>
+                  <span className="stack-go">
+                    <Icon name="arrowRight" size={18} />
+                  </span>
+                </Link>
+                <span className="stack-blade" aria-hidden="true" />
+                <Link to="/helix" className="stack-product stack-helix">
+                  <span className="stack-kicker">{t("home.stack.helix.kicker")}</span>
+                  <span className="stack-name">Helix Blockchain</span>
+                  <span className="stack-body">{t("home.stack.helix.body")}</span>
+                  <span className="stack-go">
+                    <Icon name="arrowRight" size={18} />
+                  </span>
+                </Link>
+              </div>
+              <div className="stack-algos">
+                <div className="stack-algo">
+                  <span className="mono">ML-KEM · FIPS 203</span>
+                  <span>{t("home.stack.kem")}</span>
+                </div>
+                <div className="stack-algo">
+                  <span className="mono">ML-DSA · FIPS 204</span>
+                  <span>{t("home.stack.dsa")}</span>
+                </div>
+              </div>
+              <div className="stack-layer stack-pq">
+                <Icon name="shield" size={18} />
+                {t("home.stack.pq")}
+              </div>
+              <div className="stack-layer stack-eu">
+                <span className="eu-dots" aria-hidden="true" />
+                {t("home.stack.eu")}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---- 02 · Why now ---- */}
+      <section className="section why">
+        <div className="container">
+          <Label index="02" text={t("home.why.label")} />
+          <div className="section-head">
+            <h2>{t("home.why.title")}</h2>
+            <p className="lead">{t("home.why.lead")}</p>
+          </div>
+          <Timeline steps={list<Step>("home.why.steps")} />
+          <Reveal>
+            <div className="badge-row">
+              {list<string>("home.why.badges").map((b) => (
+                <span className="badge" key={b}>
+                  {b}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---- 03 · How we work ---- */}
+      <section className="section craft">
+        <div className="container craft-grid">
+          <Reveal>
+            <Photo slot="work" className="craft-media" />
+          </Reveal>
+          <div className="craft-body">
+            <Label index="03" text={t("home.craft.label")} />
+            <h2>{t("home.craft.title")}</h2>
+            <ul className="craft-list">
+              {list<Point>("home.craft.points").map((p, i) => (
+                <Reveal as="li" key={p.title} delay={i * 80}>
+                  <span className="craft-num mono">{String(i + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3>{p.title}</h3>
+                    <p className="muted">{p.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </ul>
+            <Link className="text-link" to="/mission">
+              {t("home.craft.cta")}
+              <Icon name="arrowRight" size={16} />
             </Link>
           </div>
         </div>
       </section>
 
-      <div className="section" style={{ paddingTop: 32, paddingBottom: 32 }}>
+      {/* ---- 04 · Europe ---- */}
+      <section className="section europe">
+        <div className="container europe-grid">
+          <div>
+            <Label index="04" text={t("home.europe.label")} />
+            <h2>{t("home.europe.title")}</h2>
+            <p className="lead">{t("home.europe.lead")}</p>
+            <ul className="europe-points">
+              {list<Point>("home.europe.points").map((p, i) => (
+                <Reveal as="li" key={p.title} delay={i * 80}>
+                  <Icon name={["globe", "ban", "layers"][i] ?? "check"} size={20} />
+                  <div>
+                    <h3>{p.title}</h3>
+                    <p className="muted">{p.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+          <Reveal className="europe-visual">
+            <Photo slot="europe" className="europe-photo" />
+            <p className="europe-caption mono">
+              <span className="eu-dots" aria-hidden="true" />
+              {t("home.europe.caption")}
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---- 05 · Live ---- */}
+      <section className="section live">
+        <div className="container live-grid">
+          <div>
+            <Label index="05" text={t("home.live.label")} />
+            <h2>{t("home.live.title")}</h2>
+            <p className="lead">{t("home.live.lead")}</p>
+            <Link className="text-link" to="/helix">
+              {t("home.live.cta")}
+              <Icon name="arrowRight" size={16} />
+            </Link>
+          </div>
+          <Reveal>
+            <Testnet />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---- 06 · Join ---- */}
+      <section className="section join">
         <div className="container">
-          <Ticker items={list<string>("home.ticker.items")} />
+          <Label index="06" text={t("home.join.label")} />
+          <h2 className="join-title">{t("home.join.title")}</h2>
+          <div className="join-grid">
+            <p className="lead">{t("home.join.body")}</p>
+            <div className="btn-row">
+              <a className="btn primary" href={`mailto:${t("home.join.email")}`}>
+                <Icon name="mail" size={16} />
+                {t("home.join.email")}
+              </a>
+              <a className="btn" href={DISCORD} rel="noreferrer noopener" target="_blank">
+                <Icon name="people" size={16} />
+                Discord
+              </a>
+              <Link className="btn" to="/contact">
+                {t("nav.contact")}
+                <Icon name="arrowRight" size={16} />
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <Split media={<img className="media" src={showcase} alt="" />}>
-        <p className="eyebrow">{t("home.autopilot.eyebrow")}</p>
-        <h2>{t("home.autopilot.title")}</h2>
-        <p className="lead">{t("home.autopilot.subtitle")}</p>
-        <div className="btn-row">
-          <Link className="btn primary" to="/messenger">
-            {t("home.autopilot.ctaPrimary")}
-          </Link>
-          <Link className="btn" to="/helix">
-            {t("home.autopilot.ctaSecondary")}
-          </Link>
-        </div>
-      </Split>
-
-      <Section>
-        <Testnet />
-      </Section>
-
-      <Section
-        id="projekte"
-        eyebrow={t("home.projects.eyebrow")}
-        title={t("home.projects.title")}
-        subtitle={t("home.projects.lead")}
-      >
-        <Cards items={list<Item>("home.projects.items")} columns={2} />
-      </Section>
-
-      <Split media={<Media src={craft} poster={craftPoster} alt="" />} flip>
-        <p className="eyebrow">{t("home.why.eyebrow")}</p>
-        <h2>{t("home.why.title")}</h2>
-        {list<string>("home.why.paragraphs").map((p) => (
-          <p className="muted" key={p.slice(0, 40)}>
-            {p}
-          </p>
-        ))}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24 }}>
-          {list<string>("home.why.badges").map((b) => (
-            <span className="badge" key={b}>
-              {b}
-            </span>
-          ))}
-        </div>
-      </Split>
-
-      <Section eyebrow={t("home.principles.eyebrow")} title={t("home.principles.title")}>
-        <Groups path="home.principles" />
-      </Section>
-
-      <Section eyebrow={t("home.contact.eyebrow")} title={t("home.contact.title")}>
-        <p className="lead">{t("home.contact.body")}</p>
-        <div className="btn-row">
-          <a className="btn primary" href={`mailto:${t("home.contact.email")}`}>
-            {t("home.contact.email")}
-          </a>
-          <Link className="btn" to="/contact">
-            {t("nav.contact")}
-          </Link>
-        </div>
-      </Section>
+      </section>
     </>
   );
 }
