@@ -8,6 +8,13 @@ import NextWorld from "../components/NextWorld";
 import Photo from "../components/Photo";
 import Reveal from "../components/Reveal";
 import Scramble from "../components/Scramble";
+import SectionNav from "../components/SectionNav";
+import AppTour from "../components/AppTour";
+import type { TourStep } from "../components/AppTour";
+import Faq from "../components/Faq";
+import type { QA } from "../components/Faq";
+import StickyCta from "../components/StickyCta";
+import playQr from "../assets/play-qr.svg";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { PLAY_STORE } from "../lib/links";
@@ -43,7 +50,7 @@ function Label({ index, text }: { index: string; text: string }) {
 
 function PlayButton({ label }: { label: string }) {
   return (
-    <a className="btn primary" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
+    <a className="btn primary magnetic" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
       <Icon name="play" size={16} />
       {label}
     </a>
@@ -58,6 +65,15 @@ export default function Messenger() {
   // caption is the kind of detail that makes a product look unfinished.
   const shots = lang === "de" ? [welcomeDe, profilDe, settingsDe] : [welcomeEn, profilEn, settingsEn];
   const screens = list<Item>("messenger.screens.items");
+  const nav = [
+    { id: "weg", label: t("messenger.nav.journey") },
+    { id: "funktionen", label: t("messenger.nav.features") },
+    { id: "schutz", label: t("messenger.nav.security") },
+    { id: "app", label: t("messenger.nav.app") },
+    { id: "transparenz", label: t("messenger.nav.transparency") },
+    { id: "fragen", label: t("messenger.nav.faq") },
+    { id: "download", label: t("messenger.nav.download") },
+  ];
   const encrypted = raw("messenger.transparency.encrypted") as Group;
   const notEncrypted = raw("messenger.transparency.notEncrypted") as Group;
 
@@ -113,6 +129,7 @@ export default function Messenger() {
       </section>
 
       <Marquee items={list<string>("messenger.marquee")} />
+      <SectionNav items={nav} label={t("nav.sections")} />
 
       {/* ---- 01 · The route of a message ---- */}
       <section className="section" id="weg">
@@ -137,7 +154,7 @@ export default function Messenger() {
           </div>
           <div className="pillars">
             {list<Item>("messenger.pillars.items").map((p, i) => (
-              <Reveal key={p.title} delay={i * 90} className="pillar">
+              <Reveal key={p.title} delay={i * 90} className="pillar spot">
                 <span className="pillar-num mono">0{i + 1}</span>
                 <span className="pillar-icon">
                   <Icon name={p.icon ?? "chat"} size={26} />
@@ -151,7 +168,7 @@ export default function Messenger() {
       </section>
 
       {/* ---- 03 · Everything else ---- */}
-      <section className="section">
+      <section className="section band" id="funktionen">
         <div className="container">
           <Label index="03" text={t("messenger.features.eyebrow")} />
           <div className="section-head">
@@ -160,7 +177,7 @@ export default function Messenger() {
           </div>
           <ul className="features">
             {list<Item>("messenger.features.items").map((f, i) => (
-              <Reveal as="li" key={f.title} delay={(i % 4) * 60} className="feature">
+              <Reveal as="li" key={f.title} delay={(i % 4) * 60} className="feature spot">
                 <Icon name={f.icon ?? "check"} size={20} />
                 <div>
                   <h3>{f.title}</h3>
@@ -251,28 +268,18 @@ export default function Messenger() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section band" id="app">
         <div className="container">
-          <Label index="07" text={t("messenger.screens.eyebrow")} />
+          <Label index="07" text={t("messenger.tour.eyebrow")} />
           <div className="section-head">
-            <h2>{t("messenger.screens.title")}</h2>
-            <p className="lead">{t("messenger.screens.subtitle")}</p>
+            <h2>{t("messenger.tour.title")}</h2>
+            <p className="lead">{t("messenger.tour.lead")}</p>
           </div>
-          <div className="screens">
-            {screens.map((s, i) => (
-              <Reveal as="figure" key={s.title} delay={i * 100} className="screen">
-                <img src={shots[i]} alt={s.title} loading="lazy" width={600} height={1182} />
-                <figcaption>
-                  <h3>{s.title}</h3>
-                  <p className="muted">{s.body}</p>
-                </figcaption>
-              </Reveal>
-            ))}
-          </div>
+          <AppTour steps={list<TourStep>("messenger.tour.steps")} shots={shots} alts={screens.map((sc) => sc.title)} />
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="transparenz">
         <div className="container">
           <Label index="08" text={t("messenger.transparency.eyebrow")} />
           <div className="section-head">
@@ -284,7 +291,7 @@ export default function Messenger() {
               { g: encrypted, kind: "yes", icon: "lock" },
               { g: notEncrypted, kind: "no", icon: "alert" },
             ].map(({ g, kind, icon }) => (
-              <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
+              <Reveal key={kind} className={`ledger-col ledger-${kind} spot`}>
                 <h3>
                   <Icon name={icon} size={18} />
                   {g.heading}
@@ -311,7 +318,7 @@ export default function Messenger() {
           </div>
           <div className="nots">
             {list<Item>("messenger.boundaries.items").map((b, i) => (
-              <Reveal key={b.title} delay={i * 70} className="not">
+              <Reveal key={b.title} delay={i * 70} className="not spot">
                 <span className="not-icon">
                   <Icon name={b.icon ?? "ban"} size={22} />
                 </span>
@@ -323,19 +330,43 @@ export default function Messenger() {
         </div>
       </section>
 
-      <section className="section download">
+      <section className="section band" id="fragen">
+        <div className="container faq-grid">
+          <div>
+            <Label index="10" text={t("messenger.faq.label")} />
+            <h2>{t("messenger.faq.title")}</h2>
+          </div>
+          <Faq items={list<QA>("messenger.faq.items")} />
+        </div>
+      </section>
+
+      <section className="section download" id="download">
         <div className="container">
           <div className="download-panel dark-zone">
             <div className="download-aura" aria-hidden="true" />
-            <p className="label">{t("messenger.download.label")}</p>
-            <h2>{t("messenger.download.title")}</h2>
-            <p className="lead">{t("messenger.download.body")}</p>
-            <div className="btn-row">
-              <PlayButton label={t("messenger.playStore")} />
+            <div className="download-text">
+              <p className="label">{t("messenger.download.label")}</p>
+              <h2>{t("messenger.download.title")}</h2>
+              <p className="lead">{t("messenger.download.body")}</p>
+              <div className="btn-row">
+                <PlayButton label={t("messenger.playStore")} />
+              </div>
+              <p className="download-note">{t("messenger.download.platforms")}</p>
             </div>
+            <figure className="download-qr">
+              <img src={playQr} alt={t("messenger.download.qrAlt")} width={168} height={168} />
+              <figcaption>{t("messenger.download.qr")}</figcaption>
+            </figure>
           </div>
         </div>
       </section>
+
+      <StickyCta note={t("messenger.sticky.note")}>
+        <a className="btn primary" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
+          <Icon name="play" size={16} />
+          {t("messenger.sticky.cta")}
+        </a>
+      </StickyCta>
 
       <NextWorld to="helix" />
     </>

@@ -10,6 +10,11 @@ import Reveal from "../components/Reveal";
 import Scramble from "../components/Scramble";
 import SupplyChart from "../components/SupplyChart";
 import Testnet from "../components/Testnet";
+import SectionNav from "../components/SectionNav";
+import Faq from "../components/Faq";
+import type { QA } from "../components/Faq";
+import StickyCta from "../components/StickyCta";
+import { useOs } from "../lib/os";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { useNodeStatus } from "../lib/node";
@@ -52,6 +57,19 @@ export default function Helix() {
   const { status, validators, blockTime } = useNodeStatus();
   const locale = lang === "de" ? "de-DE" : "en-GB";
   const features = list<Feature>("helix.features");
+  const os = useOs();
+  // The wallet is a desktop app: name the visitor's system when it is one of the three it runs
+  // on, and say plainly that it is for a computer when the visitor is on a phone.
+  const walletLabel = t(`helix.download.${os === "mac" || os === "windows" || os === "linux" ? os : "generic"}`);
+  const nav = [
+    { id: "live", label: t("helix.nav.live") },
+    { id: "warum", label: t("helix.nav.why") },
+    { id: "architektur", label: t("helix.nav.chain") },
+    { id: "tokenomics", label: t("helix.nav.supply") },
+    { id: "loslegen", label: t("helix.nav.start") },
+    { id: "fragen", label: t("helix.nav.faq") },
+    { id: "offen", label: t("helix.nav.open") },
+  ];
 
   return (
     <>
@@ -71,9 +89,9 @@ export default function Helix() {
             </h1>
             <p className="lead">{t("helix.subtitle")}</p>
             <div className="btn-row">
-              <a className="btn primary" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
+              <a className="btn primary magnetic" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                 <Icon name="arrowDown" size={16} />
-                {t("helix.cta.wallet")}
+                {walletLabel}
               </a>
               <a className="btn" href={EXPLORER}>
                 {t("helix.cta.explorer")}
@@ -105,9 +123,10 @@ export default function Helix() {
       </section>
 
       <Marquee items={list<string>("helix.marquee")} />
+      <SectionNav items={nav} label={t("nav.sections")} />
 
       {/* ---- 01 · The chain, live ---- */}
-      <section className="section">
+      <section className="section" id="live">
         <div className="container">
           <Label index="01" text={t("helix.live.eyebrow")} />
           <div className="section-head">
@@ -137,7 +156,7 @@ export default function Helix() {
       </section>
 
       {/* ---- 03 · Why Helix ---- */}
-      <section className="section">
+      <section className="section band" id="warum">
         <div className="container">
           <Label index="03" text={t("helix.why.eyebrow")} />
           <div className="section-head">
@@ -174,7 +193,7 @@ export default function Helix() {
       </section>
 
       {/* ---- 04 · Architecture ---- */}
-      <section className="section">
+      <section className="section" id="architektur">
         <div className="container">
           <Label index="04" text={t("helix.chain.eyebrow")} />
           <div className="section-head">
@@ -183,7 +202,7 @@ export default function Helix() {
           </div>
           <ol className="chain">
             {features.map((f, i) => (
-              <Reveal as="li" key={f.title} delay={(i % 4) * 80} className="block">
+              <Reveal as="li" key={f.title} delay={(i % 4) * 80} className="block spot">
                 <div className="block-head mono" aria-hidden="true">
                   <span>#{String(i + 1).padStart(6, "0")}</span>
                   <span>0x{fakeHash(f.title)}</span>
@@ -200,7 +219,7 @@ export default function Helix() {
       </section>
 
       {/* ---- 05 · Tokenomics ---- */}
-      <section className="section">
+      <section className="section band" id="tokenomics">
         <div className="container">
           <Label index="05" text={t("helix.supply.eyebrow")} />
           <div className="section-head">
@@ -235,7 +254,7 @@ export default function Helix() {
       </section>
 
       {/* ---- 06 · Get started ---- */}
-      <section className="section">
+      <section className="section" id="loslegen">
         <div className="container">
           <Label index="06" text={t("helix.start.eyebrow")} />
           <div className="section-head">
@@ -243,7 +262,7 @@ export default function Helix() {
             <p className="lead">{t("helix.start.lead")}</p>
           </div>
           <div className="paths">
-            <Reveal className="path">
+            <Reveal className="path spot">
               <span className="path-num mono">A</span>
               <h3>{t("helix.start.wallet.title")}</h3>
               <p className="muted">{t("helix.start.wallet.body")}</p>
@@ -255,12 +274,13 @@ export default function Helix() {
                   </li>
                 ))}
               </ul>
-              <a className="btn primary" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
+              <a className="btn primary magnetic" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                 <Icon name="arrowDown" size={16} />
-                {t("helix.start.wallet.cta")}
+                {walletLabel}
               </a>
+              {os === "mobile" && <p className="path-note">{t("helix.download.mobileNote")}</p>}
             </Reveal>
-            <Reveal className="path" delay={90}>
+            <Reveal className="path spot" delay={90}>
               <span className="path-num mono">B</span>
               <h3>{t("helix.start.cli.title")}</h3>
               <p className="muted">{t("helix.start.cli.body")}</p>
@@ -270,7 +290,7 @@ export default function Helix() {
                 <Icon name="arrowUpRight" size={16} />
               </a>
             </Reveal>
-            <Reveal className="path" delay={180}>
+            <Reveal className="path spot" delay={180}>
               <span className="path-num mono">C</span>
               <h3>{t("helix.start.validate.title")}</h3>
               <p className="muted">{t("helix.start.validate.body")}</p>
@@ -323,34 +343,45 @@ export default function Helix() {
         </div>
       </section>
 
-      {/* ---- 07 · Open ---- */}
-      <section className="section">
+      {/* ---- Questions ---- */}
+      <section className="section band" id="fragen">
+        <div className="container faq-grid">
+          <div>
+            <Label index="07" text={t("helix.faq.label")} />
+            <h2>{t("helix.faq.title")}</h2>
+          </div>
+          <Faq items={list<QA>("helix.faq.items")} />
+        </div>
+      </section>
+
+      {/* ---- 08 · Open ---- */}
+      <section className="section" id="offen">
         <div className="container">
-          <Label index="07" text={t("helix.cta.eyebrow")} />
+          <Label index="08" text={t("helix.cta.eyebrow")} />
           <div className="section-head">
             <h2>{t("helix.cta.title")}</h2>
             <p className="lead">{t("helix.cta.body")}</p>
           </div>
           <div className="link-grid">
-            <a className="link-card" href={HELIX_REPO} rel="noreferrer noopener" target="_blank">
+            <a className="link-card spot" href={HELIX_REPO} rel="noreferrer noopener" target="_blank">
               <Icon name="code" size={22} />
               <span className="link-card-title">silvra-net/helix</span>
               <span className="muted">{t("helix.cta.githubBody")}</span>
               <Icon name="arrowUpRight" size={18} className="link-card-go" />
             </a>
-            <a className="link-card" href={EXPLORER}>
+            <a className="link-card spot" href={EXPLORER}>
               <Icon name="cube" size={22} />
               <span className="link-card-title">Helix {t("nav.explorer")}</span>
               <span className="muted">{t("helix.cta.explorerBody")}</span>
               <Icon name="arrowUpRight" size={18} className="link-card-go" />
             </a>
-            <a className="link-card" href={`https://${NODE_HOST}`} rel="noreferrer noopener" target="_blank">
+            <a className="link-card spot" href={`https://${NODE_HOST}`} rel="noreferrer noopener" target="_blank">
               <Icon name="server" size={22} />
               <span className="link-card-title">{NODE_HOST}</span>
               <span className="muted">{t("helix.cta.nodeBody")}</span>
               <Icon name="arrowUpRight" size={18} className="link-card-go" />
             </a>
-            <a className="link-card" href={DISCORD} rel="noreferrer noopener" target="_blank">
+            <a className="link-card spot" href={DISCORD} rel="noreferrer noopener" target="_blank">
               <Icon name="people" size={22} />
               <span className="link-card-title">Discord</span>
               <span className="muted">{t("helix.cta.discordBody")}</span>
@@ -361,6 +392,13 @@ export default function Helix() {
       </section>
 
       <NextWorld to="messenger" />
+
+      <StickyCta live note={status ? t("helix.sticky.note", { height: status.height.toLocaleString(locale) }) : undefined}>
+        <a className="btn primary" href={EXPLORER}>
+          {t("helix.cta.explorer")}
+          <Icon name="arrowUpRight" size={16} />
+        </a>
+      </StickyCta>
     </>
   );
 }

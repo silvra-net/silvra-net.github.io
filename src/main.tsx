@@ -10,12 +10,26 @@ import "@fontsource-variable/inter";
 import "@fontsource-variable/jetbrains-mono";
 import "./styles.css";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")!;
+// A prerendered page carries its markup, the route it was rendered for and the language it was
+// rendered in; it is hydrated, so nothing on screen is thrown away and redrawn. Markup for another
+// route — a host that answers an unknown path with the home page — is replaced instead, as is an
+// empty root (the dev server). The not-found page is rendered for any path, hence "*".
+const trim = (path: string) => path.replace(/\/+$/, "") || "/";
+const route = root.dataset.route;
+const matches = route === "*" || (route !== undefined && trim(route) === trim(window.location.pathname));
+const prerendered =
+  root.hasChildNodes() && matches ? (document.documentElement.dataset.prerendered as "de" | "en" | undefined) : undefined;
+
+const app = (
   <React.StrictMode>
-    <I18nProvider>
+    <I18nProvider initial={prerendered}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </I18nProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
+
+if (prerendered) ReactDOM.hydrateRoot(root, app);
+else ReactDOM.createRoot(root).render(app);

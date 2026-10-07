@@ -16,7 +16,7 @@ function noise(text: string): string {
  */
 export default function Scramble({ text, className, duration = 1000 }: { text: string; className?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [fx, setFx] = useState<string | null>(() => (prefersReducedMotion() ? null : noise(text)));
+  const [fx, setFx] = useState<string | null>(null);
 
   useEffect(() => {
     if (prefersReducedMotion()) {

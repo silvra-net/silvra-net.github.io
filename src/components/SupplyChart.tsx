@@ -59,7 +59,8 @@ export default function SupplyChart() {
   }, []);
 
   const narrow = w < 520;
-  const pad = narrow ? { ...PAD, right: 24, left: 44 } : PAD;
+  // On a phone the axis carries bare numbers and names its unit once, above itself.
+  const pad = narrow ? { ...PAD, right: 24, left: 34 } : PAD;
   const iw = w - pad.left - pad.right;
   const ih = H - pad.top - pad.bottom;
   const x = (year: number) => pad.left + (year / YEARS) * iw;
@@ -104,10 +105,15 @@ export default function SupplyChart() {
             <g key={v}>
               <line className="chart-grid" x1={pad.left} x2={pad.left + iw} y1={y(v)} y2={y(v)} />
               <text className="chart-tick" x={pad.left - 10} y={y(v) + 4} textAnchor="end">
-                {v === 0 ? "0" : `${v / 1e6} ${t("helix.supply.millionShort")}`}
+                {v === 0 || narrow ? `${v / 1e6}` : `${v / 1e6} ${t("helix.supply.millionShort")}`}
               </text>
             </g>
           ))}
+          {narrow && (
+            <text className="chart-tick" x={0} y={12}>
+              {t("helix.supply.millionShort")}
+            </text>
+          )}
           {[0, 5, 10, 15, 20, 25, 30].map((yr) => (
             <text key={yr} className="chart-tick" x={x(yr)} y={H - 10} textAnchor="middle">
               {yr === 0 ? t("helix.supply.genesis") : t("helix.supply.yearShort", { n: yr })}

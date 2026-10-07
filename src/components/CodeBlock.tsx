@@ -32,12 +32,20 @@ export default function CodeBlock({ title, lines }: { title: string; lines: stri
         </button>
       </div>
       <pre className="code-body">
-        {lines.map((l, i) => (
-          <span key={i} className={l.trim().startsWith("#") ? "code-comment" : "code-line"}>
-            {l}
-            {"\n"}
-          </span>
-        ))}
+        {lines.map((l, i) =>
+          l.trim().startsWith("#") ? (
+            <span key={i} className="code-comment">
+              {l}
+              {"\n"}
+            </span>
+          ) : (
+            <span key={i} className="code-line">
+              {/* Each argument stays whole, so a long command wraps between arguments only. */}
+              {l.split(/( +)/).map((tok, k) => (tok.trim() ? <span key={k} className="code-tok">{tok}</span> : tok))}
+              {"\n"}
+            </span>
+          ),
+        )}
       </pre>
     </div>
   );

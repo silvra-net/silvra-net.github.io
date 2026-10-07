@@ -4,6 +4,8 @@ import { useI18n } from "../i18n";
 import type { Lang } from "../i18n";
 import { getTheme, resolvedTheme, setTheme } from "../theme";
 import Icon from "./Icon";
+import BackToTop from "./BackToTop";
+import { useCursorEffects } from "../lib/cursor";
 import { DISCORD, EXPLORER, GITHUB } from "../lib/links";
 import icon from "../assets/silvra-icon.png";
 import type { ReactNode } from "react";
@@ -25,10 +27,12 @@ export function worldOf(pathname: string): "messenger" | "helix" | "silvra" {
 
 function ThemeToggle() {
   const { t } = useI18n();
-  const [dark, setDark] = useState(() => resolvedTheme() === "dark");
+  // Dark on the first render, as the prerendered page has it; the real theme right after.
+  const [dark, setDark] = useState(true);
 
   // Keep in step with the OS while the visitor has made no explicit choice.
   useEffect(() => {
+    setDark(resolvedTheme() === "dark");
     const mq = window.matchMedia("(prefers-color-scheme: light)");
     const onChange = () => {
       if (getTheme() === null) setDark(resolvedTheme() === "dark");
@@ -87,6 +91,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const toggle = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const progress = useRef<HTMLDivElement>(null);
+  useCursorEffects();
 
   // A menu left open across a navigation covers the page it just moved to.
   useEffect(() => setOpen(false), [pathname]);
@@ -222,6 +227,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main id="main" tabIndex={-1}>
         {children}
       </main>
+
+      <BackToTop />
 
       <footer className="site-footer">
         <div className="container">

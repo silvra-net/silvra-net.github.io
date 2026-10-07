@@ -23,12 +23,14 @@ export default function Reveal({
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const [shown, setShown] = useState(
-    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  const [shown, setShown] = useState(false);
 
   useEffect(() => {
     if (shown) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(true);
+      return;
+    }
     const el = ref.current;
     // No IntersectionObserver (or no element) must never mean invisible content.
     if (!el || typeof IntersectionObserver === "undefined") {
