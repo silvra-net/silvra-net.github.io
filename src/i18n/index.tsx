@@ -10,7 +10,7 @@ const KEY = "silvra-lang";
 
 /** Follow the browser unless the visitor has chosen; German is the fallback, not English:
  *  the site is written in German first and translated second. */
-function initialLang(): Lang {
+export function initialLang(): Lang {
   try {
     const stored = localStorage.getItem(KEY);
     if (stored === "de" || stored === "en") return stored;
@@ -47,8 +47,20 @@ interface I18n {
 
 const Ctx = createContext<I18n | null>(null);
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(initialLang);
+/**
+ * `initial` is the language a prerendered page was rendered in. The first render must match it
+ * exactly for hydration, so the visitor's own language is applied right after — without storing
+ * it as a choice they made.
+ */
+export function I18nProvider({ children, initial }: { children: ReactNode; initial?: Lang }) {
+  const [lang, setLangState] = useState<Lang>(() => initial ?? initialLang());
+
+  useEffect(() => {
+    if (!initial) return;
+    const preferred = initialLang();
+    if (preferred !== initial) setLangState(preferred);
+    // Once, after hydration.
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang;

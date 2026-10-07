@@ -9,10 +9,11 @@ export function prefersReducedMotion(): boolean {
 
 /** Follows the OS setting live: someone who switches it on mid-visit should not have to reload. */
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(prefersReducedMotion);
+  const [reduced, setReduced] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(QUERY);
     const on = () => setReduced(mq.matches);
+    on();
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
   }, []);
@@ -21,7 +22,7 @@ export function useReducedMotion(): boolean {
 
 /** Whether a media query matches, kept current as the window changes. */
 export function useMediaQuery(query: string): boolean {
-  const [match, setMatch] = useState(() => typeof window !== "undefined" && window.matchMedia(query).matches);
+  const [match, setMatch] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(query);
     const on = () => setMatch(mq.matches);

@@ -7,17 +7,15 @@ import Scramble from "../components/Scramble";
 import Timeline from "../components/Timeline";
 import Testnet from "../components/Testnet";
 import BlockStream from "../components/BlockStream";
+import Bento from "../components/Bento";
+import Faq from "../components/Faq";
+import type { QA } from "../components/Faq";
 import Photo from "../components/Photo";
 import Icon from "../components/Icon";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { DISCORD } from "../lib/links";
 
-interface Fact {
-  value: string;
-  label: string;
-  body: string;
-}
 interface Point {
   title: string;
   body: string;
@@ -52,27 +50,20 @@ export default function Home() {
           <Label index="00" text={t("home.about.label")} />
           <ScrollWords className="statement" text={t("home.about.statement")} />
           <div className="about-grid">
-            <Reveal>
-              <p className="lead">{t("home.about.body")}</p>
-              <div className="btn-row">
-                <Link className="btn primary" to="/mission">
-                  {t("home.about.cta")}
-                  <Icon name="arrowRight" size={16} />
-                </Link>
-              </div>
-            </Reveal>
-            <dl className="facts">
-              {list<Fact>("home.about.facts").map((f, i) => (
-                <Reveal key={f.label} delay={i * 80} className="fact">
-                  <dt>
-                    <span className="fact-value">{f.value}</span>
-                    <span className="fact-label">{f.label}</span>
-                  </dt>
-                  <dd>{f.body}</dd>
-                </Reveal>
-              ))}
-            </dl>
+            <p className="lead">{t("home.about.body")}</p>
+            <div className="btn-row">
+              <Link className="btn primary magnetic" to="/mission">
+                {t("home.about.cta")}
+                <Icon name="arrowRight" size={16} />
+              </Link>
+              <Link className="btn" to="/contact">
+                {t("nav.contact")}
+              </Link>
+            </div>
           </div>
+          <Reveal>
+            <Bento />
+          </Reveal>
         </div>
       </section>
 
@@ -89,7 +80,7 @@ export default function Home() {
           <Reveal>
             <div className="stack">
               <div className="stack-products dark-zone">
-                <Link to="/messenger" className="stack-product stack-messenger">
+                <Link to="/messenger" className="stack-product stack-messenger spot">
                   <span className="stack-kicker">{t("home.stack.messenger.kicker")}</span>
                   <span className="stack-name">Silvra Messenger</span>
                   <span className="stack-body">{t("home.stack.messenger.body")}</span>
@@ -98,7 +89,7 @@ export default function Home() {
                   </span>
                 </Link>
                 <span className="stack-blade" aria-hidden="true" />
-                <Link to="/helix" className="stack-product stack-helix">
+                <Link to="/helix" className="stack-product stack-helix spot">
                   <span className="stack-kicker">{t("home.stack.helix.kicker")}</span>
                   <span className="stack-name">Helix Blockchain</span>
                   <span className="stack-body">{t("home.stack.helix.body")}</span>
@@ -131,7 +122,7 @@ export default function Home() {
       </section>
 
       {/* ---- 02 · Why now ---- */}
-      <section className="section why">
+      <section className="section why band">
         <div className="container">
           <Label index="02" text={t("home.why.label")} />
           <div className="section-head">
@@ -209,7 +200,7 @@ export default function Home() {
       </section>
 
       {/* ---- 05 · Live ---- */}
-      <section className="section live">
+      <section className="section live band">
         <div className="container live-grid">
           <div>
             <Label index="05" text={t("home.live.label")} />
@@ -229,15 +220,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- 06 · Join ---- */}
+      {/* ---- 06 · Questions ---- */}
+      <section className="section band" id="faq">
+        <div className="container faq-grid">
+          <div>
+            <Label index="06" text={t("home.faq.label")} />
+            <h2>{t("home.faq.title")}</h2>
+            <p className="lead">{t("home.faq.lead")}</p>
+            <Link className="text-link" to="/contact">
+              {t("home.faq.more")}
+              <Icon name="arrowRight" size={16} />
+            </Link>
+          </div>
+          <Faq items={list<QA>("home.faq.items")} />
+        </div>
+      </section>
+
+      {/* ---- 07 · Join ---- */}
       <section className="section join">
         <div className="container">
-          <Label index="06" text={t("home.join.label")} />
+          <Label index="07" text={t("home.join.label")} />
           <h2 className="join-title">{t("home.join.title")}</h2>
           <div className="join-grid">
             <p className="lead">{t("home.join.body")}</p>
             <div className="btn-row">
-              <a className="btn primary" href={`mailto:${t("home.join.email")}`}>
+              <a className="btn primary magnetic" href={`mailto:${t("home.join.email")}`}>
                 <Icon name="mail" size={16} />
                 {t("home.join.email")}
               </a>

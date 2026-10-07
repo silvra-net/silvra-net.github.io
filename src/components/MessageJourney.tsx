@@ -23,9 +23,10 @@ export default function MessageJourney() {
   const { t, list } = useI18n();
   const stops = list<Stop>("messenger.journey.stops");
   const message = t("messenger.journey.message");
-  const [cipher, setCipher] = useState(() => noise(44));
+  const [cipher, setCipher] = useState("9f3a c1e0 77b2 d4e8 91af 5c2d 08be 6f13 2a");
 
   useEffect(() => {
+    setCipher(noise(44));
     if (prefersReducedMotion()) return;
     // One pass of the packet is 5.2 s (see .journey-packet); the server's copy changes with it.
     const id = setInterval(() => setCipher(noise(44)), 5200);

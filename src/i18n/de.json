@@ -43,7 +43,9 @@
     "close": "Navigation schließen",
     "theme": "Design wechseln",
     "switchLang": "Sprache wechseln",
-    "skip": "Zum Inhalt springen"
+    "skip": "Zum Inhalt springen",
+    "top": "Nach oben",
+    "sections": "Abschnitte dieser Seite"
   },
   "footer": {
     "copyright": "© {{year}} Silvra",
@@ -244,6 +246,97 @@
       "title": "Bauen Sie mit an Europas digitaler Zukunft.",
       "body": "Ob Sie mitentwickeln, einen Validator betreiben oder einfach wissen möchten, woran wir gerade sitzen — schreiben Sie uns.",
       "email": "info@silvra.net"
+    },
+    "bento": {
+      "messenger": {
+        "kicker": "Kommunikation",
+        "title": "Silvra Messenger",
+        "body": "Ende-zu-Ende verschlüsselt mit MLS und X-Wing. Ohne Telefonnummer, ohne Werbung.",
+        "incoming": "Bist du heute Abend da?"
+      },
+      "helix": {
+        "kicker": "Helix · Mainnet live",
+        "title": "Blockhöhe, gerade eben",
+        "body": "Validatoren aktiv: {{validators}} · ≈ 2 s pro Block · ML-DSA-65 auf jeder Signatur"
+      },
+      "standards": {
+        "kicker": "Standards statt Eigenbau",
+        "items": [
+          {
+            "code": "FIPS 203",
+            "name": "ML-KEM · Schlüsselaustausch"
+          },
+          {
+            "code": "FIPS 204",
+            "name": "ML-DSA · Signaturen"
+          },
+          {
+            "code": "FIPS 205",
+            "name": "SLH-DSA · Reserve-Signaturen"
+          },
+          {
+            "code": "RFC 9420",
+            "name": "MLS · Gruppenverschlüsselung"
+          }
+        ]
+      },
+      "eu": {
+        "kicker": "Europa",
+        "title": "Entwickelt und betrieben in der EU."
+      },
+      "zero": {
+        "items": [
+          "Werbung",
+          "Tracking",
+          "Datenhandel",
+          "Cookies auf dieser Website"
+        ]
+      },
+      "open": {
+        "kicker": "Open Source",
+        "title": "Helix ist MIT-lizenziert.",
+        "body": "Quellcode, Releases und Dokumentation — offen auf GitHub."
+      }
+    },
+    "faq": {
+      "label": "Fragen",
+      "title": "Häufige Fragen",
+      "lead": "Kurz beantwortet. Und wenn etwas fehlt: schreiben Sie uns.",
+      "more": "Eigene Frage stellen",
+      "items": [
+        {
+          "q": "Was bedeutet „post-quanten-sicher“?",
+          "a": "Verfahren, die nach heutigem Wissen auch ein großer Quantenrechner nicht bricht. Silvra setzt auf die 2024 vom US-Normungsinstitut NIST standardisierten Verfahren: ML-KEM (FIPS 203) für den Schlüsselaustausch im Messenger und ML-DSA (FIPS 204) für die Signaturen auf Helix."
+        },
+        {
+          "q": "Kann Silvra meine Nachrichten lesen?",
+          "a": "Nein. Chats sind Ende-zu-Ende verschlüsselt, die Schlüssel liegen ausschließlich auf Ihren Geräten. Was nicht so geschützt ist, sagen wir offen: Beiträge im Aktuelles-Feed liegen im Klartext auf dem Server, und Anrufe sind klassisch statt post-quanten-sicher verschlüsselt."
+        },
+        {
+          "q": "Was kostet der Silvra Messenger?",
+          "a": "Nichts. Er ist kostenlos auf Google Play — ohne Werbung und ohne ein Geschäftsmodell, das auf Ihren Daten beruht."
+        },
+        {
+          "q": "Gibt es Silvra auch fürs iPhone?",
+          "a": "Derzeit gibt es den Messenger für Android über Google Play."
+        },
+        {
+          "q": "Brauche ich eine Telefonnummer?",
+          "a": "Nein. Sie melden sich mit Ihrer E-Mail-Adresse und einem sechsstelligen Code an — ohne Passwort."
+        },
+        {
+          "q": "Wo wird Silvra entwickelt und betrieben?",
+          "a": "In der EU. Das ist eine Entscheidung über Zuständigkeiten, nicht bloß über Serverstandorte."
+        },
+        {
+          "q": "Ist HLX eine Geldanlage?",
+          "a": "Nein. Helix läuft seit Version 1.0.0 als Mainnet und wird nicht mehr zurückgesetzt — das heißt aber nicht, dass HLX etwas wert ist. Wir versprechen es nicht."
+        },
+        {
+          "q": "Ist Silvra Open Source?",
+          "a": "Helix ja: Der Code steht unter MIT-Lizenz auf GitHub. Der Messenger ist derzeit nicht öffentlich."
+        }
+      ]
     }
   },
   "messenger": {
@@ -425,7 +518,10 @@
     "download": {
       "label": "Download",
       "title": "Jetzt auf Google Play",
-      "body": "Kostenlos auf Google Play: Ende-zu-Ende-verschlüsselte Chats, verschlüsselte Anrufe, ein Feed nur für Kontakte, Gruppen und ein optionales Punktekonto — ohne Werbenetzwerke und ohne Datenweitergabe."
+      "body": "Kostenlos auf Google Play: Ende-zu-Ende-verschlüsselte Chats, verschlüsselte Anrufe, ein Feed nur für Kontakte, Gruppen und ein optionales Punktekonto — ohne Werbenetzwerke und ohne Datenweitergabe.",
+      "qr": "Mit dem Handy scannen",
+      "qrAlt": "QR-Code zum Silvra Messenger auf Google Play",
+      "platforms": "Derzeit für Android · Deutsch und Englisch"
     },
     "playStore": "Auf Google Play herunterladen",
     "crypto": {
@@ -530,6 +626,70 @@
           "body": "Verfügbar, im Urlaub, nicht stören — auf Wunsch mit Ablaufzeit."
         }
       ]
+    },
+    "nav": {
+      "journey": "Weg einer Nachricht",
+      "features": "Funktionen",
+      "security": "Verschlüsselung",
+      "app": "App",
+      "transparency": "Transparenz",
+      "faq": "Fragen",
+      "download": "Download"
+    },
+    "tour": {
+      "eyebrow": "Die App",
+      "title": "In drei Schritten drin.",
+      "lead": "Kein Passwort, keine Telefonnummer, keine Einstellungen, die man erst verstehen muss.",
+      "steps": [
+        {
+          "icon": "mail",
+          "kicker": "Anmelden",
+          "title": "E-Mail eingeben, Code bestätigen, fertig.",
+          "body": "Sie bekommen einen sechsstelligen Code per E-Mail — kein Passwort zum Merken, keine Telefonnummer in fremden Adressbüchern."
+        },
+        {
+          "icon": "people",
+          "kicker": "Profil",
+          "title": "Ihre Identität in Chats, Gruppen und Feed.",
+          "body": "Profilbild, Name und Status: so erkennen Ihre Kontakte Sie — in Einzelchats, in Gruppen und im Aktuelles-Feed."
+        },
+        {
+          "icon": "shield",
+          "kicker": "Einstellungen",
+          "title": "Alles Wichtige an einem Ort.",
+          "body": "Benachrichtigungen, angemeldete Geräte, App-Sperre, Darstellung und Sprache — übersichtlich, ohne Untermenüs-Labyrinth."
+        }
+      ]
+    },
+    "faq": {
+      "label": "Fragen",
+      "title": "Fragen zum Messenger",
+      "items": [
+        {
+          "q": "Sehe ich alte Nachrichten auf einem neuen Gerät?",
+          "a": "Nein. Ein neu angemeldetes Gerät kann vergangene verschlüsselte Nachrichten nicht lesen — eine Eigenschaft des Protokolls, wie bei Signal."
+        },
+        {
+          "q": "Sind Bilder und Sprachnachrichten auch verschlüsselt?",
+          "a": "Ja. Jede Datei bekommt einen eigenen AES-256-GCM-Schlüssel; hochgeladen wird nur das Chiffrat, der Schlüssel reist in der verschlüsselten Nachricht mit."
+        },
+        {
+          "q": "Sind Anrufe post-quanten-sicher?",
+          "a": "Nein. Sprach- und Videoanrufe laufen über WebRTC mit DTLS-SRTP — verschlüsselt, aber mit klassischen Verfahren."
+        },
+        {
+          "q": "Was ist das Punktekonto?",
+          "a": "Ein optionales Konto in Selbstverwahrung, gesichert mit einem 24-Wörter-Merksatz, den nur Sie kennen. Ohne Einrichtung ist es nicht vorhanden; Senden geht nur nach Biometrie oder Geräte-PIN."
+        },
+        {
+          "q": "Was kostet die App?",
+          "a": "Nichts. Silvra ist kostenlos und werbefrei."
+        }
+      ]
+    },
+    "sticky": {
+      "note": "Kostenlos · Android",
+      "cta": "Auf Google Play laden"
     }
   },
   "helix": {
@@ -773,6 +933,55 @@
       "explorerBody": "Blöcke, Transaktionen und Validatoren live durchsuchen.",
       "nodeBody": "Die öffentliche Schnittstelle — mit einer Statusseite über sich selbst.",
       "discordBody": "Fragen, Validator-Betrieb, Austausch mit dem Team."
+    },
+    "nav": {
+      "live": "Live",
+      "why": "Warum",
+      "chain": "Architektur",
+      "supply": "Tokenomics",
+      "start": "Loslegen",
+      "faq": "Fragen",
+      "open": "Offen"
+    },
+    "download": {
+      "mac": "Für macOS herunterladen",
+      "windows": "Für Windows herunterladen",
+      "linux": "Für Linux herunterladen",
+      "generic": "Wallet herunterladen",
+      "mobileNote": "Die Wallet ist eine Desktop-App für Linux, macOS und Windows — öffnen Sie diese Seite am Computer."
+    },
+    "faq": {
+      "label": "Fragen",
+      "title": "Fragen zu Helix",
+      "items": [
+        {
+          "q": "Brauche ich einen eigenen Knoten?",
+          "a": "Nein. Wallet und Kommandozeile sprechen ohne Einrichtung mit dem öffentlichen Netz. Ein eigener Knoten lohnt sich, wenn Sie validieren oder die Kette unabhängig prüfen möchten."
+        },
+        {
+          "q": "Wie werde ich Validator?",
+          "a": "Mit mindestens 10.000 HLX Stake und einem laufenden Knoten — per Kommandozeile oder per Klick in der Desktop-Wallet, auch hinter NAT oder Proxy. Die Anleitung steht in der Dokumentation unter „Running a Node“."
+        },
+        {
+          "q": "Kann ich mitmachen, ohne einen Knoten zu betreiben?",
+          "a": "Ja, über Delegation: Sie stellen Ihren Stake einem Validator zur Verfügung und erhalten einen Anteil an dessen Erträgen, abzüglich Provision (standardmäßig 10 %, höchstens 50 %)."
+        },
+        {
+          "q": "Was passiert, wenn Validatoren ausfallen?",
+          "a": "Bei n Validatoren übersteht das Netz ⌊(n−1)/3⌋ Ausfälle. Fehlen mehr, hält die Kette an und wartet — sie spaltet sich nicht. Wer nicht mehr signiert, wird vorübergehend ausgeschlossen, aber dafür nicht bestraft."
+        },
+        {
+          "q": "Was kostet eine Transaktion?",
+          "a": "Eine Basisgebühr pro Byte, die vollständig verbrannt wird, plus ein Trinkgeld für den Validator. Die Basisgebühr folgt der Auslastung (höchstens ±12,5 % pro Block); die Wallet zahlt von sich aus nie mehr als 1 HLX."
+        },
+        {
+          "q": "Ist HLX eine Geldanlage?",
+          "a": "Nein. Das Netz ist jung, und nichts hier verspricht einen Wert."
+        }
+      ]
+    },
+    "sticky": {
+      "note": "Mainnet live · Block {{height}}"
     }
   },
   "mission": {
