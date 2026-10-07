@@ -8,6 +8,7 @@ import Helix from "./pages/Helix";
 import Mission from "./pages/Mission";
 import Contact from "./pages/Contact";
 import Impressum from "./pages/Impressum";
+import Accessibility from "./pages/Accessibility";
 import NotFound from "./pages/NotFound";
 
 /** A client router leaves the scroll position where the last page left it; a new page should
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="/mission" element={<Mission />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/impressum" element={<Impressum />} />
+          <Route path="/barrierefreiheit" element={<Accessibility />} />
           {/* /privacy is deliberately absent: it is served as a static, JS-free page from
               public/privacy/ and is linked with a plain <a>, so it stays readable even if this
               bundle never loads. public/datenschutz/ redirects there for links already in the

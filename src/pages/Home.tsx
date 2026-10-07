@@ -45,12 +45,22 @@ export default function Home() {
     <>
       <Gate />
 
-      {/* ---- 00 · Who we are ---- */}
-      <section className="section about" id="about">
-        <div className="container">
-          <Label index="00" text={t("home.about.label")} />
-          <ScrollWords className="statement" text={t("home.about.statement")} />
-          <div className="about-grid">
+      {/* ---- 00 · Who we are: the claim, on camouflage, the way the forces put theirs ---- */}
+      <section className="claim-band dark-zone" id="about" aria-labelledby="claim-title">
+        <div className="container claim-grid">
+          <div>
+            <Label index="00" text={t("home.about.label")} />
+            <h2 className="claim" id="claim-title">
+              {list<string>("home.about.claim").map((w) => (
+                <span key={w}>
+                  {w.replace(/\.$/, "")}
+                  <span className="claim-dot">.</span>{" "}
+                </span>
+              ))}
+            </h2>
+          </div>
+          <div className="claim-body">
+            <ScrollWords className="statement" text={t("home.about.statement")} />
             <p className="lead">{t("home.about.body")}</p>
             <div className="btn-row">
               <Link className="btn primary magnetic" to="/mission">
@@ -62,6 +72,11 @@ export default function Home() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section about-overview" aria-label={t("home.bento.aria")}>
+        <div className="container">
           <Reveal>
             <Bento />
           </Reveal>

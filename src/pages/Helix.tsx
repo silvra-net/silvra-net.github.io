@@ -14,6 +14,7 @@ import SectionNav from "../components/SectionNav";
 import Faq from "../components/Faq";
 import type { QA } from "../components/Faq";
 import StickyCta from "../components/StickyCta";
+import HudFrame from "../components/HudFrame";
 import { useOs } from "../lib/os";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
@@ -78,6 +79,7 @@ export default function Helix() {
           <div className="p-hero-aura" />
           <HelixCanvas cx={0.74} cy={0.5} tilt={0.22} radius={130} length={1.35} pulse={status?.height} />
         </div>
+        <HudFrame />
         <div className="container p-hero-grid single">
           <div className="p-hero-text">
             <p className="label">

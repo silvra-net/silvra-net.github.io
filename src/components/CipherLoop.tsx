@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { prefersReducedMotion } from "../lib/motion";
+import { useReducedMotion } from "../lib/motion";
 import Icon from "./Icon";
 
 const HEX = "0123456789abcdef";
@@ -16,10 +16,11 @@ export default function CipherLoop({ messages, className }: { messages: string[]
   const [i, setI] = useState(0);
   const [shown, setShown] = useState(() => messages[0] ?? "");
   const [plain, setPlain] = useState(true);
+  const still = useReducedMotion();
 
   useEffect(() => {
     if (messages.length === 0) return;
-    if (prefersReducedMotion()) {
+    if (still) {
       setShown(messages[0]);
       setPlain(true);
       return;
@@ -74,7 +75,7 @@ export default function CipherLoop({ messages, className }: { messages: string[]
       clearTimeout(timer);
       cancelAnimationFrame(raf);
     };
-  }, [messages]);
+  }, [messages, still]);
 
   return (
     <div className={className ? `cipher-loop ${className}` : "cipher-loop"} data-plain={plain} data-i={i} aria-hidden="true">

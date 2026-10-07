@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Scramble from "./Scramble";
+import HudFrame from "./HudFrame";
 
 /**
  * The opening of a page that is not a product: dark in both themes, so the header can sit over
@@ -27,6 +28,7 @@ export default function PageHero({
         </div>
       )}
       <div className="page-hero-grid" aria-hidden="true" />
+      <HudFrame />
       <div className="container page-hero-body">
         {label && (
           <p className="label">

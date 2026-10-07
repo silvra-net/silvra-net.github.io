@@ -6,7 +6,8 @@ import { I18nProvider } from "./i18n";
 // Self-hosted, bundled with the site: no request to a font service, so nothing about a visit
 // reaches a third party just to draw the letters.
 import "@fontsource-variable/unbounded";
-import "@fontsource-variable/inter-tight";
+import "@fontsource/barlow-condensed/600.css";
+import "@fontsource/barlow-condensed/700.css";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/jetbrains-mono";
 import "./styles.css";
