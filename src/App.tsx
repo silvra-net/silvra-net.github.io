@@ -13,11 +13,18 @@ import NotFound from "./pages/NotFound";
 /** A client router leaves the scroll position where the last page left it; a new page should
  *  start at the top, the way a real navigation does. */
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
+  const last = useRef<string | null>(null);
   useEffect(() => {
+    // A jump within the same page scrolls itself; only a new page is placed here.
+    if (last.current === pathname) return;
+    last.current = pathname;
+    // A link to a section of another page lands on that section, anything else at the top.
     // Instant, not smooth: the page has changed, there is nothing to travel past.
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
-  }, [pathname]);
+    const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
+    if (target) target.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" });
+    else window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, [pathname, hash]);
   return null;
 }
 
