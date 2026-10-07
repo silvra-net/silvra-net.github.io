@@ -9,8 +9,8 @@
       "description": "Kostenloser Messenger mit Ende-zu-Ende-Verschlüsselung. Ohne Werbung, ohne Tracking, ohne Datenhandel — entwickelt und betrieben in der EU."
     },
     "helix": {
-      "title": "Helix — Post-Quanten-Blockchain von Silvra",
-      "description": "Helix ist Silvras Blockchain auf Basis post-quantensicherer Verfahren — offen, überprüfbar und ohne Kompromisse bei der Sicherheit."
+      "title": "Helix — Post-Quanten-Blockchain von Silvra · Mainnet",
+      "description": "Helix ist eine Layer-1-Blockchain mit ML-DSA-65 auf jeder Signatur, BFT-Finalität in rund zwei Sekunden und Open Source (MIT). Mainnet seit Version 1.0.0."
     },
     "mission": {
       "title": "Mission — Warum wir Silvra bauen",
@@ -53,7 +53,7 @@
     "legal": "Rechtliches",
     "impressum": "Impressum",
     "privacy": "Datenschutz",
-    "stack": "MLS · ML-KEM · ML-DSA-65"
+    "stack": "MLS · X-Wing · ML-DSA-65"
   },
   "home": {
     "gate": {
@@ -90,12 +90,12 @@
         "text": "Eine Layer-1-Blockchain, deren Signaturen durchgängig post-quanten-sicher sind — vom ersten Block an.",
         "facts": [
           "ML-DSA-65",
-          "BFT · Proof of Stake",
-          "WASM-Verträge"
+          "BFT · ≈ 2 s pro Block",
+          "Open Source · MIT"
         ],
         "cta": "Helix entdecken",
-        "live": "Block {{height}} · live",
-        "offline": "Öffentliches Testnetz"
+        "live": "Mainnet · Block {{height}}",
+        "offline": "Mainnet · node.silvra.net"
       }
     },
     "about": {
@@ -132,7 +132,7 @@
       "Entwickelt in der EU",
       "Ohne Werbung",
       "Ohne Datenhandel",
-      "Open Source",
+      "Helix: Open Source",
       "Transparenz statt Versprechen"
     ],
     "stack": {
@@ -141,13 +141,13 @@
       "lead": "Beide arbeiten an derselben Frage: Wie sieht digitale Infrastruktur aus, die man auch in zehn Jahren noch verantworten kann?",
       "messenger": {
         "kicker": "01 · Kommunikation",
-        "body": "Chats, Anrufe, Feed und Wallet — Ende-zu-Ende verschlüsselt nach MLS, hybrid mit ML-KEM."
+        "body": "Chats, Anrufe, Feed und Punktekonto — Ende-zu-Ende verschlüsselt nach MLS, hybrid mit X-Wing (X25519 + ML-KEM-768)."
       },
       "helix": {
         "kicker": "02 · Infrastruktur",
-        "body": "Layer 1 mit ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme."
+        "body": "Layer 1 im Mainnet: ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme."
       },
-      "kem": "Schlüsselaustausch im Messenger",
+      "kem": "Schlüsselaustausch im Messenger, als X-Wing",
       "dsa": "Signaturen auf Helix",
       "pq": "Post-Quanten-Kryptographie nach NIST-Standard — von der ersten Zeile an",
       "eu": "Entwickelt und betrieben in der EU"
@@ -213,7 +213,7 @@
         },
         {
           "title": "Offen statt abgeschottet",
-          "body": "Ein Testnetz, das jeder mitlesen kann, und ein Messenger, dessen Nachrichten wir selbst nicht lesen können."
+          "body": "Helix ist Open Source (MIT) und für jeden nachprüfbar; der Messenger kann Ihre Nachrichten selbst nicht lesen."
         }
       ],
       "caption": "Entwickelt & betrieben in der EU"
@@ -221,21 +221,21 @@
     "live": {
       "label": "Live",
       "title": "Helix läuft. Genau jetzt.",
-      "lead": "Keine Simulation: Diese Zahlen kommen direkt vom öffentlichen Knoten des Testnetzes und werden alle zehn Sekunden neu abgefragt.",
+      "lead": "Das Mainnet, live: alle zwei Sekunden ein Block, abgefragt direkt beim öffentlichen Knoten — keine Simulation.",
       "cta": "Mehr über Helix"
     },
     "testnet": {
-      "title": "Öffentliches Testnetz",
+      "title": "Helix Mainnet",
       "live": "live · node.silvra.net",
       "offline": "Knoten nicht erreichbar",
       "explorer": "Im Explorer ansehen",
       "stats": {
         "height": "Blockhöhe",
+        "validators": "Validatoren",
+        "accounts": "Konten",
+        "supply": "Im Umlauf",
+        "burned": "Verbrannt",
         "peers": "Peers",
-        "mempool": "Mempool",
-        "status": "Status",
-        "statusLive": "Live",
-        "statusSync": "Sync läuft",
         "version": "Version"
       }
     },
@@ -250,9 +250,9 @@
     "hero": {
       "label": "Jetzt auf Google Play",
       "lead": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — mit Post-Quanten-Kryptographie vom ersten Handshake an.",
-      "more": "So schützt Silvra",
+      "more": "So reist eine Nachricht",
       "badges": [
-        "MLS + ML-KEM",
+        "MLS + ML-KEM-768",
         "Ohne Telefonnummer",
         "Deutsch & Englisch"
       ],
@@ -263,14 +263,14 @@
         "Danke für gestern!"
       ],
       "chips": {
-        "handshake": "Handshake · ML-KEM ✓",
+        "handshake": "Handshake · X-Wing ✓",
         "e2e": "Ende-zu-Ende · MLS",
         "feed": "Feed: nur Kontakte"
       }
     },
     "marquee": [
       "Ende-zu-Ende verschlüsselt",
-      "Post-Quanten vom ersten Handshake",
+      "X-Wing · ML-KEM-768",
       "Ohne Telefonnummer",
       "Ohne Werbung",
       "Ohne Tracking",
@@ -278,7 +278,7 @@
     ],
     "pillars": {
       "eyebrow": "Die drei Säulen",
-      "title": "Chat, Aktuelles und Wallet. Eine App.",
+      "title": "Chat, Aktuelles und Punktekonto. Eine App.",
       "items": [
         {
           "icon": "chat",
@@ -292,15 +292,15 @@
         },
         {
           "icon": "wallet",
-          "title": "Wallet",
-          "body": "Ein optionales Punktekonto — nutzbar, wenn Sie möchten, sonst schlicht nicht vorhanden. Die Schlüssel liegen auf Ihrem Gerät."
+          "title": "Punktekonto",
+          "body": "Ein optionales Punktekonto in Selbstverwahrung — gesichert mit einem 24-Wörter-Merksatz, Senden nur nach Biometrie oder Geräte-PIN. Ohne Einrichtung ist es schlicht nicht vorhanden."
         }
       ]
     },
     "intro": {
       "eyebrow": "Post-Quanten von Anfang an",
       "title": "Verschlüsselt gegen einen Gegner von übermorgen",
-      "body": "Chats sind Ende-zu-Ende verschlüsselt mit MLS — dem IETF-Standard RFC 9420 — kombiniert mit ML-KEM, dem neuen NIST-Verfahren gegen Quantencomputer. Was heute abgefangen wird, bleibt auch später unlesbar."
+      "body": "Chats sind Ende-zu-Ende verschlüsselt mit MLS — dem IETF-Standard RFC 9420 — und dem hybriden Verfahren X-Wing: X25519 und ML-KEM-768 zusammen. Was heute abgefangen wird, bleibt auch später unlesbar."
     },
     "adversary": {
       "eyebrow": "Warum das nicht dasselbe ist wie „verschlüsselt“",
@@ -310,12 +310,37 @@
         "Silvra kombiniert deshalb klassische Kryptographie mit ML-KEM, dem 2024 vom US-Normungsinstitut NIST standardisierten Verfahren. Beides zusammen, nicht eines allein: Bricht eines, hält das andere trotzdem."
       ],
       "highlight": "Die Schlüssel liegen ausschließlich auf Ihren Geräten. Wir können Ihre Nachrichten nicht lesen — auch nicht auf behördliche Anfrage, weil dort schlicht nichts Lesbares liegt.",
-      "classic": "Klassisch",
-      "classicNote": "Bewährte Verfahren von heute",
-      "pqNote": "NIST-Standard gegen Quantenrechner",
-      "result": "Gemeinsamer Schlüssel",
+      "classicNote": "klassisch, heute bewährt",
+      "pqNote": "NIST FIPS 203, gegen Quantenrechner",
+      "result": "X-Wing-Schlüssel",
       "resultNote": "Bricht eines, hält das andere.",
-      "diagramAlt": "Schema: Klassische Kryptographie und ML-KEM werden kombiniert. Bricht eines der Verfahren, schützt das andere den Schlüssel weiter."
+      "diagramAlt": "Schema: X25519 und ML-KEM-768 werden zum hybriden X-Wing-Schlüssel kombiniert, der die MLS-Verschlüsselung trägt. Bricht eines der Verfahren, schützt das andere weiter.",
+      "spec": [
+        {
+          "label": "Protokoll",
+          "value": "MLS · RFC 9420 (OpenMLS)"
+        },
+        {
+          "label": "Ciphersuite",
+          "value": "MLS_256_XWING_CHACHA20POLY1305_SHA256_Ed25519"
+        },
+        {
+          "label": "Schlüsselaustausch",
+          "value": "X-Wing = X25519 + ML-KEM-768"
+        },
+        {
+          "label": "Nachrichten",
+          "value": "ChaCha20-Poly1305"
+        },
+        {
+          "label": "Anhänge",
+          "value": "AES-256-GCM, ein Schlüssel je Datei"
+        },
+        {
+          "label": "Implementierung",
+          "value": "libcrux (Cryspen, formal verifiziert)"
+        }
+      ]
     },
     "screens": {
       "eyebrow": "Ein Blick in die App",
@@ -400,7 +425,7 @@
     "download": {
       "label": "Download",
       "title": "Jetzt auf Google Play",
-      "body": "Silvra Messenger ist auf Google Play verfügbar. Die App bietet Ende-zu-Ende-verschlüsselte Chats und Anrufe, einen Kontakt-Feed, Gruppenfunktionen und ein optionales Punktekonto — ohne Werbenetzwerke und ohne Datenweitergabe."
+      "body": "Kostenlos auf Google Play: Ende-zu-Ende-verschlüsselte Chats, verschlüsselte Anrufe, ein Feed nur für Kontakte, Gruppen und ein optionales Punktekonto — ohne Werbenetzwerke und ohne Datenweitergabe."
     },
     "playStore": "Auf Google Play herunterladen",
     "crypto": {
@@ -412,91 +437,341 @@
       "nonceLabel": "Nonce",
       "ctLabel": "Ciphertext",
       "verified": "Entschlüsselung verifiziert — Ausgabe entspricht der Eingabe",
-      "caption": "Eine Demo mit AES-GCM in Ihrem Browser. Der Silvra Messenger sichert den Schlüsselaustausch zusätzlich mit dem Post-Quanten-Verfahren ML-KEM ab.",
+      "caption": "Eine Demo mit AES-GCM in Ihrem Browser. Der Silvra Messenger selbst nutzt MLS mit X-Wing (X25519 + ML-KEM-768).",
       "waiting": "Tippen Sie etwas — es wird sofort verschlüsselt."
+    },
+    "journey": {
+      "eyebrow": "Der Weg einer Nachricht",
+      "title": "Lesbar nur an den beiden Enden.",
+      "lead": "Dazwischen liegt nur Rauschen — auch auf unserem eigenen Server.",
+      "message": "Bis morgen! Ich bring Kuchen mit.",
+      "cipherAria": "Verschlüsselte Daten, für den Server unlesbar",
+      "stops": [
+        {
+          "who": "Ihr Gerät",
+          "title": "Verschlüsselt, bevor sie losgeht",
+          "body": "MLS (RFC 9420) mit X-Wing: X25519 und ML-KEM-768 zusammen. Die Schlüssel entstehen auf Ihrem Gerät und bleiben dort."
+        },
+        {
+          "who": "Silvra-Server",
+          "title": "Sieht nur Chiffrat",
+          "body": "Der Server stellt zu, aber er hat keinen Schlüssel. Es gibt nichts zu lesen — auch nicht auf behördliche Anfrage."
+        },
+        {
+          "who": "Gerät des Empfängers",
+          "title": "Entschlüsselt erst am Ziel",
+          "body": "Bilder, Videos, Sprachnachrichten und Dateien bekommen je einen eigenen AES-256-GCM-Schlüssel, der in der verschlüsselten Nachricht mitreist."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "Funktionen",
+      "title": "Alles, was ein Messenger können muss.",
+      "lead": "Und ein paar Dinge, die andere nicht tun — weil sie Ihre Daten dafür bräuchten.",
+      "items": [
+        {
+          "icon": "chat",
+          "title": "Einzel- und Gruppenchats",
+          "body": "Mit Bildern, Videos, Sprachnachrichten, Dateien und Standorten — alles Ende-zu-Ende verschlüsselt."
+        },
+        {
+          "icon": "phone",
+          "title": "Sprach- und Videoanrufe",
+          "body": "Verschlüsselt über WebRTC (DTLS-SRTP) — mit klassischen Verfahren, und das sagen wir dazu."
+        },
+        {
+          "icon": "clock",
+          "title": "Verschwindende Nachrichten",
+          "body": "Wahlweise nach einer Stunde, einem Tag oder einer Woche."
+        },
+        {
+          "icon": "poll",
+          "title": "Umfragen, Termine, Rollen",
+          "body": "Gruppen mit Abstimmungen, gemeinsamen Terminen und Admin-Rollen."
+        },
+        {
+          "icon": "smile",
+          "title": "Reaktionen und Weiterleiten",
+          "body": "Auf Nachrichten reagieren, sie weiterleiten oder mit einem Stern merken."
+        },
+        {
+          "icon": "mic",
+          "title": "Sprachnachrichten abtippen",
+          "body": "Die Erkennung läuft ausschließlich auf dem Gerät — die Aufnahme verlässt es dafür nicht."
+        },
+        {
+          "icon": "feed",
+          "title": "Aktuelles",
+          "body": "Bilder und Videos nur für Ihre Chat-Kontakte. Kein Algorithmus, keine Fremden, keine Reichweite."
+        },
+        {
+          "icon": "wallet",
+          "title": "Punktekonto",
+          "body": "Optional, in Selbstverwahrung: 24-Wörter-Merksatz, Senden nur mit Biometrie oder Geräte-PIN."
+        },
+        {
+          "icon": "lock",
+          "title": "App-Sperre",
+          "body": "Mit Biometrie oder Geräte-PIN — auch wenn jemand Ihr entsperrtes Handy in der Hand hat."
+        },
+        {
+          "icon": "devices",
+          "title": "Geräte und Sitzungen",
+          "body": "Sehen, wo Sie angemeldet sind, und Geräte gezielt abmelden."
+        },
+        {
+          "icon": "mail",
+          "title": "Anmeldung per E-Mail-Code",
+          "body": "Keine Telefonnummer, kein Passwort: ein sechsstelliger Code genügt."
+        },
+        {
+          "icon": "spark",
+          "title": "Status",
+          "body": "Verfügbar, im Urlaub, nicht stören — auf Wunsch mit Ablaufzeit."
+        }
+      ]
     }
   },
   "helix": {
-    "eyebrow": "Öffentliches Testnetz",
+    "eyebrow": "Mainnet · seit Version 1.0.0",
     "titleSub": "Post-Quanten-Blockchain",
-    "subtitle": "Eine Layer-1-Blockchain, deren Signaturen durchgängig auf ML-DSA-65 beruhen — dem NIST-Standard für post-quanten-sichere Signaturen.",
+    "subtitle": "Eine Layer-1-Blockchain, abgesichert durch NIST-standardisierte Post-Quanten-Kryptographie — jede Signatur ML-DSA-65, vom ersten Block an.",
     "hero": {
-      "signature": "Signaturen",
-      "consensus": "Konsens"
+      "blockTime": "Blockzeit",
+      "validators": "Validatoren",
+      "signature": "Signaturen"
     },
     "marquee": [
       "ML-DSA-65 auf jeder Signatur",
-      "Layer 1",
+      "Mainnet seit 1.0.0",
       "BFT-Finalität",
-      "Proof of Stake",
-      "WASM-Verträge",
+      "≈ 2 s pro Block",
+      "ZK-STARKs",
       "alice.hlx",
-      "Offenes Testnetz"
+      "Open Source · MIT"
     ],
+    "live": {
+      "eyebrow": "Live",
+      "title": "Die Kette, Block für Block.",
+      "lead": "Jeder neue Block erscheint hier, sobald der öffentliche Knoten ihn meldet — mit Höhe, Hash und Transaktionen. Ein Klick öffnet ihn im Explorer."
+    },
     "intro": {
       "eyebrow": "Post-Quanten von Grund auf",
       "title": "Nicht nachgerüstet. Von Grund auf gebaut.",
       "body": "Statt eine bestehende Kette später auf Post-Quanten umzustellen, ist Helix von der ersten Zeile an darauf ausgelegt: ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme — kein Übergang, keine klassischen Kurven, die später ausgetauscht werden müssten."
     },
-    "testnet": {
-      "eyebrow": "Live",
-      "title": "Das Testnetz in Echtzeit",
-      "lead": "Direkt vom öffentlichen Knoten node.silvra.net. Jeder kann mitlesen, jeder kann einen Knoten starten."
+    "why": {
+      "eyebrow": "Warum Helix",
+      "title": "Was bestehende Chains offenlassen.",
+      "lead": "Sechs Probleme, die Helix nicht irgendwann lösen will, sondern von der ersten Zeile an.",
+      "colProblem": "Bei bestehenden Chains",
+      "rows": [
+        {
+          "problem": "ECDSA- und Ed25519-Signaturen fallen einem großen Quantenrechner",
+          "helix": "ML-DSA-65 (NIST FIPS 204) auf jeder Transaktion, jedem Block, jeder Stimme"
+        },
+        {
+          "problem": "Stake kauft Stimmrecht ohne Grenze",
+          "helix": "Höchstens 1 % der Stimmen je Validator — gleich, wie viel Kapital dahintersteht"
+        },
+        {
+          "problem": "Hex-Adressen, und ein verlorener Schlüssel ist endgültig",
+          "helix": "alice.hlx-Namen und Wiederherstellung über Guardians"
+        },
+        {
+          "problem": "Kein Plan für die nächste Krypto-Migration",
+          "helix": "Das Signaturverfahren ist in jeder Transaktion versioniert"
+        },
+        {
+          "problem": "Zero-Knowledge-Beweise auf elliptischen Kurven (SNARKs)",
+          "helix": "Nur ZK-STARKs — rein hashbasiert"
+        },
+        {
+          "problem": "Ein endloser Vertrag legt die Kette lahm",
+          "helix": "WASM-VM mit Fuel-Limit je Transaktion und Block, ohne Gleitkomma"
+        }
+      ]
     },
     "chain": {
       "eyebrow": "Architektur",
-      "title": "Sechs Entscheidungen, Block für Block",
-      "lead": "Was Helix von einer Kette unterscheidet, die später auf Post-Quanten umgestellt werden soll."
+      "title": "Acht Entscheidungen, Block für Block",
+      "lead": "Was im Protokoll steckt — und im Code nachzulesen ist."
     },
     "features": [
       {
-        "title": "ML-DSA-65 durchgängig",
-        "body": "Nicht nur ein Plan für später: Jede Transaktion und jeder Block wird von Anfang an mit dem NIST-Standard ML-DSA-65 signiert.",
-        "icon": "shield"
+        "icon": "shield",
+        "title": "ML-DSA-65 überall",
+        "body": "Jede Transaktion, jeder Block, jede Validator-Stimme. Kein klassisches Verfahren mit späterem Umstiegsplan."
       },
       {
-        "title": "Validator-Betrieb offen",
-        "body": "Wir wollen ein Netz, bei dem unabhängige Knoten betrieben werden können. Die Dokumentation für Validator-Setup folgt Schritt für Schritt.",
-        "icon": "server"
+        "icon": "layers",
+        "title": "Krypto-Agilität eingebaut",
+        "body": "Das Signaturverfahren ist in jeder Transaktion versioniert; SLH-DSA (FIPS 205) steht als hashbasierte Reserve bereit."
       },
       {
-        "title": "Keine klassischen Kurven",
-        "body": "Helix verzichtet auf ECDSA oder EdDSA. Damit entfällt der umständliche und risikobehaftete Wechsel später.",
-        "icon": "ban"
+        "icon": "scale",
+        "title": "Final in rund zwei Sekunden",
+        "body": "Tendermint-artiger BFT-Konsens: Ein Block gilt, sobald zwei Drittel der Stimmen dahinterstehen — und wird nie zurückgenommen."
       },
       {
-        "title": "Menschenlesbare Adressen",
-        "body": "alice.hlx statt Hex-Adressen — eine Kontokennung, die man sich merken kann, mit Social-Guardian-Wiederherstellung statt Seed-Phrase.",
-        "icon": "at"
+        "icon": "people",
+        "title": "1 % Stimmrechts-Obergrenze",
+        "body": "Kein Validator hält mehr als ein Prozent der Stimmen. Kapital bedeutet nicht automatisch Kontrolle."
       },
       {
-        "title": "Byzantinische Finalität",
-        "body": "Tendermint-artiger BFT-Konsens kombiniert mit Proof of Stake — und einer Stimmrechts-Obergrenze von 1 % je Identität, damit Kapital nicht automatisch Kontrolle bedeutet.",
-        "icon": "scale"
+        "icon": "at",
+        "title": "Namen und Wiederherstellung",
+        "body": "alice.hlx statt Hex-Adresse — und soziale Wiederherstellung über Guardians, wenn ein Schlüssel verloren geht."
       },
       {
-        "title": "WASM-Smart-Contracts",
-        "body": "Verträge laufen in einer WebAssembly-VM mit Fuel-Metering — ausführbar, ohne dass ein einzelner Vertrag das gesamte Netz blockieren kann.",
-        "icon": "code"
+        "icon": "code",
+        "title": "WASM-Verträge ohne Reentrancy",
+        "body": "Fuel-gemessen, ohne Gleitkomma, ohne Aufrufe zwischen Verträgen: Die bekannteste Angriffsfläche existiert schlicht nicht."
+      },
+      {
+        "icon": "spark",
+        "title": "ZK-STARKs",
+        "body": "Zero-Knowledge-Beweise nur auf Hash-Basis — keine elliptischen Kurven, die ein Quantenrechner brechen könnte."
+      },
+      {
+        "icon": "landmark",
+        "title": "Upgrades per Governance",
+        "body": "Protokolländerungen werden on-chain beschlossen und greifen ab einer angekündigten Höhe. Keine Resets mehr seit 1.0.0."
       }
     ],
+    "supply": {
+      "eyebrow": "Tokenomics",
+      "title": "Knapp, nachvollziehbar, ohne Pre-Mine.",
+      "lead": "Jede Zahl steht im Code. Mehr als 99 % aller HLX entstehen erst durch Blockproduktion.",
+      "chartTitle": "HLX-Menge über die Zeit — Obergrenze, ohne Verbrennung",
+      "million": "Mio.",
+      "millionShort": "Mio.",
+      "genesis": "Genesis",
+      "yearShort": "J{{n}}",
+      "yearLong": "Ende von Jahr {{n}}",
+      "cap": "Obergrenze: 33 Mio. HLX",
+      "aria": "Liniendiagramm: Die HLX-Menge steigt von 100.000 bei Genesis auf etwa 31,6 Millionen nach 30 Jahren, weil sich die Blockbelohnung jährlich halbiert. Die Obergrenze liegt bei 33 Millionen. Mit den Pfeiltasten lässt sich ein Jahr auswählen.",
+      "caption": "Berechnet aus den Protokollparametern: 1 HLX pro Block, halbiert alle 15.768.000 Blöcke (≈ 1 Jahr bei 2 s). Verbrannte Gebühren sind nicht abgezogen.",
+      "table": "Als Tabelle anzeigen",
+      "colYear": "Jahr",
+      "colMinted": "Neu ausgegeben (HLX)",
+      "colSupply": "Menge gesamt (HLX)",
+      "figures": [
+        {
+          "value": "33 Mio.",
+          "label": "harte Obergrenze"
+        },
+        {
+          "value": "100.000",
+          "label": "HLX bei Genesis (~0,3 %)"
+        },
+        {
+          "value": "1 HLX",
+          "label": "Blockbelohnung, halbiert jährlich"
+        },
+        {
+          "value": "100 %",
+          "label": "der Basisgebühr werden verbrannt"
+        },
+        {
+          "value": "10.000",
+          "label": "HLX Mindest-Stake je Validator"
+        },
+        {
+          "value": "5 %",
+          "label": "Slashing bei Doppelsignatur"
+        },
+        {
+          "value": "7 Tage",
+          "label": "Unbonding-Frist"
+        },
+        {
+          "value": "1 %",
+          "label": "Stimmrechts-Obergrenze"
+        }
+      ],
+      "note": "HLX ist keine Geldanlage, und nichts hier verspricht einen Wert. Alle Parameter — und die offene Frage, was die Sicherheit nach dem Ende der Ausgabe bezahlt — stehen in"
+    },
+    "start": {
+      "eyebrow": "Loslegen",
+      "title": "Drei Wege hinein.",
+      "lead": "Sie brauchen keinen eigenen Knoten, um Helix zu benutzen: Wallet und Kommandozeile sprechen ohne Einrichtung mit dem öffentlichen Netz.",
+      "wallet": {
+        "title": "Desktop-Wallet",
+        "body": "Für Linux, macOS und Windows — alles, was die Kommandozeile kann, ohne Terminal.",
+        "points": [
+          "Guthaben, Senden, Empfangen, Verlauf",
+          "Staking, Delegation und Governance",
+          ".hlx-Namen und Wiederherstellung",
+          "Validator-Knoten per Klick",
+          "Schlüssel bleibt auf dem Gerät, Sperre nach 10 Minuten"
+        ],
+        "cta": "Wallet herunterladen"
+      },
+      "cli": {
+        "title": "Kommandozeile",
+        "body": "Ein Binary für alles: helix startet einen Knoten oder spricht als Client mit dem Netz.",
+        "lines": [
+          "# 1. Wallet anlegen",
+          "helix wallet new -o alice.json --passphrase",
+          "",
+          "# 2. Die Kette ansehen",
+          "helix chain status",
+          "",
+          "# 3. HLX senden",
+          "helix tx send <adresse> 10 --key alice.json"
+        ],
+        "cta": "CLI-Dokumentation"
+      },
+      "validate": {
+        "title": "Validieren oder delegieren",
+        "body": "Sichern Sie das Netz mit — mit eigenem Knoten oder über einen bestehenden Validator.",
+        "points": [
+          "Validator ab 10.000 HLX Stake",
+          "Delegieren ohne eigenen Knoten",
+          "Auch hinter NAT, Firewall oder Proxy",
+          "Linux, macOS, Windows oder Docker"
+        ],
+        "cta": "Knoten betreiben",
+        "cta2": "Staking"
+      }
+    },
     "honesty": {
       "eyebrow": "Ehrlich gesagt",
-      "title": "Ein Testnetz ist hier wörtlich gemeint",
-      "paragraphs": [
-        "HLX hat aktuell keinen Wert. Das Netz läuft im offenen Testbetrieb — jeder kann einen Knoten starten, jeder kann mitlesen. Nichts davon ist auf Hauptnetz-Sicherheit geprüft.",
-        "Der Code ist bislang nicht extern auditiert. Das Mainnet startet, sobald vier unabhängige Validatoren stabil laufen — nach Meilenstein, nicht nach Kalender."
+      "title": "Ein junges Netz — und das sagen wir dazu.",
+      "items": [
+        {
+          "title": "Der Validator-Kreis ist noch klein",
+          "body": "n Validatoren überstehen ⌊(n−1)/3⌋ Ausfälle: vier überstehen einen, sieben zwei. Fehlen zu viele, hält die Kette an und wartet — sie spaltet sich nicht. Die aktuelle Zahl steht oben, live."
+        },
+        {
+          "title": "HLX ist keine Geldanlage",
+          "body": "Seit 1.0.0 wird nichts mehr zurückgesetzt. Das heißt nicht, dass HLX etwas wert ist — und wir behaupten es nicht."
+        },
+        {
+          "title": "Der Transport ist klassisch verschlüsselt",
+          "body": "Knoten verbinden sich über libp2p Noise (X25519). Was sie austauschen, ist öffentlich und ML-DSA-signiert: Ein Quantenrechner könnte mitlesen, aber nichts fälschen."
+        },
+        {
+          "title": "Konsens im großen Maßstab: getestet, noch nicht erprobt",
+          "body": "Vote-Locking, Neuvorschläge und Doppelsignaturen laufen durch Chaos-Tests mit einem Drittel verlorener Nachrichten — ohne Abspaltung. Das Live-Netz ist noch klein."
+        },
+        {
+          "title": "Fortlaufend aus Angreifersicht geprüft",
+          "body": "Jeder Fund wird erst als Test nachgestellt, dann behoben — und der Fix gegengeprüft, indem er zurückgenommen und der Test wieder scheitern muss."
+        }
       ],
       "highlight": "Wir sagen das lieber vorher, als es nachträglich erklären zu müssen."
     },
     "cta": {
-      "eyebrow": "Mitmachen",
-      "title": "Selbst nachsehen.",
-      "body": "Den öffentlichen Knoten, die Schnittstelle und aktuelle Blöcke finden Sie direkt auf node.silvra.net — oder Sie fragen uns.",
+      "eyebrow": "Offen",
+      "title": "Offen. MIT-lizenziert. Selbst nachprüfen.",
+      "body": "Code, Dokumentation, Explorer und der öffentliche Knoten — alles einsehbar, alles ohne Konto.",
+      "wallet": "Wallet herunterladen",
       "explorer": "Explorer öffnen",
+      "githubBody": "Quellcode, Releases und Dokumentation von Helix.",
       "explorerBody": "Blöcke, Transaktionen und Validatoren live durchsuchen.",
-      "nodeBody": "Die öffentliche Schnittstelle des Testnetzes.",
-      "githubBody": "Code und Projekte der Silvra-Organisation.",
+      "nodeBody": "Die öffentliche Schnittstelle — mit einer Statusseite über sich selbst.",
       "discordBody": "Fragen, Validator-Betrieb, Austausch mit dem Team."
     }
   },
@@ -578,10 +853,10 @@
       },
       {
         "title": "Validator-Betrieb",
-        "body": "Wenn Sie einen Helix-Validator betreiben möchten, melden Sie sich bei uns. Wir informieren Sie, sobald die öffentliche Dokumentation bereitsteht.",
+        "body": "Sie möchten einen Helix-Validator betreiben? Die Anleitung steht in der Dokumentation — und wir helfen gern beim Einstieg.",
         "detail": [
-          "Helix läuft auf einem Tendermint-artigen BFT-Konsens mit Proof of Stake und einer Stimmrechts-Obergrenze von 1 % je Identität. Validator-Knoten lassen sich über CLI oder Desktop-GUI betreiben — Linux, macOS, Windows.",
-          "Das Netz ist aktuell ein offenes Testnetz, HLX hat noch keinen Wert. Wir melden uns, sobald die öffentliche Validator-Dokumentation bereitsteht."
+          "Helix läuft als Mainnet mit Tendermint-artigem BFT-Konsens, Proof of Stake und einer Stimmrechts-Obergrenze von 1 % je Validator. Mindest-Stake: 10.000 HLX; ohne eigenen Knoten können Sie delegieren.",
+          "Ein Knoten läuft über die Kommandozeile oder per Klick aus der Desktop-Wallet — unter Linux, macOS, Windows oder in Docker, auch hinter NAT oder Proxy."
         ],
         "icon": "server"
       }
@@ -611,12 +886,23 @@
   "next": {
     "label": "Die andere Seite von Silvra",
     "cta": "Hinüberwechseln",
-    "messenger": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — Chats, Anrufe, Feed und Wallet in einer App.",
-    "helix": "Die Layer-1-Blockchain mit ML-DSA-65 auf jeder Signatur. Das Testnetz läuft — sehen Sie selbst."
+    "messenger": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — Chats, Anrufe, Feed und Punktekonto in einer App.",
+    "helix": "Die Layer-1-Blockchain mit ML-DSA-65 auf jeder Signatur. Das Mainnet läuft — sehen Sie selbst."
   },
   "notFound": {
     "title": "Seite nicht gefunden",
     "body": "Diese Seite existiert nicht. Vielleicht hilft Ihnen einer dieser Wege weiter.",
     "cta": "Zur Startseite"
+  },
+  "common": {
+    "copy": "Kopieren",
+    "copied": "Kopiert ✓"
+  },
+  "blocks": {
+    "label": "Die neuesten Blöcke, live vom öffentlichen Knoten",
+    "secondsAgo": "vor {{n}} s",
+    "minutesAgo": "vor {{n}} min",
+    "open": "Block {{height}} im Explorer öffnen",
+    "tx": "{{n}} Tx"
   }
 }

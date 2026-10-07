@@ -6,6 +6,7 @@ import Reveal from "../components/Reveal";
 import Scramble from "../components/Scramble";
 import Timeline from "../components/Timeline";
 import Testnet from "../components/Testnet";
+import BlockStream from "../components/BlockStream";
 import Photo from "../components/Photo";
 import Icon from "../components/Icon";
 import { useI18n } from "../i18n";
@@ -222,6 +223,9 @@ export default function Home() {
           <Reveal>
             <Testnet />
           </Reveal>
+        </div>
+        <div className="container live-stream">
+          <BlockStream />
         </div>
       </section>
 

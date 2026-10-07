@@ -17,7 +17,7 @@ const PAGES = [
 ];
 
 /** Which world a path belongs to. The two product pages carry their own colour; the rest is Silvra. */
-function worldOf(pathname: string): "messenger" | "helix" | "silvra" {
+export function worldOf(pathname: string): "messenger" | "helix" | "silvra" {
   if (pathname.startsWith("/messenger")) return "messenger";
   if (pathname.startsWith("/helix")) return "helix";
   return "silvra";
@@ -86,6 +86,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const world = worldOf(pathname);
   const toggle = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
+  const progress = useRef<HTMLDivElement>(null);
 
   // A menu left open across a navigation covers the page it just moved to.
   useEffect(() => setOpen(false), [pathname]);
@@ -95,12 +96,27 @@ export default function Layout({ children }: { children: ReactNode }) {
     document.documentElement.dataset.world = world;
   }, [world]);
 
-  // Transparent over the opening of a page, solid once the page has moved under it.
+  // Transparent over the opening of a page, solid once the page has moved under it; and a
+  // hairline along the header's lower edge that fills as the page is read.
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 24);
+    let raf = 0;
+    const paint = () => {
+      raf = 0;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.current?.style.setProperty("transform", `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`);
+    };
+    const on = () => {
+      setScrolled(window.scrollY > 24);
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
     on();
     window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    window.addEventListener("resize", on);
+    return () => {
+      window.removeEventListener("scroll", on);
+      window.removeEventListener("resize", on);
+      cancelAnimationFrame(raf);
+    };
   }, [pathname]);
 
   // The open menu covers the page: the page must not scroll under it, Escape must close it,
@@ -176,6 +192,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </button>
           </div>
         </div>
+        <div className="scroll-progress" ref={progress} aria-hidden="true" />
       </header>
 
       <div id="mobile-menu" ref={menu} className={open ? "mobile-menu open" : "mobile-menu"} hidden={!open}>
