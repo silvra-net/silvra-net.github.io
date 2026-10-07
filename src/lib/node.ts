@@ -1,41 +1,79 @@
 import { useSyncExternalStore } from "react";
 
-/** The public node's status endpoint. Same origin the explorer reads, and the only place these
- *  numbers come from — nothing here is cached or precomputed on our side. */
+/** The public node. The only place the site's numbers come from — nothing here is cached or
+ *  precomputed on our side, and the node answers browsers directly (CORS is open). */
 export const NODE = "https://node.silvra.net";
 
 export interface NodeStatus {
   version: string;
   height: number;
+  best_hash: string;
   peer_count: number;
   mempool_size: number;
   is_syncing: boolean;
+  total_accounts?: number;
+  circulating_supply_hlx?: number;
+  total_burned_hlx?: number;
+  base_fee_per_byte?: number;
+  protocol_version?: number;
+}
+
+/** A block as the node's display view returns it. */
+export interface SeenBlock {
+  height: number;
+  hash: string;
+  /** Milliseconds since the epoch, from the block itself. */
+  timestamp: number;
+  tx_count: number;
+  validator: string;
 }
 
 export interface NodeState {
   status: NodeStatus | null;
   failed: boolean;
+  /** Active validators, from /validators; null until the first answer. */
+  validators: number | null;
+  /** Newest first, consecutive, straight from the chain. Filled only while a block stream is
+   *  on screen — the gate needs a height, not a block history. */
+  blocks: SeenBlock[];
+  /** Seconds per block, from the timestamps of the blocks above; null until two are known. */
+  blockTime: number | null;
 }
 
 /*
-  One poll for the whole page. The gate, the Helix hero and the testnet panel all show the same
-  height; three components polling on their own would triple the requests and could briefly
-  show three different numbers for the same chain.
-*/
-let state: NodeState = { status: null, failed: false };
-const listeners = new Set<() => void>();
-let timer: ReturnType<typeof setInterval> | undefined;
+  One poll for the whole page. The gate, the Helix hero, the block stream and the testnet panel
+  all show the same height; components polling on their own would multiply the requests and
+  could briefly show different numbers for the same chain.
 
-function emit(next: NodeState) {
-  state = next;
+  Blocks come every two seconds, so the status is asked for every three — often enough that the
+  height visibly moves, rare enough to be a light load on the node. A hidden tab asks for
+  nothing: nobody is looking.
+*/
+const STATUS_EVERY = 3_000;
+const VALIDATORS_EVERY = 30_000;
+const KEEP_BLOCKS = 14;
+
+let state: NodeState = { status: null, failed: false, validators: null, blocks: [], blockTime: null };
+const listeners = new Set<() => void>();
+let statusTimer: ReturnType<typeof setInterval> | undefined;
+let validatorTimer: ReturnType<typeof setInterval> | undefined;
+let streamWanted = 0;
+
+function emit(patch: Partial<NodeState>) {
+  state = { ...state, ...patch };
   listeners.forEach((l) => l());
 }
 
-async function load() {
+const hidden = () => typeof document !== "undefined" && document.visibilityState === "hidden";
+
+async function loadStatus() {
+  if (hidden()) return;
   try {
-    const res = await fetch(`${NODE}/status`);
+    const res = await fetch(`${NODE}/status`, { cache: "no-store" });
     if (!res.ok) throw new Error(String(res.status));
-    emit({ status: (await res.json()) as NodeStatus, failed: false });
+    const status = (await res.json()) as NodeStatus;
+    emit({ status, failed: false });
+    if (streamWanted > 0) await loadBlocks(status.height);
   } catch {
     // A node that cannot be reached is reported as such rather than as a frozen number: a stale
     // height that looks live is worse than an honest gap.
@@ -43,17 +81,61 @@ async function load() {
   }
 }
 
+/** Fetch whatever blocks the stream does not have yet, up to the given height. */
+async function loadBlocks(height: number) {
+  const known = state.blocks[0]?.height ?? 0;
+  if (height <= known) return;
+  const from = Math.max(known + 1, height - KEEP_BLOCKS + 1);
+  try {
+    const res = await fetch(`${NODE}/blocks/range?from=${from}&count=${height - from + 1}`, { cache: "no-store" });
+    if (!res.ok) return;
+    const fresh = ((await res.json()) as SeenBlock[])
+      .map(({ height: h, hash, timestamp, tx_count, validator }) => ({ height: h, hash, timestamp, tx_count, validator }))
+      .sort((a, b) => b.height - a.height);
+    const blocks = [...fresh, ...state.blocks.filter((b) => b.height < from)].slice(0, KEEP_BLOCKS);
+    const span = blocks.length >= 2 ? (blocks[0].timestamp - blocks[blocks.length - 1].timestamp) / 1000 : 0;
+    const blockTime = blocks.length >= 2 && span > 0 ? span / (blocks[0].height - blocks[blocks.length - 1].height) : null;
+    emit({ blocks, blockTime });
+  } catch {
+    /* a missed range is filled by the next one */
+  }
+}
+
+async function loadValidators() {
+  if (hidden()) return;
+  try {
+    const res = await fetch(`${NODE}/validators`, { cache: "no-store" });
+    if (!res.ok) throw new Error(String(res.status));
+    const data = (await res.json()) as { validators?: { active?: boolean }[] };
+    const active = (data.validators ?? []).filter((v) => v.active !== false).length;
+    emit({ validators: active });
+  } catch {
+    /* the count is a detail; the status poll reports the node being down */
+  }
+}
+
+function onVisible() {
+  if (!hidden()) {
+    void loadStatus();
+  }
+}
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
-  if (!timer) {
-    void load();
-    timer = setInterval(load, 10_000);
+  if (!statusTimer) {
+    void loadStatus();
+    void loadValidators();
+    statusTimer = setInterval(loadStatus, STATUS_EVERY);
+    validatorTimer = setInterval(loadValidators, VALIDATORS_EVERY);
+    document.addEventListener("visibilitychange", onVisible);
   }
   return () => {
     listeners.delete(listener);
-    if (listeners.size === 0 && timer) {
-      clearInterval(timer);
-      timer = undefined;
+    if (listeners.size === 0 && statusTimer) {
+      clearInterval(statusTimer);
+      clearInterval(validatorTimer);
+      statusTimer = validatorTimer = undefined;
+      document.removeEventListener("visibilitychange", onVisible);
     }
   };
 }
@@ -61,6 +143,25 @@ function subscribe(listener: () => void) {
 export function useNodeStatus(): NodeState {
   return useSyncExternalStore(
     subscribe,
+    () => state,
+    () => state,
+  );
+}
+
+function subscribeStream(listener: () => void) {
+  streamWanted += 1;
+  const off = subscribe(listener);
+  if (state.status) void loadBlocks(state.status.height);
+  return () => {
+    streamWanted -= 1;
+    off();
+  };
+}
+
+/** The node state plus a running history of recent blocks, fetched while this is mounted. */
+export function useBlockStream(): NodeState {
+  return useSyncExternalStore(
+    subscribeStream,
     () => state,
     () => state,
   );

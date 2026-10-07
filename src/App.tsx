@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Layout from "./components/Layout";
+import Layout, { worldOf } from "./components/Layout";
+import { prefersReducedMotion } from "./lib/motion";
 import Home from "./pages/Home";
 import Messenger from "./pages/Messenger";
 import Helix from "./pages/Helix";
@@ -20,10 +21,34 @@ function ScrollToTop() {
   return null;
 }
 
+/**
+ * Moving between pages draws the blade across the screen once — the home page's gesture, used as
+ * the site's page transition. Not from the gate into a product: the gate sweeps on its own.
+ */
+function RouteWipe() {
+  const { pathname } = useLocation();
+  const prev = useRef(pathname);
+  const [run, setRun] = useState(0);
+  useEffect(() => {
+    const from = prev.current;
+    prev.current = pathname;
+    if (from === pathname || prefersReducedMotion()) return;
+    if (from === "/" && (pathname === "/messenger" || pathname === "/helix")) return;
+    setRun((n) => n + 1);
+  }, [pathname]);
+  if (!run) return null;
+  return (
+    <div key={run} className={`route-wipe wipe-${worldOf(pathname)}`} aria-hidden="true">
+      <i />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <>
       <ScrollToTop />
+      <RouteWipe />
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
