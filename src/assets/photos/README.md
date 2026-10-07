@@ -5,7 +5,7 @@ Each file here fills one slot on the site, by name. `work.webp` fills the slot `
 
 | Slot        | Where it appears                          | Motif                                                         |
 | ----------- | ----------------------------------------- | ------------------------------------------------------------- |
-| `work`      | Home, "How we work" (portrait, 4:5)       | Calm, dark workspace or code on a screen; monochrome          |
+| `work`      | Home, "Principles" (portrait, 4:5)        | Dark server racks or hardware; no logos, crests or legible text |
 | `europe`    | Home, "Europe" (circle)                   | Europe at night seen from space — the continent's lights      |
 | `messenger` | Messenger page, "Post-quantum" (4:5)      | Hands with a phone at night, black and white                  |
 | `helix`     | Helix page, intro (4:5, icon on top)      | Abstract light structure or fibre optics in amber/gold        |
