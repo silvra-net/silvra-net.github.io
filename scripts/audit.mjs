@@ -18,7 +18,11 @@ function ratio(a, b) {
   return (x + 0.05) / (y + 0.05);
 }
 
-const browser = await chromium.launch({ channel: "chromium" });
+// CHROMIUM points at a specific browser binary, for machines whose preinstalled Chromium does
+// not match the Playwright version in package.json.
+const browser = await chromium.launch(
+  process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : { channel: "chromium" },
+);
 const findings = [];
 const add = (kind, where, detail) => findings.push({ kind, where, detail });
 
@@ -125,9 +129,9 @@ for (const theme of ["dark", "light"]) {
         for (const el of document.querySelectorAll("p, span, a, li, dd, dt, h1, h2, h3, td, th, button, small")) {
           if (!vis(el) || !el.innerText || el.innerText.trim().length < 3) continue;
           if (el.children.length > 0 && el.innerText !== el.firstChild?.textContent) continue;
-          // The hero and page headers paint their ground in a pseudo-element (scrim, dot grid)
-          // and over video, none of which an ancestor walk can see. Measured by eye instead.
-          if (el.closest(".hero, .page-header, .split-media")) continue;
+          // A transparent header sits over the dark opening of the page, not over the body an
+          // ancestor walk would reach; photos and canvases are not colours either. Measured by eye.
+          if (el.closest(".site-header:not(.is-solid), .photo, .page-hero-media")) continue;
           const s = getComputedStyle(el);
           const fill = rgba(s.color);
           // A transparent fill with a stroke is a drawn outline, not invisible text.
@@ -169,7 +173,7 @@ for (const theme of ["dark", "light"]) {
 }
 
 await browser.close();
-writeFileSync("audit.json", JSON.stringify(findings, null, 1));
+writeFileSync(process.env.OUTJSON ?? "audit.json", JSON.stringify(findings, null, 1));
 const by = {};
 for (const f of findings) (by[f.kind] ??= []).push(f);
 for (const [k, v] of Object.entries(by).sort((a, b) => b[1].length - a[1].length)) {

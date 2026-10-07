@@ -23,7 +23,11 @@ mkdirSync(OUT, { recursive: true });
 
 // The default is chrome-headless-shell, which is a separate download; the full Chromium is
 // already here and its new headless mode renders the same page.
-const browser = await chromium.launch({ channel: "chromium" });
+// CHROMIUM points at a specific browser binary, for machines whose preinstalled Chromium does
+// not match the Playwright version in package.json.
+const browser = await chromium.launch(
+  process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : { channel: "chromium" },
+);
 const problems = [];
 
 for (const theme of THEMES) {

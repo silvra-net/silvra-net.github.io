@@ -1,14 +1,15 @@
-import PageHeader from "../components/PageHeader";
-import Section from "../components/Section";
-import Split from "../components/Split";
-import Cards from "../components/Cards";
-import type { Item } from "../components/Cards";
-import Groups from "../components/Groups";
+import CipherCanvas from "../components/CipherCanvas";
+import CipherLoop from "../components/CipherLoop";
 import CryptoDemo from "../components/CryptoDemo";
+import Icon from "../components/Icon";
+import Marquee from "../components/Marquee";
+import NextWorld from "../components/NextWorld";
+import Photo from "../components/Photo";
+import Reveal from "../components/Reveal";
+import Scramble from "../components/Scramble";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
-import chatPreview from "../assets/chat-preview.webp";
-import messengerLogo from "../assets/messenger-logo.webp";
+import { PLAY_STORE } from "../lib/links";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
 import profilDe from "../assets/Profil_DE.webp";
@@ -16,114 +17,274 @@ import profilEn from "../assets/Profil_EN.webp";
 import settingsDe from "../assets/Settings_DE.webp";
 import settingsEn from "../assets/setting_EN.webp";
 
+interface Item {
+  icon?: string;
+  title: string;
+  body: string;
+}
+interface Group {
+  heading: string;
+  items: Item[];
+}
+
+function Label({ index, text }: { index: string; text: string }) {
+  return (
+    <p className="label">
+      <span className="label-index">{index}</span>
+      <Scramble text={text} />
+    </p>
+  );
+}
+
+function PlayButton({ label }: { label: string }) {
+  return (
+    <a className="btn primary" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
+      <Icon name="play" size={16} />
+      {label}
+    </a>
+  );
+}
+
 export default function Messenger() {
-  const { t, list, lang } = useI18n();
+  const { t, list, raw, lang } = useI18n();
   useSeo(t("meta.messenger.title"), t("meta.messenger.description"));
 
-  // The screenshots are of the app in the visitor's language; showing German UI next to an
-  // English caption is the kind of detail that makes a product look unfinished.
+  // The screenshots are of the app in the visitor's language; German UI next to an English
+  // caption is the kind of detail that makes a product look unfinished.
   const shots = lang === "de" ? [welcomeDe, profilDe, settingsDe] : [welcomeEn, profilEn, settingsEn];
   const screens = list<Item>("messenger.screens.items");
+  const encrypted = raw("messenger.transparency.encrypted") as Group;
+  const notEncrypted = raw("messenger.transparency.notEncrypted") as Group;
 
   return (
     <>
-      <PageHeader
-        eyebrow={t("messenger.eyebrow")}
-        title={t("messenger.title")}
-        subtitle={t("messenger.subtitle")}
-      >
-        <div className="btn-row">
-          <a
-            className="btn primary"
-            href="https://play.google.com/store/apps/details?id=net.silvra.spark"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            {t("messenger.playStore")}
-          </a>
+      <section className="p-hero p-hero-messenger dark-zone">
+        <div className="p-hero-bg" aria-hidden="true">
+          <div className="p-hero-aura" />
+          <CipherCanvas phrases={list<string>("home.gate.messenger.phrases")} cell={22} />
         </div>
-      </PageHeader>
-
-      <Split media={<img className="media contain" data-icon src={messengerLogo} alt="" />}>
-        <h2>{t("messenger.status.title")}</h2>
-        <p className="muted">{t("messenger.status.body")}</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 20 }}>
-          {list<string>("messenger.status.badges").map((b) => (
-            <span className="badge" key={b}>
-              {b}
+        <div className="container p-hero-grid">
+          <div className="p-hero-text">
+            <p className="label">
+              <span className="dot ok pulse" aria-hidden="true" />
+              <Scramble text={t("messenger.hero.label")} />
+            </p>
+            <h1 className="p-title">
+              <span className="metal">Silvra</span> <span className="metal">Messenger</span>
+            </h1>
+            <p className="lead">{t("messenger.hero.lead")}</p>
+            <div className="btn-row">
+              <PlayButton label={t("messenger.playStore")} />
+              <a className="btn" href="#schutz">
+                {t("messenger.hero.more")}
+                <Icon name="arrowDown" size={16} />
+              </a>
+            </div>
+            <ul className="chip-row">
+              {list<string>("messenger.hero.badges").map((b) => (
+                <li className="chip" key={b}>
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="p-hero-visual">
+            <img className="phone-shot" src={shots[0]} alt={t("messenger.hero.shotAlt")} width={600} height={1182} />
+            <CipherLoop className="float float-bubble" messages={list<string>("messenger.hero.bubbles")} />
+            <span className="float float-chip chip-a" aria-hidden="true">
+              <Icon name="key" size={14} />
+              {t("messenger.hero.chips.handshake")}
             </span>
-          ))}
+            <span className="float float-chip chip-b" aria-hidden="true">
+              <Icon name="lock" size={14} />
+              {t("messenger.hero.chips.e2e")}
+            </span>
+            <span className="float float-chip chip-c" aria-hidden="true">
+              <Icon name="people" size={14} />
+              {t("messenger.hero.chips.feed")}
+            </span>
+          </div>
         </div>
-      </Split>
+      </section>
 
-      <Split media={<img className="media" src={chatPreview} alt="" />} flip>
-        <p className="eyebrow">{t("messenger.intro.eyebrow")}</p>
-        <h2>{t("messenger.intro.title")}</h2>
-        <p className="muted">{t("messenger.intro.body")}</p>
-      </Split>
+      <Marquee items={list<string>("messenger.marquee")} />
 
-      <Section eyebrow={t("messenger.pillars.eyebrow")} title={t("messenger.pillars.title")}>
-        <Cards items={list<Item>("messenger.pillars.items")} />
-      </Section>
+      <section className="section">
+        <div className="container">
+          <Label index="01" text={t("messenger.pillars.eyebrow")} />
+          <div className="section-head">
+            <h2>{t("messenger.pillars.title")}</h2>
+          </div>
+          <div className="pillars">
+            {list<Item>("messenger.pillars.items").map((p, i) => (
+              <Reveal key={p.title} delay={i * 90} className="pillar">
+                <span className="pillar-num mono">0{i + 1}</span>
+                <span className="pillar-icon">
+                  <Icon name={p.icon ?? "chat"} size={26} />
+                </span>
+                <h3>{p.title}</h3>
+                <p className="muted">{p.body}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <Section eyebrow={t("messenger.adversary.eyebrow")} title={t("messenger.adversary.title")}>
-        {list<string>("messenger.adversary.paragraphs").map((p) => (
-          <p className="muted" key={p.slice(0, 40)} style={{ maxWidth: "70ch" }}>
-            {p}
-          </p>
-        ))}
-        <p className="card" style={{ marginTop: 24 }}>
-          {t("messenger.adversary.highlight")}
-        </p>
-      </Section>
+      <section className="section photo-split">
+        <div className="container photo-split-grid">
+          <Reveal>
+            <Photo slot="messenger" className="photo-frame" />
+          </Reveal>
+          <div>
+            <Label index="02" text={t("messenger.intro.eyebrow")} />
+            <h2>{t("messenger.intro.title")}</h2>
+            <p className="lead">{t("messenger.intro.body")}</p>
+          </div>
+        </div>
+      </section>
 
-      <Section
-        eyebrow={t("messenger.screens.eyebrow")}
-        title={t("messenger.screens.title")}
-        subtitle={t("messenger.screens.subtitle")}
-      >
-        <div className="shot-row">
-          {screens.map((s, i) => (
-            <figure className="card" key={s.title} style={{ margin: 0 }}>
-              <img src={shots[i]} alt={s.title} loading="lazy" style={{ borderRadius: 8 }} />
-              <figcaption style={{ marginTop: 16 }}>
-                <h3 style={{ marginBottom: 4 }}>{s.title}</h3>
-                <p className="muted small" style={{ margin: 0 }}>
-                  {s.body}
+      <section className="section" id="schutz">
+        <div className="container">
+          <Label index="03" text={t("messenger.adversary.eyebrow")} />
+          <div className="section-head wide">
+            <h2>{t("messenger.adversary.title")}</h2>
+          </div>
+          <div className="adversary-grid">
+            <div>
+              {list<string>("messenger.adversary.paragraphs").map((p) => (
+                <p className="muted" key={p.slice(0, 40)}>
+                  {p}
                 </p>
-              </figcaption>
-            </figure>
-          ))}
+              ))}
+            </div>
+            <Reveal>
+              <div className="hybrid" role="img" aria-label={t("messenger.adversary.diagramAlt")}>
+                <div className="hybrid-in">
+                  <span className="hybrid-box">
+                    <span className="mono">{t("messenger.adversary.classic")}</span>
+                    <small>{t("messenger.adversary.classicNote")}</small>
+                  </span>
+                  <span className="hybrid-plus" aria-hidden="true">
+                    +
+                  </span>
+                  <span className="hybrid-box pq">
+                    <span className="mono">ML-KEM</span>
+                    <small>{t("messenger.adversary.pqNote")}</small>
+                  </span>
+                </div>
+                <span className="hybrid-line" aria-hidden="true" />
+                <span className="hybrid-out">
+                  <Icon name="key" size={18} />
+                  {t("messenger.adversary.result")}
+                </span>
+                <p className="hybrid-note mono">{t("messenger.adversary.resultNote")}</p>
+              </div>
+            </Reveal>
+          </div>
+          <Reveal>
+            <blockquote className="quote">{t("messenger.adversary.highlight")}</blockquote>
+          </Reveal>
         </div>
-      </Section>
+      </section>
 
-      <Section
-        eyebrow={t("messenger.transparency.eyebrow")}
-        title={t("messenger.transparency.title")}
-        subtitle={t("messenger.transparency.subtitle")}
-      >
-        <Groups path="messenger.transparency" />
-      </Section>
-
-      <Section eyebrow={t("messenger.boundaries.eyebrow")} title={t("messenger.boundaries.title")}>
-        <Cards items={list<Item>("messenger.boundaries.items")} columns={2} />
-      </Section>
-
-      <Section
-        eyebrow={t("messenger.crypto.eyebrow")}
-        title={t("messenger.crypto.title")}
-        subtitle={t("messenger.crypto.body")}
-      >
-        <CryptoDemo />
-      </Section>
-
-      <Section title={t("messenger.download.title")} subtitle={t("messenger.download.body")}>
-        <div className="btn-row">
-          <a className="btn primary" href="https://play.google.com/store/apps/details?id=net.silvra.spark" rel="noreferrer noopener" target="_blank">
-            {t("messenger.playStore")}
-          </a>
+      <section className="section demo">
+        <div className="container demo-grid">
+          <div>
+            <Label index="04" text={t("messenger.crypto.eyebrow")} />
+            <h2>{t("messenger.crypto.title")}</h2>
+            <p className="lead">{t("messenger.crypto.body")}</p>
+          </div>
+          <CryptoDemo />
         </div>
-      </Section>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <Label index="05" text={t("messenger.screens.eyebrow")} />
+          <div className="section-head">
+            <h2>{t("messenger.screens.title")}</h2>
+            <p className="lead">{t("messenger.screens.subtitle")}</p>
+          </div>
+          <div className="screens">
+            {screens.map((s, i) => (
+              <Reveal as="figure" key={s.title} delay={i * 100} className="screen">
+                <img src={shots[i]} alt={s.title} loading="lazy" width={600} height={1182} />
+                <figcaption>
+                  <h3>{s.title}</h3>
+                  <p className="muted">{s.body}</p>
+                </figcaption>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <Label index="06" text={t("messenger.transparency.eyebrow")} />
+          <div className="section-head">
+            <h2>{t("messenger.transparency.title")}</h2>
+            <p className="lead">{t("messenger.transparency.subtitle")}</p>
+          </div>
+          <div className="ledger">
+            {[
+              { g: encrypted, kind: "yes", icon: "lock" },
+              { g: notEncrypted, kind: "no", icon: "alert" },
+            ].map(({ g, kind, icon }) => (
+              <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
+                <h3>
+                  <Icon name={icon} size={18} />
+                  {g.heading}
+                </h3>
+                <ul>
+                  {g.items.map((it) => (
+                    <li key={it.title}>
+                      <strong>{it.title}</strong>
+                      <span className="muted">{it.body}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <Label index="07" text={t("messenger.boundaries.eyebrow")} />
+          <div className="section-head">
+            <h2>{t("messenger.boundaries.title")}</h2>
+          </div>
+          <div className="nots">
+            {list<Item>("messenger.boundaries.items").map((b, i) => (
+              <Reveal key={b.title} delay={i * 70} className="not">
+                <span className="not-icon">
+                  <Icon name={b.icon ?? "ban"} size={22} />
+                </span>
+                <h3>{b.title}</h3>
+                <p className="muted">{b.body}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section download">
+        <div className="container">
+          <div className="download-panel dark-zone">
+            <div className="download-aura" aria-hidden="true" />
+            <p className="label">{t("messenger.download.label")}</p>
+            <h2>{t("messenger.download.title")}</h2>
+            <p className="lead">{t("messenger.download.body")}</p>
+            <div className="btn-row">
+              <PlayButton label={t("messenger.playStore")} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <NextWorld to="helix" />
     </>
   );
 }

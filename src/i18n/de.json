@@ -1,15 +1,15 @@
 {
   "meta": {
     "home": {
-      "title": "Silvra — Zukunftssichere Software aus Europa",
-      "description": "Wir bauen Kommunikation und digitale Infrastruktur für Europa — post-quanten-sicher, transparent und ohne Datenhandel. Entwickelt und betrieben in der EU."
+      "title": "Silvra — Digitale Infrastruktur aus Europa",
+      "description": "Silvra entwickelt in der EU post-quanten-sichere Technologie: den Silvra Messenger mit Ende-zu-Ende-Verschlüsselung und Helix, eine Layer-1-Blockchain mit ML-DSA-65. Ohne Werbung, ohne Datenhandel."
     },
     "messenger": {
       "title": "Silvra Messenger — Ende-zu-Ende verschlüsselt, ohne Datenhandel",
       "description": "Kostenloser Messenger mit Ende-zu-Ende-Verschlüsselung. Ohne Werbung, ohne Tracking, ohne Datenhandel — entwickelt und betrieben in der EU."
     },
     "helix": {
-      "title": "Silvra Helix — Post-Quanten-Blockchain aus Europa",
+      "title": "Helix — Post-Quanten-Blockchain von Silvra",
       "description": "Helix ist Silvras Blockchain auf Basis post-quantensicherer Verfahren — offen, überprüfbar und ohne Kompromisse bei der Sicherheit."
     },
     "mission": {
@@ -24,133 +24,154 @@
       "title": "Impressum — Silvra",
       "description": "Impressum und Anbieterkennzeichnung von Silvra."
     },
-    "datenschutz": {
-      "title": "Datenschutzerklärung — Silvra",
-      "description": "Wie wir mit deinen Daten umgehen: wenig sammeln, nichts verkaufen, alles transparent erklärt."
-    },
     "notFound": {
       "title": "Seite nicht gefunden — Silvra",
       "description": "Diese Seite gibt es nicht (mehr). Zurück zur Übersicht."
     }
   },
   "nav": {
-    "home": "Start",
-    "products": "Produkte",
+    "home": "Startseite",
+    "main": "Hauptnavigation",
     "messenger": "Messenger",
-    "messengerTag": "Ende-zu-Ende verschlüsselter Chat",
+    "messengerTag": "Ende-zu-Ende verschlüsselt, post-quanten-sicher",
     "helix": "Helix",
-    "helixTag": "Post-Quanten-Blockchain",
+    "helixTag": "Layer-1-Blockchain mit ML-DSA-65",
     "mission": "Mission",
     "contact": "Kontakt",
-    "cta": "Mitreden",
-    "download": "Download",
     "explorer": "Explorer",
     "open": "Navigation öffnen",
     "close": "Navigation schließen",
-    "missionTag": "Warum wir Silvra bauen",
     "theme": "Design wechseln",
     "switchLang": "Sprache wechseln",
     "skip": "Zum Inhalt springen"
   },
   "footer": {
-    "copyright": "© {{year}} Silvra — entwickelt & betrieben in der EU",
-    "description": "Wir bauen Kommunikation und digitale Infrastruktur für Europa — post-quanten-sicher, transparent und ohne Datenhandel.",
-    "pages": "Seiten",
+    "copyright": "© {{year}} Silvra",
+    "description": "Kommunikation und digitale Infrastruktur für Europa — post-quanten-sicher, transparent, ohne Datenhandel.",
+    "eu": "Entwickelt & betrieben in der EU",
     "products": "Produkte",
     "legal": "Rechtliches",
-    "socials": "Socials"
+    "impressum": "Impressum",
+    "privacy": "Datenschutz",
+    "stack": "MLS · ML-KEM · ML-DSA-65"
   },
   "home": {
-    "hero": {
-      "eyebrow": "Forschung & Entwicklung — in der EU",
-      "title": "Software, die auch\nübermorgen trägt",
-      "titleLine1": "Software, die auch",
-      "titleShadow": "übermorgen",
-      "titleLine2": "trägt",
-      "body": "Wir bauen Kommunikation und digitale Infrastruktur für Europa — auf Verfahren, die dem standhalten, was auf heutige Verschlüsselung zukommt. Entwickelt und betrieben in der EU, ohne Werbung, ohne Datenhandel.",
-      "ctaPrimary": "Projekte ansehen",
-      "ctaSecondary": "Woran wir uns halten",
-      "node": {
-        "live": "live · node.silvra.net",
-        "simulated": "Testnetz · Simulation",
-        "badge": "ML-DSA-65",
-        "heightLabel": "Aktuelle Blockhöhe",
-        "blockSigs": "{{sigs}} sigs · {{seconds}}s",
-        "footer": "Nicht behauptet, sondern nachgezählt: Jede Signatur im Testnetz ist post-quanten-sicher — vom ersten Block an."
-      }
-    },
-    "autopilot": {
-      "eyebrow": "So funktioniert es",
-      "title": "Sicherheit, die läuft. Von allein.",
-      "subtitle": "Silvra verschlüsselt, verwaltet Ihre Schlüssel und schützt Ihre Kommunikation — automatisch, im Hintergrund, ohne dass Sie etwas tun müssen.",
-      "ctaPrimary": "Jetzt herunterladen",
-      "ctaSecondary": "Mehr erfahren",
-      "tiles": {
-        "identity": "Post-Quanten",
-        "helix": "Helix",
-        "encryption": "Ende-zu-Ende",
-        "messenger": "Messenger"
-      }
-    },
-    "testnet": {
-      "title": "Unser Testnetz produziert gerade Blöcke",
-      "live": "live von node.silvra.net",
-      "public": "öffentliche Schnittstelle: node.silvra.net",
-      "stats": {
-        "height": "Blockhöhe",
-        "sigs": "Signaturen je Block",
-        "time": "Blockzeit",
-        "status": "Status",
-        "statusLive": "Live",
-        "statusTestnet": "Testnetz aktiv"
+    "gate": {
+      "title": "Silvra — digitale Infrastruktur aus Europa: Silvra Messenger und Helix Blockchain",
+      "seal": "Silvra · Technologie aus der EU · Für das, was kommt · ",
+      "scroll": "Mehr über Silvra",
+      "messenger": {
+        "kicker": "Kommunikation",
+        "title1": "Silvra",
+        "title2": "Messenger",
+        "text": "Ende-zu-Ende verschlüsselt — mit Post-Quanten-Kryptographie vom ersten Handshake an.",
+        "facts": [
+          "MLS · RFC 9420",
+          "ML-KEM",
+          "Ohne Telefonnummer",
+          "Ohne Werbung"
+        ],
+        "cta": "Messenger entdecken",
+        "phrases": [
+          "Bis morgen!",
+          "Bin gleich da",
+          "Danke dir",
+          "Treffen um acht?",
+          "Gute Nacht",
+          "Hab's gefunden",
+          "Alles gut?",
+          "Ruf mich an"
+        ]
       },
-      "footer": "Letzte {{count}} Blöcke: {{total}} post-quanten-sichere Signaturen — {{source}}.",
-      "offline": "Knoten nicht erreichbar"
-    },
-    "projects": {
-      "eyebrow": "Unsere Projekte",
-      "title": "Zwei Vorhaben, ein Ziel",
-      "lead": "Beide arbeiten an derselben Frage: Wie sieht digitale Infrastruktur aus, die man auch in zehn Jahren noch verantworten kann?",
-      "items": [
-        {
-          "tag": "Verschlüsselt · in Entwicklung",
-          "title": "Silvra Messenger",
-          "body": "Chats laufen Ende-zu-Ende verschlüsselt nach MLS, kombiniert mit dem Post-Quanten-Verfahren ML-KEM. Dazu ein Feed nur für Ihre Kontakte und eine optionale Wallet — in einer App aus Europa.",
-          "points": [
-            "MLS + ML-KEM",
-            "Kontakt-Feed",
-            "Optionales Punktekonto"
-          ]
-        },
-        {
-          "tag": "Öffentliches Testnetz",
-          "title": "Helix",
-          "body": "Eine Layer-1-Blockchain, deren Signaturen durchgängig auf dem NIST-Standard ML-DSA-65 beruhen — nicht auf klassischen Kurven mit späterem Umstiegsplan.",
-          "points": [
-            "ML-DSA-65 durchgängig",
-            "Layer 1",
-            "Validator-Betrieb offen"
-          ]
-        }
-      ],
-      "visual": {
-        "messenger": {
-          "handshake": "Handshake: ML-KEM-768 ✓",
-          "epoch": "Epoch 14 · Schlüssel rotiert",
-          "e2e": "Ende-zu-Ende · MLS",
-          "feed": "Feed: nur Kontakte",
-          "input": "Nachricht …"
-        },
-        "helix": "genesis → head · ML-DSA-65"
+      "helix": {
+        "kicker": "Infrastruktur",
+        "title1": "Helix",
+        "title2": "Blockchain",
+        "text": "Eine Layer-1-Blockchain, deren Signaturen durchgängig post-quanten-sicher sind — vom ersten Block an.",
+        "facts": [
+          "ML-DSA-65",
+          "BFT · Proof of Stake",
+          "WASM-Verträge"
+        ],
+        "cta": "Helix entdecken",
+        "live": "Block {{height}} · live",
+        "offline": "Öffentliches Testnetz"
       }
+    },
+    "about": {
+      "label": "Silvra",
+      "statement": "Wir bauen die digitale Infrastruktur, der Europa auch übermorgen noch vertrauen kann.",
+      "body": "Kommunikation und Blockchain auf Verfahren, die dem standhalten, was auf heutige Verschlüsselung zukommt. Entwickelt und betrieben in der EU — ohne Werbung, ohne Datenhandel.",
+      "cta": "Unsere Mission",
+      "facts": [
+        {
+          "value": "2",
+          "label": "Produkte, ein Fundament",
+          "body": "Ein Messenger und eine Blockchain — beide von Anfang an post-quanten-sicher gebaut."
+        },
+        {
+          "value": "0",
+          "label": "Werbung, Tracking, Datenhandel",
+          "body": "Es gibt kein Geschäftsmodell, das auf Ihren Daten beruht."
+        },
+        {
+          "value": "EU",
+          "label": "Entwickelt & betrieben",
+          "body": "Eine Entscheidung über Zuständigkeiten, nicht bloß über Serverstandorte."
+        },
+        {
+          "value": "2024",
+          "label": "NIST-Standards",
+          "body": "ML-KEM und ML-DSA — eingebaut, solange die Projekte jung genug dafür sind."
+        }
+      ]
+    },
+    "marquee": [
+      "Ende-zu-Ende verschlüsselt",
+      "Post-Quanten",
+      "Entwickelt in der EU",
+      "Ohne Werbung",
+      "Ohne Datenhandel",
+      "Open Source",
+      "Transparenz statt Versprechen"
+    ],
+    "stack": {
+      "label": "Ökosystem",
+      "title": "Zwei Produkte. Ein Fundament.",
+      "lead": "Beide arbeiten an derselben Frage: Wie sieht digitale Infrastruktur aus, die man auch in zehn Jahren noch verantworten kann?",
+      "messenger": {
+        "kicker": "01 · Kommunikation",
+        "body": "Chats, Anrufe, Feed und Wallet — Ende-zu-Ende verschlüsselt nach MLS, hybrid mit ML-KEM."
+      },
+      "helix": {
+        "kicker": "02 · Infrastruktur",
+        "body": "Layer 1 mit ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme."
+      },
+      "kem": "Schlüsselaustausch im Messenger",
+      "dsa": "Signaturen auf Helix",
+      "pq": "Post-Quanten-Kryptographie nach NIST-Standard — von der ersten Zeile an",
+      "eu": "Entwickelt und betrieben in der EU"
     },
     "why": {
-      "eyebrow": "Warum wir das tun",
-      "title": "Was heute abgefangen wird, lässt sich später lesen",
-      "paragraphs": [
-        "Ein großer Teil der Verschlüsselung, die heute das Internet trägt, beruht auf mathematischen Problemen, die ein hinreichend großer Quantenrechner lösen kann. Wann es solche Rechner gibt, weiß niemand. Sicher ist nur: Was heute abgefangen und gespeichert wird, lässt sich später entschlüsseln.",
-        "Deshalb setzen wir dort, wo wir die Wahl haben, von Anfang an auf die Verfahren, die das US-Normungsinstitut NIST 2024 standardisiert hat — und bauen sie ein, solange ein Projekt jung genug ist, dass es ohne Bruch geht.",
-        "Das zweite Motiv ist einfacher: Wir wollen, dass es europäische Alternativen gibt. Nicht als Etikett, sondern als Software, die man tatsächlich benutzen kann."
+      "label": "Warum jetzt",
+      "title": "Verschlüsselung mit Ablaufdatum",
+      "lead": "Ein großer Teil der Verschlüsselung, die heute das Internet trägt, beruht auf mathematischen Problemen, die ein hinreichend großer Quantenrechner lösen kann.",
+      "steps": [
+        {
+          "when": "Heute",
+          "title": "Abfangen und speichern",
+          "body": "Verschlüsselte Daten werden abgefangen und aufbewahrt. Heute sind sie unlesbar — gespeichert werden sie trotzdem."
+        },
+        {
+          "when": "Irgendwann",
+          "title": "Der Quantenrechner",
+          "body": "Ein hinreichend großer Quantenrechner bricht die klassischen Verfahren. Wann es so weit ist, weiß niemand."
+        },
+        {
+          "when": "Mit Silvra",
+          "title": "Von Anfang an vorbereitet",
+          "body": "Wo wir die Wahl haben, setzen wir auf die 2024 standardisierten NIST-Verfahren — und sagen offen, wo noch nicht."
+        }
       ],
       "badges": [
         "NIST FIPS 203 · ML-KEM",
@@ -158,101 +179,128 @@
         "Standardisiert 2024"
       ]
     },
-    "principles": {
-      "eyebrow": "Wie wir arbeiten",
-      "title": "Woran wir uns halten",
-      "expect": {
-        "heading": "Das können Sie erwarten",
-        "items": [
-          {
-            "title": "Offen über Lücken",
-            "body": "Was noch nicht fertig ist, steht in unserer Dokumentation — nicht erst dann, wenn jemand danach fragt."
-          },
-          {
-            "title": "Kein Datenhandel",
-            "body": "Es gibt bei uns kein Geschäftsmodell, das auf dem Weiterverkauf von Nutzungsdaten beruht. Auch keine Werbeplätze."
-          },
-          {
-            "title": "In Europa entwickelt und betrieben",
-            "body": "Das ist eine Entscheidung über Zuständigkeiten, nicht bloß über Serverstandorte."
-          }
-        ]
-      },
-      "noPromise": {
-        "heading": "Das versprechen wir nicht",
-        "items": [
-          {
-            "title": "Keine fertigen Produkte für jeden Zweck",
-            "body": "Wir bauen zwei Dinge und machen die gründlich, statt vieles halb."
-          },
-          {
-            "title": "Keine Termine, die wir nicht halten können",
-            "body": "Was fertig ist, geht live. Was nicht, bekommt kein Datum."
-          },
-          {
-            "title": "Keine Sicherheitsversprechen ohne Beleg",
-            "body": "Wo ein Verfahren klassisch verschlüsselt statt quantensicher, schreiben wir das hin."
-          }
-        ]
+    "craft": {
+      "label": "Haltung",
+      "title": "Gründlich statt laut.",
+      "points": [
+        {
+          "title": "Zwei Dinge, gründlich",
+          "body": "Wir bauen zwei Produkte und machen die gründlich, statt vieles halb."
+        },
+        {
+          "title": "Live, wenn fertig",
+          "body": "Was fertig ist, geht live. Was nicht, bekommt kein Datum."
+        },
+        {
+          "title": "Offen über Lücken",
+          "body": "Wo ein Verfahren klassisch verschlüsselt statt quantensicher, schreiben wir das hin — bevor jemand fragt."
+        }
+      ],
+      "cta": "Woran wir uns halten"
+    },
+    "europe": {
+      "label": "Europa",
+      "title": "Aus Europa. Für Europa.",
+      "lead": "Wir wollen, dass es europäische Alternativen gibt. Nicht als Etikett, sondern als Software, die man tatsächlich benutzen kann.",
+      "points": [
+        {
+          "title": "Entwickelt und betrieben in der EU",
+          "body": "Das ist eine Entscheidung über Zuständigkeiten, nicht bloß über Serverstandorte."
+        },
+        {
+          "title": "Kein Datenhandel",
+          "body": "Kein Geschäftsmodell, das auf dem Weiterverkauf von Nutzungsdaten beruht. Auch keine Werbeplätze."
+        },
+        {
+          "title": "Offen statt abgeschottet",
+          "body": "Ein Testnetz, das jeder mitlesen kann, und ein Messenger, dessen Nachrichten wir selbst nicht lesen können."
+        }
+      ],
+      "caption": "Entwickelt & betrieben in der EU"
+    },
+    "live": {
+      "label": "Live",
+      "title": "Helix läuft. Genau jetzt.",
+      "lead": "Keine Simulation: Diese Zahlen kommen direkt vom öffentlichen Knoten des Testnetzes und werden alle zehn Sekunden neu abgefragt.",
+      "cta": "Mehr über Helix"
+    },
+    "testnet": {
+      "title": "Öffentliches Testnetz",
+      "live": "live · node.silvra.net",
+      "offline": "Knoten nicht erreichbar",
+      "explorer": "Im Explorer ansehen",
+      "stats": {
+        "height": "Blockhöhe",
+        "peers": "Peers",
+        "mempool": "Mempool",
+        "status": "Status",
+        "statusLive": "Live",
+        "statusSync": "Sync läuft",
+        "version": "Version"
       }
     },
-    "contact": {
-      "eyebrow": "Kontakt",
-      "title": "Fragen zu\nunserer Arbeit?",
+    "join": {
+      "label": "Mitmachen",
+      "title": "Bauen Sie mit an Europas digitaler Zukunft.",
       "body": "Ob Sie mitentwickeln, einen Validator betreiben oder einfach wissen möchten, woran wir gerade sitzen — schreiben Sie uns.",
-      "email": "info@silvra.net",
-      "helix": "node.silvra.net"
-    },
-    "ticker": {
-      "items": [
-        "Ende-zu-Ende verschlüsselt",
-        "Post-Quantum · ML-KEM-1024",
-        "EU-betrieben",
-        "Ohne Werbung",
-        "Ohne Datenhandel",
-        "Open Source",
-        "Transparenz statt Versprechen"
-      ]
+      "email": "info@silvra.net"
     }
   },
   "messenger": {
-    "eyebrow": "Jetzt auf Google Play",
-    "title": "Silvra Messenger",
-    "subtitle": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — mit Post-Quanten-Kryptographie vom ersten Handshake an.",
-    "status": {
-      "title": "Verfügbarkeit",
-      "body": "Silvra Messenger ist auf Google Play verfügbar. Die App bietet Ende-zu-Ende-verschlüsselte Chats und Anrufe, einen Kontakt-Feed, Gruppenfunktionen und ein optionales Punktekonto — ohne Werbenetzwerke und ohne Datenweitergabe.",
+    "hero": {
+      "label": "Jetzt auf Google Play",
+      "lead": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — mit Post-Quanten-Kryptographie vom ersten Handshake an.",
+      "more": "So schützt Silvra",
       "badges": [
-        "Google Play",
         "MLS + ML-KEM",
+        "Ohne Telefonnummer",
         "Deutsch & Englisch"
+      ],
+      "shotAlt": "Startbildschirm des Silvra Messenger: Willkommen, Anmeldung per E-Mail mit sechsstelligem Code",
+      "bubbles": [
+        "Bis morgen! Ich bring Kuchen mit.",
+        "Bin in zehn Minuten da.",
+        "Danke für gestern!"
+      ],
+      "chips": {
+        "handshake": "Handshake · ML-KEM ✓",
+        "e2e": "Ende-zu-Ende · MLS",
+        "feed": "Feed: nur Kontakte"
+      }
+    },
+    "marquee": [
+      "Ende-zu-Ende verschlüsselt",
+      "Post-Quanten vom ersten Handshake",
+      "Ohne Telefonnummer",
+      "Ohne Werbung",
+      "Ohne Tracking",
+      "Aus Europa"
+    ],
+    "pillars": {
+      "eyebrow": "Die drei Säulen",
+      "title": "Chat, Aktuelles und Wallet. Eine App.",
+      "items": [
+        {
+          "icon": "chat",
+          "title": "Chat",
+          "body": "Einzel- und Gruppengespräche mit Bildern, Sprachnachrichten, Dateien und Standorten. Dazu Sprach- und Videoanrufe sowie Nachrichten, die sich nach einer Stunde, einem Tag oder einer Woche selbst löschen."
+        },
+        {
+          "icon": "feed",
+          "title": "Aktuelles",
+          "body": "Ein Feed für Bilder und Videos, sichtbar nur für Ihre Chat-Kontakte. Kein öffentlicher Feed, keine Fremden, keine Reichweiten-Metriken."
+        },
+        {
+          "icon": "wallet",
+          "title": "Wallet",
+          "body": "Ein optionales Punktekonto — nutzbar, wenn Sie möchten, sonst schlicht nicht vorhanden. Die Schlüssel liegen auf Ihrem Gerät."
+        }
       ]
     },
     "intro": {
       "eyebrow": "Post-Quanten von Anfang an",
       "title": "Verschlüsselt gegen einen Gegner von übermorgen",
       "body": "Chats sind Ende-zu-Ende verschlüsselt mit MLS — dem IETF-Standard RFC 9420 — kombiniert mit ML-KEM, dem neuen NIST-Verfahren gegen Quantencomputer. Was heute abgefangen wird, bleibt auch später unlesbar."
-    },
-    "pillars": {
-      "eyebrow": "Die drei Säulen",
-      "title": "Chat, Aktuelles und Wallet. Eine App.",
-      "items": [
-        {
-          "icon": "MessageCircle",
-          "title": "Chat",
-          "body": "Einzel- und Gruppengespräche mit Bildern, Sprachnachrichten, Dateien und Standorten. Dazu Sprach- und Videoanrufe sowie Nachrichten, die sich nach einer Stunde, einem Tag oder einer Woche selbst löschen."
-        },
-        {
-          "icon": "Rss",
-          "title": "Aktuelles",
-          "body": "Ein Feed für Bilder und Videos, sichtbar nur für Ihre Chat-Kontakte. Kein öffentlicher Feed, keine Fremden, keine Reichweiten-Metriken."
-        },
-        {
-          "icon": "Wallet",
-          "title": "Wallet",
-          "body": "Ein optionales Punktekonto — nutzbar, wenn Sie möchten, sonst schlicht nicht vorhanden. Die Schlüssel liegen auf Ihrem Gerät."
-        }
-      ]
     },
     "adversary": {
       "eyebrow": "Warum das nicht dasselbe ist wie „verschlüsselt“",
@@ -261,7 +309,13 @@
         "Heute gängige Verfahren beruhen auf mathematischen Problemen, die ein hinreichend großer Quantenrechner lösen kann. Niemand weiß, wann es solche Maschinen geben wird — dass abgefangene Daten bis dahin aufbewahrt werden, ist dagegen gängige Praxis.",
         "Silvra kombiniert deshalb klassische Kryptographie mit ML-KEM, dem 2024 vom US-Normungsinstitut NIST standardisierten Verfahren. Beides zusammen, nicht eines allein: Bricht eines, hält das andere trotzdem."
       ],
-      "highlight": "Die Schlüssel liegen ausschließlich auf Ihren Geräten. Wir können Ihre Nachrichten nicht lesen — auch nicht auf behördliche Anfrage, weil dort schlicht nichts Lesbares liegt."
+      "highlight": "Die Schlüssel liegen ausschließlich auf Ihren Geräten. Wir können Ihre Nachrichten nicht lesen — auch nicht auf behördliche Anfrage, weil dort schlicht nichts Lesbares liegt.",
+      "classic": "Klassisch",
+      "classicNote": "Bewährte Verfahren von heute",
+      "pqNote": "NIST-Standard gegen Quantenrechner",
+      "result": "Gemeinsamer Schlüssel",
+      "resultNote": "Bricht eines, hält das andere.",
+      "diagramAlt": "Schema: Klassische Kryptographie und ML-KEM werden kombiniert. Bricht eines der Verfahren, schützt das andere den Schlüssel weiter."
     },
     "screens": {
       "eyebrow": "Ein Blick in die App",
@@ -322,91 +376,108 @@
       "title": "Was der Messenger nicht ist",
       "items": [
         {
-          "icon": "Ban",
+          "icon": "ban",
           "title": "Kein Werbenetzwerk",
           "body": "Es gibt kein Geschäftsmodell, das Daten verkauft. Entsprechend keine Werbeplätze und kein Tracking."
         },
         {
-          "icon": "Coins",
+          "icon": "coins",
           "title": "Keine Krypto-Börse",
           "body": "Kein Handel, keine Umwandlung in Euro, keine Verwahrung."
         },
         {
-          "icon": "Mail",
+          "icon": "mail",
           "title": "Keine Telefonnummer nötig",
           "body": "Anmeldung per E-Mail-Adresse und sechsstelligem Code. Kein Passwort, keine Nummer in fremden Adressbüchern."
         },
         {
-          "icon": "Landmark",
+          "icon": "landmark",
           "title": "Kein Behördenportal",
           "body": "Das Projekt ist aus einer Bürger-App entstanden. Diese Zeit ist vorbei — es ist ein Messenger."
         }
       ]
     },
     "download": {
+      "label": "Download",
       "title": "Jetzt auf Google Play",
-      "body": "Laden Sie Silvra Messenger herunter und testen Sie Ende-zu-Ende-verschlüsselte Chats mit Post-Quanten-Kryptographie."
+      "body": "Silvra Messenger ist auf Google Play verfügbar. Die App bietet Ende-zu-Ende-verschlüsselte Chats und Anrufe, einen Kontakt-Feed, Gruppenfunktionen und ein optionales Punktekonto — ohne Werbenetzwerke und ohne Datenweitergabe."
     },
     "playStore": "Auf Google Play herunterladen",
     "crypto": {
       "eyebrow": "Live-Demo · WebCrypto",
       "title": "Verschlüsselung, live im Browser",
-      "body": "Gib eine Nachricht ein — sie wird direkt hier mit AES-256-GCM verschlüsselt und wieder entschlüsselt. Jeder Durchlauf nutzt einen frischen, zufälligen Schlüssel.",
-      "placeholder": "Deine Nachricht…",
+      "body": "Geben Sie eine Nachricht ein: Sie wird direkt hier mit AES-256-GCM verschlüsselt und sofort wieder entschlüsselt. Der Schlüssel entsteht beim Laden der Seite zufällig, jede Verschlüsselung bekommt eine frische Nonce — und nichts davon verlässt Ihren Browser.",
+      "placeholder": "Ihre Nachricht …",
       "keyLabel": "Schlüssel · AES-256",
       "nonceLabel": "Nonce",
       "ctLabel": "Ciphertext",
       "verified": "Entschlüsselung verifiziert — Ausgabe entspricht der Eingabe",
-      "caption": "Demo per AES-GCM in deinem Browser. Der echte Silvra Messenger sichert den Schlüsselaustausch zusätzlich mit Post-Quantum-Verfahren (ML-KEM-1024)."
+      "caption": "Eine Demo mit AES-GCM in Ihrem Browser. Der Silvra Messenger sichert den Schlüsselaustausch zusätzlich mit dem Post-Quanten-Verfahren ML-KEM ab.",
+      "waiting": "Tippen Sie etwas — es wird sofort verschlüsselt."
     }
   },
   "helix": {
     "eyebrow": "Öffentliches Testnetz",
-    "title": "Helix",
+    "titleSub": "Post-Quanten-Blockchain",
     "subtitle": "Eine Layer-1-Blockchain, deren Signaturen durchgängig auf ML-DSA-65 beruhen — dem NIST-Standard für post-quanten-sichere Signaturen.",
+    "hero": {
+      "signature": "Signaturen",
+      "consensus": "Konsens"
+    },
+    "marquee": [
+      "ML-DSA-65 auf jeder Signatur",
+      "Layer 1",
+      "BFT-Finalität",
+      "Proof of Stake",
+      "WASM-Verträge",
+      "alice.hlx",
+      "Offenes Testnetz"
+    ],
     "intro": {
       "eyebrow": "Post-Quanten von Grund auf",
       "title": "Nicht nachgerüstet. Von Grund auf gebaut.",
       "body": "Statt eine bestehende Kette später auf Post-Quanten umzustellen, ist Helix von der ersten Zeile an darauf ausgelegt: ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme — kein Übergang, keine klassischen Kurven, die später ausgetauscht werden müssten."
     },
     "testnet": {
-      "title": "Testnetz-Status",
-      "live": "live von node.silvra.net",
-      "public": "öffentliche Schnittstelle: node.silvra.net",
-      "stats": {
-        "height": "Blockhöhe",
-        "sigs": "Signaturen je Block",
-        "time": "Blockzeit",
-        "status": "Status",
-        "statusLive": "Live",
-        "statusTestnet": "Testnetz aktiv"
-      },
-      "footer": "Letzte {{count}} Blöcke: {{total}} post-quanten-sichere Signaturen — {{source}}."
+      "eyebrow": "Live",
+      "title": "Das Testnetz in Echtzeit",
+      "lead": "Direkt vom öffentlichen Knoten node.silvra.net. Jeder kann mitlesen, jeder kann einen Knoten starten."
+    },
+    "chain": {
+      "eyebrow": "Architektur",
+      "title": "Sechs Entscheidungen, Block für Block",
+      "lead": "Was Helix von einer Kette unterscheidet, die später auf Post-Quanten umgestellt werden soll."
     },
     "features": [
       {
         "title": "ML-DSA-65 durchgängig",
-        "body": "Nicht nur ein Plan für später: Jede Transaktion und jeder Block wird von Anfang an mit dem NIST-Standard ML-DSA-65 signiert."
+        "body": "Nicht nur ein Plan für später: Jede Transaktion und jeder Block wird von Anfang an mit dem NIST-Standard ML-DSA-65 signiert.",
+        "icon": "shield"
       },
       {
         "title": "Validator-Betrieb offen",
-        "body": "Wir wollen ein Netz, bei dem unabhängige Knoten betrieben werden können. Die Dokumentation für Validator-Setup folgt Schritt für Schritt."
+        "body": "Wir wollen ein Netz, bei dem unabhängige Knoten betrieben werden können. Die Dokumentation für Validator-Setup folgt Schritt für Schritt.",
+        "icon": "server"
       },
       {
         "title": "Keine klassischen Kurven",
-        "body": "Helix verzichtet auf ECDSA oder EdDSA. Damit entfällt der umständliche und risikobehaftete Wechsel später."
+        "body": "Helix verzichtet auf ECDSA oder EdDSA. Damit entfällt der umständliche und risikobehaftete Wechsel später.",
+        "icon": "ban"
       },
       {
         "title": "Menschenlesbare Adressen",
-        "body": "alice.hlx statt Hex-Adressen — eine Kontokennung, die man sich merken kann, mit Social-Guardian-Wiederherstellung statt Seed-Phrase."
+        "body": "alice.hlx statt Hex-Adressen — eine Kontokennung, die man sich merken kann, mit Social-Guardian-Wiederherstellung statt Seed-Phrase.",
+        "icon": "at"
       },
       {
         "title": "Byzantinische Finalität",
-        "body": "Tendermint-artiger BFT-Konsens kombiniert mit Proof of Stake — und einer Stimmrechts-Obergrenze von 1 % je Identität, damit Kapital nicht automatisch Kontrolle bedeutet."
+        "body": "Tendermint-artiger BFT-Konsens kombiniert mit Proof of Stake — und einer Stimmrechts-Obergrenze von 1 % je Identität, damit Kapital nicht automatisch Kontrolle bedeutet.",
+        "icon": "scale"
       },
       {
         "title": "WASM-Smart-Contracts",
-        "body": "Verträge laufen in einer WebAssembly-VM mit Fuel-Metering — ausführbar, ohne dass ein einzelner Vertrag das gesamte Netz blockieren kann."
+        "body": "Verträge laufen in einer WebAssembly-VM mit Fuel-Metering — ausführbar, ohne dass ein einzelner Vertrag das gesamte Netz blockieren kann.",
+        "icon": "code"
       }
     ],
     "honesty": {
@@ -419,20 +490,23 @@
       "highlight": "Wir sagen das lieber vorher, als es nachträglich erklären zu müssen."
     },
     "cta": {
-      "eyebrow": "Mehr erfahren",
-      "body": "Den öffentlichen Knoten, die Schnittstelle und aktuelle Blöcke findest du direkt auf node.silvra.net.",
-      "link": "node.silvra.net",
-      "github": "GitHub",
-      "discord": "Discord"
+      "eyebrow": "Mitmachen",
+      "title": "Selbst nachsehen.",
+      "body": "Den öffentlichen Knoten, die Schnittstelle und aktuelle Blöcke finden Sie direkt auf node.silvra.net — oder Sie fragen uns.",
+      "explorer": "Explorer öffnen",
+      "explorerBody": "Blöcke, Transaktionen und Validatoren live durchsuchen.",
+      "nodeBody": "Die öffentliche Schnittstelle des Testnetzes.",
+      "githubBody": "Code und Projekte der Silvra-Organisation.",
+      "discordBody": "Fragen, Validator-Betrieb, Austausch mit dem Team."
     }
   },
   "mission": {
-    "eyebrow": "Warum wir das tun",
+    "eyebrow": "Mission",
     "title": "Was heute abgefangen wird, lässt sich später lesen",
     "subtitle": "Wir bauen digitale Infrastruktur, die auch mit Quantenrechnern noch verantwortet werden kann — und die in Europa ihren Ursprung hat.",
     "approach": {
       "eyebrow": "Unser Ansatz",
-      "title": "Post-Quanten-Kryptographie von Anfang an",
+      "statement": "Post-Quanten-Kryptographie von Anfang an — eingebaut, solange ein Projekt jung genug ist, dass es ohne Bruch geht.",
       "paragraphs": [
         "Ein großer Teil der Verschlüsselung, die heute das Internet trägt, beruht auf mathematischen Problemen, die ein hinreichend großer Quantenrechner lösen kann. Wann es solche Rechner gibt, weiß niemand. Sicher ist nur: Was heute abgefangen und gespeichert wird, lässt sich später entschlüsseln.",
         "Deshalb setzen wir dort, wo wir die Wahl haben, von Anfang an auf die Verfahren, die das US-Normungsinstitut NIST 2024 standardisiert hat — und bauen sie ein, solange ein Projekt jung genug ist, dass es ohne Bruch geht.",
@@ -492,69 +566,24 @@
       "body": "Wir lesen jede Nachricht. Bei technischen Fragen helfen wir gerne weiter oder verweisen auf die passende Dokumentation."
     },
     "email": "info@silvra.net",
-    "helix": "node.silvra.net",
     "cards": [
       {
-        "icon": "MessageCircle",
         "title": "Mitentwickeln",
-        "body": "Du arbeitest an Post-Quanten-Kryptographie, Distributed Systems oder mobilen Clients? Schreib uns — wir tauschen uns gerne aus.",
+        "body": "Sie arbeiten an Post-Quanten-Kryptographie, verteilten Systemen oder mobilen Clients? Schreiben Sie uns — wir tauschen uns gerne aus.",
         "detail": [
           "Wir bauen an Ende-zu-Ende-Verschlüsselung, post-quanten-sicherer Kryptographie und den mobilen Apps für Android — in Rust, Kotlin und React Native.",
-          "Schreib uns kurz, woran du arbeitest oder arbeiten möchtest. Wir antworten persönlich, kein Ticketsystem."
-        ]
+          "Schreiben Sie uns kurz, woran Sie arbeiten oder arbeiten möchten. Wir antworten persönlich, ohne Ticketsystem."
+        ],
+        "icon": "code"
       },
       {
-        "icon": "ExternalLink",
         "title": "Validator-Betrieb",
-        "body": "Wenn du einen Helix-Validator betreiben möchtest, melde dich bei uns. Wir informieren dich, sobald die öffentliche Dokumentation bereitsteht.",
+        "body": "Wenn Sie einen Helix-Validator betreiben möchten, melden Sie sich bei uns. Wir informieren Sie, sobald die öffentliche Dokumentation bereitsteht.",
         "detail": [
           "Helix läuft auf einem Tendermint-artigen BFT-Konsens mit Proof of Stake und einer Stimmrechts-Obergrenze von 1 % je Identität. Validator-Knoten lassen sich über CLI oder Desktop-GUI betreiben — Linux, macOS, Windows.",
           "Das Netz ist aktuell ein offenes Testnetz, HLX hat noch keinen Wert. Wir melden uns, sobald die öffentliche Validator-Dokumentation bereitsteht."
-        ]
-      }
-    ],
-    "discord": "Discord"
-  },
-  "datenschutz": {
-    "eyebrow": "Rechtliches",
-    "title": "Datenschutz",
-    "subtitle": "Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.",
-    "sections": [
-      {
-        "title": "1. Verantwortlicher",
-        "body": "Verantwortlich für die Datenverarbeitung auf dieser Website ist Silvra. Die vollständigen Angaben zum Betreiber finden Sie im Impressum. Sie erreichen uns jederzeit unter info@silvra.net."
-      },
-      {
-        "title": "2. Grundsätzliches",
-        "body": "Diese Website verarbeitet personenbezogene Daten nur, soweit dies für den Betrieb technisch erforderlich ist. Es findet kein Tracking, keine Analyse von Nutzerverhalten, keine Werbung und keine Weitergabe von Nutzungsdaten an Dritte zu Marketingzwecken statt."
-      },
-      {
-        "title": "3. Keine Cookies, lokale Speicherung",
-        "body": "Diese Website verwendet keine Cookies. Ihre Auswahl von Sprache und Darstellungsmodus (hell/dunkel) wird ausschließlich lokal in Ihrem Browser (Local Storage) gespeichert und nicht an uns oder Dritte übertragen."
-      },
-      {
-        "title": "4. Hosting und Server-Logfiles",
-        "body": "Beim Aufruf dieser Website verarbeitet der Hosting-Anbieter technisch notwendige Verbindungsdaten in Server-Logfiles, insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs, abgerufene Datei, Browsertyp und Betriebssystem. Die Verarbeitung erfolgt auf Grundlage unseres berechtigten Interesses an einem stabilen und sicheren Betrieb der Website (Art. 6 Abs. 1 lit. f DSGVO). Die Logdaten werden nicht mit anderen Datenquellen zusammengeführt und nicht ausgewertet."
-      },
-      {
-        "title": "5. Google Fonts",
-        "body": "Zur Darstellung der Website werden Schriftarten über Google Fonts geladen. Dabei stellt Ihr Browser eine Verbindung zu Servern der Google Ireland Ltd. bzw. der Google LLC (USA) her und übermittelt dabei Ihre IP-Adresse. Weitere Informationen finden Sie in der Datenschutzerklärung von Google unter policies.google.com/privacy."
-      },
-      {
-        "title": "6. Externe Dienste und Links",
-        "body": "Auf der Helix-Seite greift Ihr Browser direkt auf die öffentliche Schnittstelle von node.silvra.net zu; dabei wird Ihre IP-Adresse an diesen Dienst übermittelt. Auf andere Dienste, auf die wir verlinken (z. B. Google Play und X), haben wir keinen Einfluss; für dortige Datenverarbeitungen gelten ausschließlich die Datenschutzerklärungen der jeweiligen Anbieter."
-      },
-      {
-        "title": "7. Kontaktaufnahme",
-        "body": "Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir Ihre E-Mail-Adresse, den Inhalt Ihrer Nachricht und die übermittelten Metadaten (z. B. Zeitpunkt, Betreff) ausschließlich zur Bearbeitung Ihrer Anfrage (Art. 6 Abs. 1 lit. f DSGVO). Eine Weitergabe an Dritte erfolgt nicht."
-      },
-      {
-        "title": "8. Ihre Rechte",
-        "body": "Sie haben das Recht auf Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Berichtigung, Löschung und Einschränkung der Verarbeitung sowie auf Datenübertragbarkeit. Sie können der Verarbeitung jederzeit widersprechen. Zudem besteht das Recht auf Beschwerde bei einer zuständigen Datenschutz-Aufsichtsbehörde. Wenden Sie sich dazu an info@silvra.net."
-      },
-      {
-        "title": "9. Änderungen dieser Erklärung",
-        "body": "Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich die Website oder die rechtlichen Anforderungen ändern. Es gilt die jeweils auf dieser Seite veröffentlichte Fassung."
+        ],
+        "icon": "server"
       }
     ]
   },
@@ -575,11 +604,19 @@
         "title": "Art des Angebots",
         "body": "Silvra ist ein nicht-gewerbliches Projekt. Es wird kein Geschäftsbetrieb geführt und mit den hier vorgestellten Projekten keine Gewinnerzielungsabsicht verfolgt."
       }
-    ]
+    ],
+    "photos": "Bildnachweise",
+    "photosBody": "Fotos von Unsplash, verwendet unter der Unsplash-Lizenz:"
+  },
+  "next": {
+    "label": "Die andere Seite von Silvra",
+    "cta": "Hinüberwechseln",
+    "messenger": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — Chats, Anrufe, Feed und Wallet in einer App.",
+    "helix": "Die Layer-1-Blockchain mit ML-DSA-65 auf jeder Signatur. Das Testnetz läuft — sehen Sie selbst."
   },
   "notFound": {
     "title": "Seite nicht gefunden",
-    "body": "Diese Seite existiert nicht. Vielleicht hilft dir einer dieser Links weiter.",
+    "body": "Diese Seite existiert nicht. Vielleicht hilft Ihnen einer dieser Wege weiter.",
     "cta": "Zur Startseite"
   }
 }

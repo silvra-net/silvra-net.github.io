@@ -14,7 +14,8 @@ import NotFound from "./pages/NotFound";
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Instant, not smooth: the page has changed, there is nothing to travel past.
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }, [pathname]);
   return null;
 }
