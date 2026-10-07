@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { motionChoice, subscribeMotion } from "./motion";
 
 /** The public node. The only place the site's numbers come from — nothing here is cached or
  *  precomputed on our side, and the node answers browsers directly (CORS is open). */
@@ -47,7 +48,9 @@ export interface NodeState {
 
   Blocks come every two seconds, so the status is asked for every three — often enough that the
   height visibly moves, rare enough to be a light load on the node. A hidden tab asks for
-  nothing: nobody is looking.
+  nothing: nobody is looking. Nor does a page whose visitor pressed "Bewegung anhalten": WCAG
+  2.2.2 counts numbers that update themselves as moving content, so after the first reading they
+  hold still until motion is switched back on.
 */
 const STATUS_EVERY = 3_000;
 const VALIDATORS_EVERY = 30_000;
@@ -65,9 +68,11 @@ function emit(patch: Partial<NodeState>) {
 }
 
 const hidden = () => typeof document !== "undefined" && document.visibilityState === "hidden";
+/** Only the page's own switch pauses the data; the OS setting asks for less animation, not stale numbers. */
+const paused = () => motionChoice() === "still";
 
 async function loadStatus() {
-  if (hidden()) return;
+  if (hidden() || (paused() && state.status)) return;
   try {
     const res = await fetch(`${NODE}/status`, { cache: "no-store" });
     if (!res.ok) throw new Error(String(res.status));
@@ -102,7 +107,7 @@ async function loadBlocks(height: number) {
 }
 
 async function loadValidators() {
-  if (hidden()) return;
+  if (hidden() || (paused() && state.validators !== null)) return;
   try {
     const res = await fetch(`${NODE}/validators`, { cache: "no-store" });
     if (!res.ok) throw new Error(String(res.status));
@@ -120,6 +125,8 @@ function onVisible() {
   }
 }
 
+let offMotion: (() => void) | undefined;
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
   if (!statusTimer) {
@@ -128,6 +135,13 @@ function subscribe(listener: () => void) {
     statusTimer = setInterval(loadStatus, STATUS_EVERY);
     validatorTimer = setInterval(loadValidators, VALIDATORS_EVERY);
     document.addEventListener("visibilitychange", onVisible);
+    // Switching motion back on brings the numbers up to date at once, not at the next tick.
+    offMotion = subscribeMotion(() => {
+      if (!paused()) {
+        void loadStatus();
+        void loadValidators();
+      }
+    });
   }
   return () => {
     listeners.delete(listener);
@@ -136,6 +150,8 @@ function subscribe(listener: () => void) {
       clearInterval(validatorTimer);
       statusTimer = validatorTimer = undefined;
       document.removeEventListener("visibilitychange", onVisible);
+      offMotion?.();
+      offMotion = undefined;
     }
   };
 }

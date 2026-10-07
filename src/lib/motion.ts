@@ -2,22 +2,84 @@ import { useEffect, useState } from "react";
 import type { RefObject } from "react";
 
 const QUERY = "(prefers-reduced-motion: reduce)";
+const KEY = "silvra-motion";
 
-export function prefersReducedMotion(): boolean {
-  return typeof window !== "undefined" && window.matchMedia(QUERY).matches;
+/**
+ * Motion has two sources: the OS setting for reduced motion, and a switch on the page itself
+ * ("Bewegung anhalten"), which WCAG 2.2.2 asks for — anything that moves or updates on its own
+ * must be possible to pause. An explicit choice on the page wins over the OS, in both directions,
+ * the way the theme does. The choice is mirrored onto <html data-motion> before first paint
+ * (index.html), so CSS can follow it without waiting for React.
+ */
+type Choice = "still" | "moving";
+let choice: Choice | null | undefined;
+const listeners = new Set<() => void>();
+
+function readChoice(): Choice | null {
+  try {
+    const v = localStorage.getItem(KEY);
+    return v === "still" || v === "moving" ? v : null;
+  } catch {
+    return null;
+  }
 }
 
-/** Follows the OS setting live: someone who switches it on mid-visit should not have to reload. */
+/** The explicit choice made on the page, if any. */
+export function motionChoice(): Choice | null {
+  if (typeof window === "undefined") return null;
+  if (choice === undefined) choice = readChoice();
+  return choice;
+}
+
+/** Whether things should stand still: the page's own switch, or else the OS setting. */
+export function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  const c = motionChoice();
+  return c ? c === "still" : window.matchMedia(QUERY).matches;
+}
+
+function publish(): void {
+  document.documentElement.dataset.motion = prefersReducedMotion() ? "still" : "moving";
+  listeners.forEach((l) => l());
+}
+
+export function setMotionStill(still: boolean): void {
+  choice = still ? "still" : "moving";
+  try {
+    localStorage.setItem(KEY, choice);
+  } catch {
+    /* private mode: the choice lasts for this page view */
+  }
+  publish();
+}
+
+export function subscribeMotion(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+/**
+ * Follows both sources live: someone who switches either mid-visit should not have to reload.
+ * Read on the client from the first render — it only ever steers effects and handlers, never
+ * markup, so the server's `false` cannot make hydration disagree.
+ */
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
+  const [still, setStill] = useState(prefersReducedMotion);
   useEffect(() => {
+    const on = () => setStill(prefersReducedMotion());
     const mq = window.matchMedia(QUERY);
-    const on = () => setReduced(mq.matches);
+    const os = () => publish();
     on();
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
+    mq.addEventListener("change", os);
+    const off = subscribeMotion(on);
+    return () => {
+      mq.removeEventListener("change", os);
+      off();
+    };
   }, []);
-  return reduced;
+  return still;
 }
 
 /** Whether a media query matches, kept current as the window changes. */
@@ -43,10 +105,11 @@ export function useMediaQuery(query: string): boolean {
  * animation towards it.
  */
 export function useScrollProgress(ref: RefObject<HTMLElement>, start = 0.85, end = 0.45): void {
+  const still = useReducedMotion();
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (prefersReducedMotion()) {
+    if (still) {
       el.style.setProperty("--p", "1");
       return;
     }
@@ -70,7 +133,7 @@ export function useScrollProgress(ref: RefObject<HTMLElement>, start = 0.85, end
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
     };
-  }, [ref, start, end]);
+  }, [ref, start, end, still]);
 }
 
 /**
@@ -87,12 +150,13 @@ export function useCanvasLoop(
     dispose?: () => void;
   },
 ): void {
+  // Switching motion off or on rebuilds the scene, so it can draw itself still or moving.
+  const still = useReducedMotion();
   useEffect(() => {
     const canvas = ref.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
     const scene = setup(canvas, ctx);
-    const still = prefersReducedMotion();
     let raf = 0;
     let visible = true;
 
@@ -137,6 +201,7 @@ export function useCanvasLoop(
       cancelAnimationFrame(raf);
       scene.dispose?.();
     };
-    // `setup` is a fresh closure every render; the scene is built once per mount on purpose.
-  }, [ref]);
+    // `setup` is a fresh closure every render; the scene is built once per mount on purpose,
+    // and again only when motion is switched.
+  }, [ref, still]);
 }

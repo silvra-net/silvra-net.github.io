@@ -33,16 +33,18 @@ export default function BlockStream() {
   };
 
   return (
-    <div className="stream" aria-label={t("blocks.label")}>
+    <div className="stream" role="region" aria-label={t("blocks.label")}>
       <ol className="stream-row" aria-live="off">
         {shown.map((b, i) => (
           <li key={b.height} className={i === 0 ? "stream-block newest" : "stream-block"}>
-            <a href={`${EXPLORER}block/${b.height}`} className="stream-link" aria-label={t("blocks.open", { height: b.height.toLocaleString(locale) })}>
+            <a href={`${EXPLORER}block/${b.height}`} className="stream-link">
               <span className="stream-top" aria-hidden="true" />
               <span className="stream-height mono">#{b.height.toLocaleString(locale)}</span>
               <span className="stream-tx mono">{t("blocks.tx", { n: b.tx_count })}</span>
               <span className="stream-hash mono">{short(b.hash)}</span>
               <span className="stream-age mono">{age(b.timestamp)}</span>
+              {/* Named by what it shows (WCAG 2.5.3), then where it leads. */}
+              <span className="sr-only"> — {t("blocks.openSuffix")}</span>
             </a>
           </li>
         ))}

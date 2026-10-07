@@ -6,6 +6,7 @@ import { getTheme, resolvedTheme, setTheme } from "../theme";
 import Icon from "./Icon";
 import BackToTop from "./BackToTop";
 import { useCursorEffects } from "../lib/cursor";
+import { setMotionStill, useReducedMotion } from "../lib/motion";
 import { DISCORD, EXPLORER, GITHUB } from "../lib/links";
 import icon from "../assets/silvra-icon.png";
 import type { ReactNode } from "react";
@@ -53,6 +54,37 @@ function ThemeToggle() {
       }}
     >
       <Icon name={dark ? "moon" : "sun"} size={16} />
+    </button>
+  );
+}
+
+/**
+ * "Bewegung anhalten": stops every animation and every self-updating number on the site, as WCAG
+ * 2.2.2 asks. A toggle button, so its name stays the same and its state is the pressed state.
+ * Unpressed on the first render, as the prerendered page has it; the real state right after.
+ */
+function MotionToggle({ labelled = false }: { labelled?: boolean }) {
+  const { t } = useI18n();
+  const still = useReducedMotion();
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
+  const pressed = ready && still;
+  return (
+    <button
+      type="button"
+      className={labelled ? "motion-row" : "icon-btn motion-toggle"}
+      aria-pressed={pressed}
+      aria-label={labelled ? undefined : t("nav.motion")}
+      title={labelled ? undefined : t("nav.motion")}
+      onClick={() => setMotionStill(!still)}
+    >
+      <Icon name={pressed ? "play" : "pause"} size={16} />
+      {labelled && (
+        <>
+          <span>{t("nav.motion")}</span>
+          <span className="motion-state mono">{pressed ? t("nav.motionPaused") : t("nav.motionRunning")}</span>
+        </>
+      )}
     </button>
   );
 }
@@ -152,15 +184,18 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <header className={`site-header${scrolled || open ? " is-solid" : " dark-zone"}${open ? " is-open" : ""}`}>
         <div className="container header-row">
-          <Link to="/" className="brand" aria-label={t("nav.home")}>
+          <Link to="/" className="brand">
             <img src={icon} alt="" width={30} height={30} />
             <span className="brand-name">Silvra</span>
             {world !== "silvra" && (
-              <span className={`brand-world brand-${world}`} aria-hidden="true">
-                <span className="brand-slash">/</span>
+              <span className={`brand-world brand-${world}`}>
+                <span className="brand-slash" aria-hidden="true">
+                  /
+                </span>
                 {t(`nav.${world}`)}
               </span>
             )}
+            <span className="sr-only"> — {t("nav.home")}</span>
           </Link>
 
           <nav className="site-nav" aria-label={t("nav.main")}>
@@ -183,6 +218,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               <Icon name="arrowUpRight" size={14} />
             </a>
             <LanguageSwitcher />
+            <MotionToggle />
             <ThemeToggle />
             <button
               ref={toggle}
@@ -220,6 +256,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               {t("nav.explorer")} <Icon name="arrowUpRight" size={14} />
             </a>
           </div>
+          <MotionToggle labelled />
         </nav>
       </div>
 
@@ -230,13 +267,19 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <BackToTop />
 
-      <footer className="site-footer">
+      <div className="camo-frame" aria-hidden="true">
+        <i />
+        <i />
+      </div>
+
+      <footer className="site-footer dark-zone">
         <div className="container">
           <div className="footer-top">
             <div className="footer-intro">
-              <Link to="/" className="brand" aria-label={t("nav.home")}>
+              <Link to="/" className="brand">
                 <img src={icon} alt="" width={30} height={30} />
                 <span className="brand-name">Silvra</span>
+                <span className="sr-only"> — {t("nav.home")}</span>
               </Link>
               <p>{t("footer.description")}</p>
               <p className="footer-eu">
@@ -267,6 +310,10 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Link to="/impressum">{t("footer.impressum")}</Link>
                 {/* Plain anchor: the privacy policy is a static page, not a route. */}
                 <a href="/privacy/">{t("footer.privacy")}</a>
+                <Link to="/barrierefreiheit">{t("footer.accessibility")}</Link>
+                <a href={`mailto:info@silvra.net?subject=${encodeURIComponent(t("footer.reportBarrier"))}`}>
+                  {t("footer.reportBarrier")}
+                </a>
               </div>
             </div>
           </div>

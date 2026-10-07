@@ -31,6 +31,7 @@ const PAGES = {
   "/mission": { meta: "mission", og: "home" },
   "/contact": { meta: "contact", og: "home" },
   "/impressum": { meta: "impressum", og: "home" },
+  "/barrierefreiheit": { meta: "accessibility", og: "home" },
 };
 
 const get = (path) => path.split(".").reduce((o, k) => (o ? o[k] : undefined), de);

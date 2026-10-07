@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
 import { useI18n } from "../i18n";
-import { prefersReducedMotion } from "../lib/motion";
+import { useReducedMotion } from "../lib/motion";
 
 const HEX = "0123456789abcdef";
 const noise = (n: number) =>
@@ -25,13 +25,15 @@ export default function MessageJourney() {
   const message = t("messenger.journey.message");
   const [cipher, setCipher] = useState("9f3a c1e0 77b2 d4e8 91af 5c2d 08be 6f13 2a");
 
+  const still = useReducedMotion();
+
   useEffect(() => {
     setCipher(noise(44));
-    if (prefersReducedMotion()) return;
+    if (still) return;
     // One pass of the packet is 5.2 s (see .journey-packet); the server's copy changes with it.
     const id = setInterval(() => setCipher(noise(44)), 5200);
     return () => clearInterval(id);
-  }, []);
+  }, [still]);
 
   const views = [
     <p className="journey-bubble mine" key="a">

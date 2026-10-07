@@ -24,6 +24,10 @@
       "title": "Legal Notice — Silvra",
       "description": "Imprint and provider information of Silvra."
     },
+    "accessibility": {
+      "title": "Accessibility statement — Silvra",
+      "description": "How accessible silvra.net is, how we check it, what does not work yet and where to report a barrier."
+    },
     "notFound": {
       "title": "Page not found — Silvra",
       "description": "This page does not exist (anymore). Back to the overview."
@@ -42,6 +46,9 @@
     "open": "Open navigation",
     "close": "Close navigation",
     "theme": "Switch theme",
+    "motion": "Pause motion and live values",
+    "motionPaused": "paused",
+    "motionRunning": "running",
     "switchLang": "Switch language",
     "skip": "Skip to content",
     "top": "Back to top",
@@ -55,11 +62,44 @@
     "legal": "Legal",
     "impressum": "Legal notice",
     "privacy": "Privacy",
-    "stack": "MLS · X-Wing · ML-DSA-65"
+    "stack": "MLS · X-Wing · ML-DSA-65",
+    "accessibility": "Accessibility",
+    "reportBarrier": "Report a barrier"
   },
   "home": {
     "gate": {
-      "title": "Silvra — digital infrastructure from Europe: Silvra Messenger and Helix Blockchain",
+      "claimOrg": "Silvra",
+      "claim": "Digital infrastructure from Europe",
+      "choose": "Choose a sector",
+      "hudMessenger": [
+        [
+          "Channel",
+          "MLS · RFC 9420"
+        ],
+        [
+          "Keys",
+          "X-Wing · ML-KEM-768"
+        ],
+        [
+          "Status",
+          "Encrypted"
+        ]
+      ],
+      "hudHelix": [
+        [
+          "Network",
+          "Mainnet {{version}}"
+        ],
+        [
+          "Block",
+          "{{height}}"
+        ],
+        [
+          "Signature",
+          "ML-DSA-65"
+        ]
+      ],
+      "hudOffline": "unreachable",
       "seal": "Silvra · Technology from the EU · Built for what comes next · ",
       "scroll": "More about Silvra",
       "messenger": {
@@ -67,12 +107,6 @@
         "title1": "Silvra",
         "title2": "Messenger",
         "text": "End-to-end encrypted — with post-quantum cryptography from the very first handshake.",
-        "facts": [
-          "MLS · RFC 9420",
-          "ML-KEM",
-          "No phone number",
-          "No ads"
-        ],
         "cta": "Explore the messenger",
         "phrases": [
           "See you tomorrow",
@@ -90,18 +124,16 @@
         "title1": "Helix",
         "title2": "Blockchain",
         "text": "A layer-1 blockchain whose signatures are post-quantum secure throughout — from the very first block.",
-        "facts": [
-          "ML-DSA-65",
-          "BFT · ≈ 2 s per block",
-          "Open Source · MIT"
-        ],
-        "cta": "Explore Helix",
-        "live": "Mainnet · block {{height}}",
-        "offline": "Mainnet · node.silvra.net"
+        "cta": "Explore Helix"
       }
     },
     "about": {
       "label": "Silvra",
+      "claim": [
+        "Encrypted.",
+        "Sovereign.",
+        "European."
+      ],
       "statement": "We build the digital infrastructure Europe can still trust the day after tomorrow.",
       "body": "Communication and blockchain on methods that withstand what is coming for today's encryption. Developed and operated in the EU — without ads, without trading data.",
       "cta": "Our mission",
@@ -358,6 +390,7 @@
       "email": "info@silvra.net"
     },
     "bento": {
+      "aria": "Overview: the messenger, Helix and what carries both",
       "messenger": {
         "kicker": "Communication",
         "title": "Silvra Messenger",
@@ -1202,6 +1235,49 @@
     "photos": "Photo credits",
     "photosBody": "Photos from Unsplash, used under the Unsplash licence:"
   },
+  "accessibility": {
+    "eyebrow": "Accessibility",
+    "title": "Accessibility statement",
+    "subtitle": "This site should work for everyone — by keyboard, with a screen reader, magnified or without any animation at all.",
+    "sections": [
+      {
+        "title": "Aim",
+        "body": "We build silvra.net to the Web Content Accessibility Guidelines (WCAG) 2.2, conformance level AA. This statement covers silvra.net and all its pages; the Helix explorer and outside services such as Google Play or GitHub are not part of it."
+      },
+      {
+        "title": "Compliance status",
+        "body": "By our checks, silvra.net is largely compliant with WCAG 2.2 AA. The known limitations are listed below."
+      },
+      {
+        "title": "What the site does for it",
+        "body": "Among other things:",
+        "items": [
+          "A switch “Pause motion and live values” in the header stops every animation and every self-updating number; the operating system's “reduce motion” setting is honoured as well.",
+          "Everything can be reached by keyboard, focus is always visible, and a “skip to content” link opens every page. On the home page, ← and → choose a sector.",
+          "Text reaches a contrast ratio of at least 4.5 : 1, in the light and the dark theme.",
+          "Status is never conveyed by colour alone, always with a symbol and a word as well.",
+          "Every page is delivered as finished HTML and readable without JavaScript; headings, landmarks and language are marked up.",
+          "The site can be zoomed to 400 % and used down to 320 pixels wide without scrolling sideways."
+        ]
+      },
+      {
+        "title": "How we check",
+        "body": "Before every release we test each page in the light and the dark theme with axe-core against WCAG 2.2 A and AA, measure contrast and touch targets, and test keyboard operation. Last check: 7 October 2026."
+      },
+      {
+        "title": "Known limitations",
+        "body": "What we are still working on:",
+        "items": [
+          "There is currently no content in Easy Read or in sign language.",
+          "The encrypted-looking characters behind the home page are decoration and hidden from screen readers; what they show is said in the text.",
+          "The Helix explorer is a separate application with a very dense display; it is not covered by this statement."
+        ]
+      }
+    ],
+    "reportTitle": "Report a barrier",
+    "reportBody": "Did you run into a barrier, or do you need content in another form? Write to us — with the page and, if you can, your browser and assistive technology:",
+    "reportSubject": "Accessibility barrier"
+  },
   "next": {
     "label": "The other side of Silvra",
     "cta": "Cross over",
@@ -1221,7 +1297,7 @@
     "label": "The newest blocks, live from the public node",
     "secondsAgo": "{{n}} s ago",
     "minutesAgo": "{{n}} min ago",
-    "open": "Open block {{height}} in the explorer",
+    "openSuffix": "open in the explorer",
     "tx": "{{n}} tx"
   }
 }

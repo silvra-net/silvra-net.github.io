@@ -11,7 +11,7 @@ import { useI18n } from "../i18n";
 export default function NextWorld({ to }: { to: "messenger" | "helix" }) {
   const { t, list } = useI18n();
   return (
-    <Link to={`/${to}`} className={`next-world next-${to} dark-zone`} aria-labelledby={`next-${to}-title`}>
+    <Link to={`/${to}`} className={`next-world next-${to} dark-zone`}>
       <div className="next-world-bg" aria-hidden="true">
         {to === "helix" ? (
           <HelixCanvas cx={0.72} cy={0.5} tilt={1.2} radius={90} length={1.4} />

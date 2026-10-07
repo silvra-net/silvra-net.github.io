@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { prefersReducedMotion } from "../lib/motion";
+import { useReducedMotion } from "../lib/motion";
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&+=/<>";
 
@@ -17,9 +17,10 @@ function noise(text: string): string {
 export default function Scramble({ text, className, duration = 1000 }: { text: string; className?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [fx, setFx] = useState<string | null>(null);
+  const still = useReducedMotion();
 
   useEffect(() => {
-    if (prefersReducedMotion()) {
+    if (still) {
       setFx(null);
       return;
     }
@@ -67,7 +68,7 @@ export default function Scramble({ text, className, duration = 1000 }: { text: s
       clearTimeout(failsafe);
       cancelAnimationFrame(raf);
     };
-  }, [text, duration]);
+  }, [text, duration, still]);
 
   return (
     <span ref={ref} className={className ? `scramble ${className}` : "scramble"} data-busy={fx !== null || undefined}>

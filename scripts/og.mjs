@@ -21,19 +21,27 @@ const asset = (name) => url(`src/assets/${name}`);
 const base = `
 @font-face { font-family: U; src: url(${font("unbounded", "unbounded-latin-wght-normal.woff2")}); font-weight: 200 900; }
 @font-face { font-family: I; src: url(${font("inter", "inter-latin-wght-normal.woff2")}); font-weight: 100 900; }
-@font-face { font-family: T; src: url(${font("inter-tight", "inter-tight-latin-wght-normal.woff2")}); font-weight: 100 900; }
+@font-face { font-family: B; src: url(${url("node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2")}); font-weight: 700; }
 @font-face { font-family: M; src: url(${font("jetbrains-mono", "jetbrains-mono-latin-wght-normal.woff2")}); font-weight: 100 800; }
 * { box-sizing: border-box; margin: 0; }
-body { width: 1200px; height: 630px; overflow: hidden; background: #050506; color: #f4f4f5; font-family: I; position: relative; }
+body { width: 1200px; height: 630px; overflow: hidden; background: #0a0c09; color: #eef0e9; font-family: I; position: relative; }
 .brand { position: absolute; left: 64px; top: 56px; display: flex; align-items: center; gap: 14px; z-index: 5; }
 .brand img { width: 44px; height: 44px; border-radius: 11px; box-shadow: 0 0 0 1px rgba(255,255,255,.22); }
 .brand span { font-family: U; font-weight: 500; font-size: 20px; letter-spacing: .3em; }
 .label { font-family: M; font-size: 16px; letter-spacing: .18em; text-transform: uppercase; color: #a1a1aa; }
-.title { font-family: T; font-weight: 500; letter-spacing: -.025em; line-height: 1.02; }
+.title { font-family: B; font-weight: 700; letter-spacing: .005em; line-height: 1; text-transform: uppercase; }
 .metal { background: linear-gradient(100deg,#9aa0a8 0%,#fff 25%,#b9bec6 45%,#f3f4f6 62%,#8a9098 85%,#e9ebee 100%); -webkit-background-clip: text; color: transparent; }
 .gold { background: linear-gradient(100deg,#c08328 0%,#ffd892 30%,#e0a44a 55%,#fff0cf 72%,#c8903a 100%); -webkit-background-clip: text; color: transparent; }
 .foot { position: absolute; left: 64px; bottom: 52px; font-family: M; font-size: 17px; color: #a1a1aa; letter-spacing: .04em; z-index: 5; text-shadow: 0 0 10px #050506, 0 0 3px #050506; }
 canvas { position: absolute; inset: 0; }
+.camo { position: absolute; inset: 0; z-index: 1; background: url(${asset("camo-dark.svg")}) 0 0 / 384px; opacity: .55;
+  -webkit-mask-image: radial-gradient(85% 85% at 45% 50%, transparent 45%, #000 100%); }
+.scan { position: absolute; inset: 0; z-index: 2; background: repeating-linear-gradient(180deg, rgba(238,240,233,.025) 0 1px, transparent 1px 3px); }
+.c { position: absolute; z-index: 6; width: 26px; height: 26px; border: 0 solid rgba(238,240,233,.55); }
+.c.tl { top: 22px; left: 22px; border-top-width: 2px; border-left-width: 2px; }
+.c.tr { top: 22px; right: 22px; border-top-width: 2px; border-right-width: 2px; }
+.c.bl { bottom: 22px; left: 22px; border-bottom-width: 2px; border-left-width: 2px; }
+.c.br { bottom: 22px; right: 22px; border-bottom-width: 2px; border-right-width: 2px; }
 `;
 
 // The helix and the cipher field, drawn once — the same geometry as the site's canvases.
@@ -83,10 +91,11 @@ function cipher(ctx, x0, x1, W, H, seed) {
 const pages = {
   home: `
     <canvas id="c" width="1200" height="630"></canvas>
+    <div class="camo"></div><div class="scan"></div><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
     <div class="brand"><img src="${asset("silvra-icon.png")}"><span>SILVRA</span></div>
     <div style="position:absolute;left:64px;top:190px;z-index:5;width:560px">
-      <p class="label" style="margin-bottom:22px">Messenger · Helix</p>
-      <h1 class="title" style="font-size:60px">Digitale<br>Infrastruktur<br><span class="metal">aus Europa.</span></h1>
+      <p class="label" style="margin-bottom:22px"><span style="color:#d4b86a">Silvra</span> // Messenger · Helix</p>
+      <h1 class="title" style="font-size:80px">Digitale<br>Infrastruktur<br><span class="metal">aus Europa.</span></h1>
     </div>
     <p class="foot">silvra.net · Post-Quanten · Entwickelt in der EU</p>
     <script>
@@ -94,7 +103,7 @@ const pages = {
       window.ready = document.fonts.load("500 14px M").then(() => {
       const c = document.getElementById("c").getContext("2d");
       const a = 730, b = 610;
-      c.fillStyle = "#08090b"; c.beginPath(); c.moveTo(0,0); c.lineTo(a,0); c.lineTo(b,630); c.lineTo(0,630); c.fill();
+      c.fillStyle = "#0b0d0a"; c.beginPath(); c.moveTo(0,0); c.lineTo(a,0); c.lineTo(b,630); c.lineTo(0,630); c.fill();
       const g1 = c.createRadialGradient(300, 420, 0, 300, 420, 520); g1.addColorStop(0,"rgba(200,215,235,.10)"); g1.addColorStop(1,"rgba(0,0,0,0)");
       c.fillStyle = g1; c.fillRect(0,0,700,630);
       cipher(c, 20, 700, 1200, 630, 7);
@@ -111,10 +120,11 @@ const pages = {
     </script>`,
   messenger: `
     <canvas id="c" width="1200" height="630"></canvas>
+    <div class="camo"></div><div class="scan"></div><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
     <div class="brand"><img src="${asset("silvra-icon.png")}"><span>SILVRA</span></div>
     <div style="position:absolute;left:64px;top:178px;z-index:5;width:640px">
       <p class="label" style="margin-bottom:22px">Silvra Messenger</p>
-      <h1 class="title metal" style="font-size:52px">Ende-zu-Ende<br>verschlüsselt.<br>Post-Quanten-sicher.</h1>
+      <h1 class="title metal" style="font-size:70px">Ende-zu-Ende<br>verschlüsselt.<br>Post-Quanten-sicher.</h1>
     </div>
     <p class="foot">MLS · X-Wing (X25519 + ML-KEM-768) · ohne Telefonnummer</p>
     <img src="${asset("Welcome_DE-portrait.webp")}" style="position:absolute;right:70px;top:70px;width:300px;transform:rotate(-6deg);filter:drop-shadow(0 40px 80px rgba(0,0,0,.7)) drop-shadow(0 0 60px rgba(200,215,235,.15));z-index:4">
@@ -129,10 +139,11 @@ const pages = {
     </script>`,
   helix: `
     <canvas id="c" width="1200" height="630"></canvas>
+    <div class="camo"></div><div class="scan"></div><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
     <div class="brand"><img src="${asset("helix-icon.png")}"><span>HELIX</span></div>
     <div style="position:absolute;left:64px;top:186px;z-index:5;width:640px">
       <p class="label" style="margin-bottom:22px;color:#e8b15c">● Mainnet · seit 1.0.0</p>
-      <h1 class="title" style="font-size:64px">Post-Quanten-<br><span class="gold">Blockchain.</span></h1>
+      <h1 class="title" style="font-size:92px">Post-Quanten-<br><span class="gold">Blockchain.</span></h1>
     </div>
     <p class="foot">ML-DSA-65 auf jeder Signatur · BFT-Finalität ≈ 2 s · Open Source (MIT)</p>
     <script>

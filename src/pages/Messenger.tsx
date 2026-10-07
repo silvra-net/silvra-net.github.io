@@ -14,6 +14,7 @@ import type { TourStep } from "../components/AppTour";
 import Faq from "../components/Faq";
 import type { QA } from "../components/Faq";
 import StickyCta from "../components/StickyCta";
+import HudFrame from "../components/HudFrame";
 import playQr from "../assets/play-qr.svg";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
@@ -84,6 +85,7 @@ export default function Messenger() {
           <div className="p-hero-aura" />
           <CipherCanvas phrases={list<string>("home.gate.messenger.phrases")} cell={22} />
         </div>
+        <HudFrame />
         <div className="container p-hero-grid">
           <div className="p-hero-text">
             <p className="label">
