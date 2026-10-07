@@ -181,6 +181,116 @@
         "Standardized 2024"
       ]
     },
+    "inventory": {
+      "label": "Inventory",
+      "title": "Every building block, with its standard and status.",
+      "lead": "The cryptography in the messenger and in Helix, listed in full — including where it is still classical. Everything here comes from the projects' code and documentation.",
+      "caption": "Cryptographic building blocks of Silvra Messenger and Helix with method, standard and status against quantum computers",
+      "cols": {
+        "part": "Building block",
+        "method": "Method",
+        "standard": "Standard",
+        "status": "Against quantum computers"
+      },
+      "status": {
+        "pq": "Post-quantum",
+        "sym": "Symmetric, 256-bit",
+        "classic": "Classical",
+        "none": "Not end-to-end"
+      },
+      "sourcesLabel": "Sources:",
+      "sourceHelix": "Helix · docs/internals.md",
+      "sourceMessenger": "Messenger · Transparency",
+      "groups": [
+        {
+          "name": "Silvra Messenger",
+          "rows": [
+            {
+              "part": "Key exchange",
+              "method": "X-Wing (X25519 + ML-KEM-768) in MLS",
+              "standard": "FIPS 203 · RFC 9420",
+              "status": "pq",
+              "note": "Hybrid: if one scheme breaks, the other holds."
+            },
+            {
+              "part": "Message content",
+              "method": "ChaCha20-Poly1305",
+              "standard": "RFC 8439",
+              "status": "sym",
+              "note": "A quantum computer halves 256 bits to 128 — still enough."
+            },
+            {
+              "part": "Attachments",
+              "method": "AES-256-GCM, one key per file",
+              "standard": "FIPS 197 · SP 800-38D",
+              "status": "sym",
+              "note": "The file key travels inside the encrypted MLS message."
+            },
+            {
+              "part": "Sender signatures",
+              "method": "Ed25519 (in MLS)",
+              "standard": "RFC 8032",
+              "status": "classic",
+              "note": "Concerns authenticity, not the confidentiality of stored messages."
+            },
+            {
+              "part": "Voice and video calls",
+              "method": "WebRTC, DTLS-SRTP",
+              "standard": "RFC 5764",
+              "status": "classic",
+              "note": "Encrypted, but with classical schemes."
+            },
+            {
+              "part": "Updates feed",
+              "method": "—",
+              "standard": "—",
+              "status": "none",
+              "note": "A broadcast to contacts; posts are stored in plain text on the server."
+            }
+          ]
+        },
+        {
+          "name": "Helix",
+          "rows": [
+            {
+              "part": "Signatures",
+              "method": "ML-DSA-65",
+              "standard": "FIPS 204",
+              "status": "pq",
+              "note": "Every transaction, every block, every validator vote."
+            },
+            {
+              "part": "Backup signatures",
+              "method": "SLH-DSA-SHA2-192s",
+              "standard": "FIPS 205",
+              "status": "pq",
+              "note": "Hash-based — rests on different mathematics than ML-DSA."
+            },
+            {
+              "part": "Hashing",
+              "method": "BLAKE3",
+              "standard": "—",
+              "status": "pq",
+              "note": "A twofold security margin against Grover's algorithm."
+            },
+            {
+              "part": "Zero-knowledge proofs",
+              "method": "ZK-STARKs",
+              "standard": "—",
+              "status": "pq",
+              "note": "Hash-based, no elliptic curves."
+            },
+            {
+              "part": "P2P transport",
+              "method": "libp2p Noise (X25519)",
+              "standard": "—",
+              "status": "classic",
+              "note": "Carries only public, ML-DSA-signed data: readable, but not forgeable."
+            }
+          ]
+        }
+      ]
+    },
     "craft": {
       "label": "Attitude",
       "title": "Thorough, not loud.",

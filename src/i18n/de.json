@@ -181,6 +181,116 @@
         "Standardisiert 2024"
       ]
     },
+    "inventory": {
+      "label": "Inventar",
+      "title": "Jeder Baustein, mit Standard und Status.",
+      "lead": "Die Kryptographie in Messenger und Helix, vollständig aufgelistet — auch dort, wo sie noch klassisch ist. Die Angaben stammen aus dem Code und der Dokumentation der Projekte.",
+      "caption": "Kryptographische Bausteine von Silvra Messenger und Helix mit Verfahren, Standard und Status gegenüber Quantenrechnern",
+      "cols": {
+        "part": "Baustein",
+        "method": "Verfahren",
+        "standard": "Standard",
+        "status": "Gegen Quantenrechner"
+      },
+      "status": {
+        "pq": "Post-Quanten",
+        "sym": "Symmetrisch, 256 Bit",
+        "classic": "Klassisch",
+        "none": "Nicht Ende-zu-Ende"
+      },
+      "sourcesLabel": "Quellen:",
+      "sourceHelix": "Helix · docs/internals.md",
+      "sourceMessenger": "Messenger · Transparenz",
+      "groups": [
+        {
+          "name": "Silvra Messenger",
+          "rows": [
+            {
+              "part": "Schlüsselaustausch",
+              "method": "X-Wing (X25519 + ML-KEM-768) in MLS",
+              "standard": "FIPS 203 · RFC 9420",
+              "status": "pq",
+              "note": "Hybrid: Bricht ein Verfahren, hält das andere."
+            },
+            {
+              "part": "Nachrichteninhalt",
+              "method": "ChaCha20-Poly1305",
+              "standard": "RFC 8439",
+              "status": "sym",
+              "note": "Ein Quantenrechner halbiert 256 Bit auf 128 — das reicht weiterhin."
+            },
+            {
+              "part": "Anhänge",
+              "method": "AES-256-GCM, ein Schlüssel je Datei",
+              "standard": "FIPS 197 · SP 800-38D",
+              "status": "sym",
+              "note": "Der Dateischlüssel reist in der verschlüsselten MLS-Nachricht."
+            },
+            {
+              "part": "Absender-Signaturen",
+              "method": "Ed25519 (in MLS)",
+              "standard": "RFC 8032",
+              "status": "classic",
+              "note": "Betrifft die Echtheit, nicht die Vertraulichkeit gespeicherter Nachrichten."
+            },
+            {
+              "part": "Sprach- und Videoanrufe",
+              "method": "WebRTC, DTLS-SRTP",
+              "standard": "RFC 5764",
+              "status": "classic",
+              "note": "Verschlüsselt, aber mit klassischen Verfahren."
+            },
+            {
+              "part": "Aktuelles-Feed",
+              "method": "—",
+              "standard": "—",
+              "status": "none",
+              "note": "Ein Broadcast an Kontakte; Beiträge liegen im Klartext auf dem Server."
+            }
+          ]
+        },
+        {
+          "name": "Helix",
+          "rows": [
+            {
+              "part": "Signaturen",
+              "method": "ML-DSA-65",
+              "standard": "FIPS 204",
+              "status": "pq",
+              "note": "Jede Transaktion, jeder Block, jede Validator-Stimme."
+            },
+            {
+              "part": "Reserve-Signaturen",
+              "method": "SLH-DSA-SHA2-192s",
+              "standard": "FIPS 205",
+              "status": "pq",
+              "note": "Hash-basiert — ruht auf anderer Mathematik als ML-DSA."
+            },
+            {
+              "part": "Hashing",
+              "method": "BLAKE3",
+              "standard": "—",
+              "status": "pq",
+              "note": "Doppelte Sicherheitsreserve gegenüber Grovers Algorithmus."
+            },
+            {
+              "part": "Zero-Knowledge-Beweise",
+              "method": "ZK-STARKs",
+              "standard": "—",
+              "status": "pq",
+              "note": "Hash-basiert, ohne elliptische Kurven."
+            },
+            {
+              "part": "P2P-Transport",
+              "method": "libp2p Noise (X25519)",
+              "standard": "—",
+              "status": "classic",
+              "note": "Trägt nur öffentliche, ML-DSA-signierte Daten: lesbar, aber nicht fälschbar."
+            }
+          ]
+        }
+      ]
+    },
     "craft": {
       "label": "Haltung",
       "title": "Gründlich statt laut.",

@@ -9,6 +9,7 @@ import Testnet from "../components/Testnet";
 import BlockStream from "../components/BlockStream";
 import Bento from "../components/Bento";
 import Faq from "../components/Faq";
+import CryptoInventory from "../components/CryptoInventory";
 import type { QA } from "../components/Faq";
 import Photo from "../components/Photo";
 import Icon from "../components/Icon";
@@ -142,14 +143,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- 03 · How we work ---- */}
+      {/* ---- 03 · Inventory ---- */}
+      <section className="section" id="inventar">
+        <div className="container">
+          <Label index="03" text={t("home.inventory.label")} />
+          <div className="section-head">
+            <h2>{t("home.inventory.title")}</h2>
+            <p className="lead">{t("home.inventory.lead")}</p>
+          </div>
+          <Reveal>
+            <CryptoInventory />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---- 04 · How we work ---- */}
       <section className="section craft">
         <div className="container craft-grid">
           <Reveal>
             <Photo slot="work" className="craft-media" />
           </Reveal>
           <div className="craft-body">
-            <Label index="03" text={t("home.craft.label")} />
+            <Label index="04" text={t("home.craft.label")} />
             <h2>{t("home.craft.title")}</h2>
             <ul className="craft-list">
               {list<Point>("home.craft.points").map((p, i) => (
@@ -170,11 +185,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- 04 · Europe ---- */}
+      {/* ---- 05 · Europe ---- */}
       <section className="section europe">
         <div className="container europe-grid">
           <div>
-            <Label index="04" text={t("home.europe.label")} />
+            <Label index="05" text={t("home.europe.label")} />
             <h2>{t("home.europe.title")}</h2>
             <p className="lead">{t("home.europe.lead")}</p>
             <ul className="europe-points">
@@ -199,11 +214,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- 05 · Live ---- */}
+      {/* ---- 06 · Live ---- */}
       <section className="section live band">
         <div className="container live-grid">
           <div>
-            <Label index="05" text={t("home.live.label")} />
+            <Label index="06" text={t("home.live.label")} />
             <h2>{t("home.live.title")}</h2>
             <p className="lead">{t("home.live.lead")}</p>
             <Link className="text-link" to="/helix">
@@ -220,11 +235,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- 06 · Questions ---- */}
+      {/* ---- 07 · Questions ---- */}
       <section className="section band" id="faq">
         <div className="container faq-grid">
           <div>
-            <Label index="06" text={t("home.faq.label")} />
+            <Label index="07" text={t("home.faq.label")} />
             <h2>{t("home.faq.title")}</h2>
             <p className="lead">{t("home.faq.lead")}</p>
             <Link className="text-link" to="/contact">
@@ -236,10 +251,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- 07 · Join ---- */}
+      {/* ---- 08 · Join ---- */}
       <section className="section join">
         <div className="container">
-          <Label index="07" text={t("home.join.label")} />
+          <Label index="08" text={t("home.join.label")} />
           <h2 className="join-title">{t("home.join.title")}</h2>
           <div className="join-grid">
             <p className="lead">{t("home.join.body")}</p>

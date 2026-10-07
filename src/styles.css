@@ -51,7 +51,8 @@
 }
 
 :root {
-  --display: "Unbounded Variable", "Unbounded", system-ui, sans-serif;
+  --display: "Inter Tight Variable", "Inter Tight", "Inter Variable", system-ui, sans-serif;
+  --brand: "Unbounded Variable", "Unbounded", system-ui, sans-serif;
   --font: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --header-h: 72px;
@@ -237,24 +238,27 @@ h3 {
   margin: 0 0 16px;
   font-weight: 400;
   text-wrap: balance;
+  font-size: 17px;
 }
 h1 {
   font-family: var(--display);
-  font-size: clamp(40px, 6.4vw, 92px);
-  line-height: 1;
-  letter-spacing: -0.04em;
+  font-size: clamp(34px, 4.4vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+  font-weight: 500;
 }
 h2 {
   font-family: var(--display);
-  font-size: clamp(30px, 4.2vw, 58px);
-  line-height: 1.06;
-  letter-spacing: -0.035em;
+  font-size: clamp(27px, 3vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
   margin-bottom: 20px;
+  font-weight: 500;
 }
 h3 {
   font-family: var(--font);
   font-weight: 600;
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1.3;
   letter-spacing: -0.01em;
   margin-bottom: 8px;
@@ -263,8 +267,8 @@ p {
   margin: 0 0 16px;
 }
 .lead {
-  font-size: clamp(17px, 1.35vw, 20px);
-  line-height: 1.6;
+  font-size: clamp(16px, 1.15vw, 18px);
+  line-height: 1.65;
   color: var(--muted);
   max-width: 60ch;
   margin: 0 0 28px;
@@ -284,11 +288,11 @@ p {
   display: flex;
   align-items: center;
   gap: 12px;
-  font: 500 12px/1.4 var(--mono);
-  letter-spacing: 0.16em;
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 28px;
+  margin: 0 0 24px;
 }
 .label-index {
   display: inline-flex;
@@ -463,10 +467,10 @@ p {
 
 .statement {
   font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(28px, 4.2vw, 60px);
-  line-height: 1.14;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-size: clamp(24px, 2.7vw, 38px);
+  line-height: 1.24;
+  letter-spacing: -0.013em;
   max-width: 21em;
   margin: 0 0 clamp(48px, 7vw, 96px);
 }
@@ -552,7 +556,7 @@ p {
   box-shadow: 0 0 0 1px var(--line-2);
 }
 .brand-name {
-  font-family: var(--display);
+  font-family: var(--brand);
   font-weight: 500;
   font-size: 14px;
   letter-spacing: 0.26em;
@@ -562,7 +566,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--display);
+  font-family: var(--brand);
   font-size: 14px;
   letter-spacing: 0.06em;
 }
@@ -734,7 +738,8 @@ p {
 .mobile-title {
   font-family: var(--display);
   font-size: 23px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  font-weight: 500;
 }
 .mobile-helix .mobile-title {
   color: #f6c56f;
@@ -891,10 +896,10 @@ p {
 }
 .gate-title {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(40px, 5.4vw, 92px);
-  line-height: 0.96;
-  letter-spacing: -0.045em;
+  font-weight: 500;
+  font-size: clamp(36px, 4.3vw, 66px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
   margin: 0 0 22px;
 }
 .gate-title span {
@@ -1236,7 +1241,7 @@ p {
     bottom: 4.5vh;
   }
   .gate-title {
-    font-size: clamp(34px, 10vw, 54px);
+    font-size: clamp(30px, 8.6vw, 44px);
     margin-bottom: 14px;
   }
   .gate-kicker {
@@ -1336,15 +1341,16 @@ p {
 }
 .fact-value {
   font-family: var(--display);
-  font-size: clamp(38px, 4.4vw, 60px);
+  font-size: clamp(30px, 3.2vw, 44px);
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   background: var(--metal);
   background-size: 220% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
+  font-weight: 500;
 }
 .fact:nth-child(2) .fact-value,
 .fact:nth-child(4) .fact-value {
@@ -1363,14 +1369,14 @@ p {
 .marquee {
   overflow: hidden;
   border-block: 1px solid var(--line);
-  padding: clamp(18px, 2.5vw, 34px) 0;
+  padding: 14px 0;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 60s linear infinite;
+  animation: marquee 48s linear infinite;
 }
 .marquee.reverse .marquee-track {
   animation-direction: reverse;
@@ -1382,19 +1388,19 @@ p {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(34px, 5.6vw, 84px);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--text) 42%, transparent);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  color: var(--muted);
+  text-transform: uppercase;
 }
 .marquee-slash {
-  color: var(--accent-text);
+  color: var(--faint);
   -webkit-text-stroke: 0;
-  margin: 0 0.45em;
-  font-weight: 200;
+  margin: 0 1.4em;
+  font-weight: 400;
 }
 :root[data-world="silvra"] .marquee-item:nth-child(even) .marquee-slash {
   color: var(--amber-text);
@@ -1480,9 +1486,10 @@ p {
 }
 .stack-name {
   font-family: var(--display);
-  font-size: clamp(22px, 2.6vw, 36px);
-  letter-spacing: -0.03em;
+  font-size: clamp(20px, 2vw, 28px);
+  letter-spacing: -0.015em;
   line-height: 1.05;
+  font-weight: 500;
 }
 .stack-helix .stack-name {
   color: #f0bb68;
@@ -1617,9 +1624,9 @@ p {
 }
 .timeline h3 {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(22px, 2.2vw, 30px);
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-size: clamp(19px, 1.7vw, 23px);
+  letter-spacing: -0.01em;
 }
 
 .craft-grid {
@@ -1754,10 +1761,10 @@ p {
   color: var(--muted);
 }
 .testnet-big {
-  font-size: clamp(44px, 6vw, 80px);
+  font-size: clamp(40px, 4.6vw, 62px);
   font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   color: var(--amber-text);
   font-variant-numeric: tabular-nums;
 }
@@ -1803,11 +1810,12 @@ p {
     radial-gradient(40% 60% at 85% 100%, color-mix(in srgb, var(--amber) 14%, transparent), transparent 70%);
 }
 .join-title {
-  font-size: clamp(38px, 6.4vw, 100px);
-  line-height: 1;
-  letter-spacing: -0.045em;
+  font-size: clamp(32px, 4.4vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.018em;
   max-width: 14em;
   margin-bottom: clamp(32px, 4vw, 56px);
+  font-weight: 500;
 }
 .join-grid {
   display: grid;
@@ -1899,7 +1907,7 @@ p {
 }
 .page-hero-body h1 {
   max-width: 16em;
-  font-size: clamp(38px, 6vw, 84px);
+  font-size: clamp(34px, 4.6vw, 64px);
 }
 .page-hero-body .lead {
   color: #c4c4cc;
@@ -1955,10 +1963,10 @@ p {
 }
 .p-title {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(46px, 6.2vw, 104px);
-  line-height: 0.92;
-  letter-spacing: -0.05em;
+  font-weight: 500;
+  font-size: clamp(40px, 5vw, 74px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
   margin: 0 0 30px;
 }
 .p-title > span {
@@ -2124,9 +2132,9 @@ p {
 }
 .pillar h3 {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: 26px;
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-size: 21px;
+  letter-spacing: -0.01em;
 }
 .pillar p {
   margin: 0;
@@ -2178,7 +2186,7 @@ p {
 }
 .hybrid-plus {
   align-self: center;
-  font: 300 28px var(--display);
+  font: 300 24px var(--display);
   color: var(--muted);
 }
 .hybrid-line {
@@ -2207,10 +2215,10 @@ p {
   margin: clamp(48px, 7vw, 96px) 0 0;
   padding: 0 0 0 clamp(24px, 4vw, 56px);
   font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(22px, 2.6vw, 36px);
+  font-weight: 400;
+  font-size: clamp(20px, 2vw, 28px);
   line-height: 1.3;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   max-width: 34em;
 }
 .quote::before {
@@ -2434,7 +2442,7 @@ p {
   justify-content: center;
 }
 .download-panel h2 {
-  font-size: clamp(34px, 5.4vw, 76px);
+  font-size: clamp(30px, 3.8vw, 52px);
 }
 .download-panel .lead {
   margin-inline: auto;
@@ -2484,11 +2492,12 @@ p {
 }
 .next-world-title {
   font-family: var(--display);
-  font-size: clamp(42px, 8vw, 128px);
-  line-height: 0.95;
-  letter-spacing: -0.05em;
+  font-size: clamp(34px, 5vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
   margin: 0 0 20px;
   transition: transform 0.8s var(--ease-out);
+  font-weight: 500;
 }
 .next-helix .next-world-title {
   background: var(--gold);
@@ -2651,9 +2660,9 @@ p {
 .honesty-highlight {
   margin: 24px 0 0;
   font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(19px, 2vw, 26px);
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-size: clamp(18px, 1.6vw, 22px);
+  letter-spacing: -0.01em;
   line-height: 1.35;
   color: var(--text);
 }
@@ -2739,9 +2748,9 @@ p {
 }
 .versus-col h3 {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(22px, 2.4vw, 32px);
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-size: clamp(20px, 1.9vw, 26px);
+  letter-spacing: -0.01em;
   margin-bottom: 24px;
 }
 .versus-col ul {
@@ -2809,9 +2818,9 @@ p {
 }
 .contact-card h3 {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: 26px;
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.01em;
 }
 .contact-links {
   margin-top: 32px;
@@ -2907,11 +2916,11 @@ p {
 }
 .footer-mark {
   margin: clamp(48px, 7vw, 96px) 0 0;
-  font-family: var(--display);
+  font-family: var(--brand);
   font-weight: 500;
   font-size: clamp(64px, 17.5vw, 260px);
   line-height: 0.82;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   text-align: center;
   white-space: nowrap;
   user-select: none;
@@ -3490,9 +3499,10 @@ p {
 .figure dd {
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(22px, 2.2vw, 30px);
-  letter-spacing: -0.03em;
+  font-size: clamp(22px, 2vw, 28px);
+  letter-spacing: -0.015em;
   color: var(--amber-text);
+  font-weight: 500;
 }
 .figure dt {
   font-size: 13.5px;
@@ -3553,9 +3563,9 @@ p {
 }
 .path h3 {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: 24px;
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-size: 21px;
+  letter-spacing: -0.01em;
 }
 .path-points {
   list-style: none;
@@ -4495,14 +4505,14 @@ a.tile:hover {
 }
 .tile-title {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(22px, 2.2vw, 30px);
-  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-size: clamp(20px, 1.8vw, 25px);
+  letter-spacing: -0.01em;
   line-height: 1.1;
   margin: 0;
 }
 .tile-messenger .tile-title {
-  font-size: clamp(30px, 3.4vw, 46px);
+  font-size: clamp(26px, 2.6vw, 36px);
 }
 .tile-body {
   margin: 0;
@@ -4566,10 +4576,10 @@ a.tile:hover .tile-go {
 }
 .tile-big {
   margin: 4px 0 0;
-  font-size: clamp(40px, 4.8vw, 64px);
+  font-size: clamp(36px, 4vw, 54px);
   font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   color: #f0bb68;
   font-variant-numeric: tabular-nums;
 }
@@ -4623,14 +4633,15 @@ a.tile:hover .tile-go {
 .tile-zero-num {
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(64px, 7vw, 104px);
+  font-size: clamp(56px, 6vw, 88px);
   line-height: 0.9;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.025em;
   background: var(--metal);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
+  font-weight: 400;
 }
 .tile-zero-list {
   list-style: none;
@@ -4729,9 +4740,9 @@ a.tile:hover .tile-go {
 }
 .tour-step h3 {
   font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(26px, 3vw, 40px);
-  letter-spacing: -0.035em;
+  font-weight: 500;
+  font-size: clamp(22px, 2.3vw, 30px);
+  letter-spacing: -0.013em;
   line-height: 1.1;
   margin-bottom: 14px;
 }
@@ -4910,5 +4921,206 @@ a.tile-messenger:hover .tile-phone {
   }
   .tile-messenger .tile-chat {
     max-width: none;
+  }
+}
+
+/* ---------- crypto inventory ---------- */
+
+.inventory {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.inventory .st-pq {
+  --st: var(--ok);
+}
+.inventory .st-sym {
+  --st: var(--muted);
+}
+.inventory .st-classic {
+  --st: var(--warn);
+}
+.inventory .st-none {
+  --st: var(--bad);
+}
+.inventory-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 36px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+}
+.inventory-bar {
+  display: flex;
+  gap: 2px;
+  flex: 1 1 220px;
+  max-width: 360px;
+  height: 6px;
+}
+.inventory-bar .seg {
+  min-width: 6px;
+  border-radius: 3px;
+  background: var(--st);
+}
+.inventory-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--muted);
+}
+.inventory-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.inventory-legend svg,
+.inventory-status svg {
+  flex: none;
+  color: var(--st);
+}
+.inventory-legend strong {
+  font: 600 13px var(--mono);
+  color: var(--text);
+}
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.inventory-table thead th {
+  padding: 14px 24px 12px;
+  text-align: left;
+  font: 500 10.5px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.inventory-group th {
+  padding: 12px 24px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  background: color-mix(in srgb, var(--text) 3.5%, transparent);
+  border-top: 1px solid var(--line);
+}
+.inventory-table tbody tr:not(.inventory-group) > * {
+  padding: 16px 24px;
+  vertical-align: top;
+  border-top: 1px solid var(--line);
+}
+.inventory-table tbody tr:not(.inventory-group):hover {
+  background: color-mix(in srgb, var(--text) 2.5%, transparent);
+}
+.inventory-table tbody th[scope="row"] {
+  width: 36%;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+.inventory-note {
+  display: block;
+  max-width: 48ch;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.inventory-table td.mono {
+  font-size: 12.5px;
+  color: var(--text);
+}
+.inventory-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px 4px 9px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--st) 40%, transparent);
+  background: color-mix(in srgb, var(--st) 9%, transparent);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text);
+}
+.inventory-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 12px;
+  margin: 0;
+  padding: 2px 24px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+.inventory-sources .mono {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.inventory-sources a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--text);
+  text-underline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .inventory-summary {
+    padding: 18px 20px;
+  }
+  .inventory-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .inventory-table,
+  .inventory-table tbody,
+  .inventory-table tr,
+  .inventory-group th {
+    display: block;
+  }
+  .inventory-group th {
+    padding: 12px 20px;
+  }
+  .inventory-table tbody tr:not(.inventory-group) {
+    display: grid;
+    gap: 8px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .inventory-table tbody tr:not(.inventory-group) > * {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+  /* The status sits right under its name; the chip needs no column label. */
+  .inventory-table tbody tr:not(.inventory-group) > td:last-child {
+    grid-row: 2;
+  }
+  .inventory-table td[data-label]:not(:last-child)::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font: 500 10px/1.4 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .inventory-sources {
+    padding: 2px 20px;
   }
 }

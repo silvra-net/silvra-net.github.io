@@ -21,6 +21,7 @@ const asset = (name) => url(`src/assets/${name}`);
 const base = `
 @font-face { font-family: U; src: url(${font("unbounded", "unbounded-latin-wght-normal.woff2")}); font-weight: 200 900; }
 @font-face { font-family: I; src: url(${font("inter", "inter-latin-wght-normal.woff2")}); font-weight: 100 900; }
+@font-face { font-family: T; src: url(${font("inter-tight", "inter-tight-latin-wght-normal.woff2")}); font-weight: 100 900; }
 @font-face { font-family: M; src: url(${font("jetbrains-mono", "jetbrains-mono-latin-wght-normal.woff2")}); font-weight: 100 800; }
 * { box-sizing: border-box; margin: 0; }
 body { width: 1200px; height: 630px; overflow: hidden; background: #050506; color: #f4f4f5; font-family: I; position: relative; }
@@ -28,7 +29,7 @@ body { width: 1200px; height: 630px; overflow: hidden; background: #050506; colo
 .brand img { width: 44px; height: 44px; border-radius: 11px; box-shadow: 0 0 0 1px rgba(255,255,255,.22); }
 .brand span { font-family: U; font-weight: 500; font-size: 20px; letter-spacing: .3em; }
 .label { font-family: M; font-size: 16px; letter-spacing: .18em; text-transform: uppercase; color: #a1a1aa; }
-.title { font-family: U; font-weight: 400; letter-spacing: -.045em; line-height: 1.02; }
+.title { font-family: T; font-weight: 500; letter-spacing: -.025em; line-height: 1.02; }
 .metal { background: linear-gradient(100deg,#9aa0a8 0%,#fff 25%,#b9bec6 45%,#f3f4f6 62%,#8a9098 85%,#e9ebee 100%); -webkit-background-clip: text; color: transparent; }
 .gold { background: linear-gradient(100deg,#c08328 0%,#ffd892 30%,#e0a44a 55%,#fff0cf 72%,#c8903a 100%); -webkit-background-clip: text; color: transparent; }
 .foot { position: absolute; left: 64px; bottom: 52px; font-family: M; font-size: 17px; color: #a1a1aa; letter-spacing: .04em; z-index: 5; text-shadow: 0 0 10px #050506, 0 0 3px #050506; }
