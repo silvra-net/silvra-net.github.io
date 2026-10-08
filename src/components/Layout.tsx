@@ -16,7 +16,7 @@ const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayout
 
 /** Full-width openings and bands that stay night olive in both themes. While one of them is
  *  under the header, the header stays dark with it instead of turning into a paper strip. */
-const DARK_BANDS = ".gate, .p-hero, .page-hero, .claim-band, .next-world, .site-footer";
+const DARK_BANDS = ".gate, .p-hero, .page-hero, .claim-band, .marquee-band, .next-world, .site-footer";
 
 /** Everything the open phone menu covers. Made inert, so neither Tab nor a screen reader's
  *  virtual cursor can wander into a page the visitor cannot see. */

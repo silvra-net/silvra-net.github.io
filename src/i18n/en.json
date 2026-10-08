@@ -85,8 +85,8 @@
           "X-Wing · ML-KEM-768"
         ],
         [
-          "Status",
-          "Encrypted"
+          "Mode",
+          "End-to-end"
         ]
       ],
       "hudHelix": [
@@ -104,7 +104,7 @@
         ]
       ],
       "hudOffline": "unreachable",
-      "seal": "Silvra · Technology from the EU · Built for what comes next · ",
+      "seal": "Silvra · Technology from the EU · Post-quantum cryptography · ",
       "scroll": "More about Silvra",
       "messenger": {
         "kicker": "Communication",
@@ -165,30 +165,19 @@
       ]
     },
     "marquee": [
-      "End-to-end encrypted",
-      "Post-quantum",
-      "Built in the EU",
-      "No ads",
-      "No data trading",
-      "Helix: open source",
-      "Transparency over promises"
+      "End-to-end encrypted chats",
+      "Post-quantum key exchange",
+      "Helix: open source (MIT)",
+      "Transparency over promises",
+      "Signatures per FIPS 204"
     ],
     "stack": {
       "label": "Ecosystem",
       "title": "Two products. One foundation.",
       "lead": "Both work on the same question: what does digital infrastructure look like that you can still stand behind in ten years?",
-      "messenger": {
-        "kicker": "01 · Communication",
-        "body": "Chats, calls, feed and points account — end-to-end encrypted with MLS, hybrid with X-Wing (X25519 + ML-KEM-768)."
-      },
-      "helix": {
-        "kicker": "02 · Infrastructure",
-        "body": "A layer 1 on mainnet: ML-DSA-65 on every transaction, every block and every validator vote."
-      },
       "kem": "Key exchange in the messenger, as X-Wing",
       "dsa": "Signatures on Helix",
-      "pq": "Post-quantum cryptography to NIST standards — from the first line of code",
-      "eu": "Developed and operated in the EU"
+      "pq": "Post-quantum cryptography to NIST standards — from the first line of code"
     },
     "why": {
       "label": "Why now",
@@ -363,8 +352,7 @@
           "title": "Open, not walled off",
           "body": "Helix is open source (MIT) and checkable by anyone; the messenger cannot read your messages itself."
         }
-      ],
-      "caption": "Developed & operated in the EU"
+      ]
     },
     "live": {
       "label": "Live",

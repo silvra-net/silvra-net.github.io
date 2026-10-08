@@ -75,6 +75,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* The claims run on straight under the claim band, on the same night olive. */}
+      <div className="marquee-band dark-zone">
+        <Marquee items={list<string>("home.marquee")} />
+      </div>
+
       <section className="section about-overview" aria-label={t("home.bento.aria")}>
         <div className="container">
           <Reveal>
@@ -83,9 +88,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Marquee items={list<string>("home.marquee")} />
-
-      {/* ---- 01 · Two products, one foundation ---- */}
+      {/* ---- 01 · One foundation under both products ---- */}
       <section className="section">
         <div className="container">
           <Label index="01" text={t("home.stack.label")} />
@@ -95,25 +98,6 @@ export default function Home() {
           </div>
           <Reveal>
             <div className="stack">
-              <div className="stack-products dark-zone">
-                <Link to="/messenger" className="stack-product stack-messenger">
-                  <span className="stack-kicker">{t("home.stack.messenger.kicker")}</span>
-                  <span className="stack-name">Silvra Messenger</span>
-                  <span className="stack-body">{t("home.stack.messenger.body")}</span>
-                  <span className="stack-go">
-                    <Icon name="arrowRight" size={18} />
-                  </span>
-                </Link>
-                <span className="stack-blade" aria-hidden="true" />
-                <Link to="/helix" className="stack-product stack-helix">
-                  <span className="stack-kicker">{t("home.stack.helix.kicker")}</span>
-                  <span className="stack-name">Helix Blockchain</span>
-                  <span className="stack-body">{t("home.stack.helix.body")}</span>
-                  <span className="stack-go">
-                    <Icon name="arrowRight" size={18} />
-                  </span>
-                </Link>
-              </div>
               <div className="stack-algos">
                 <div className="stack-algo">
                   <span className="mono">ML-KEM · FIPS 203</span>
@@ -127,10 +111,6 @@ export default function Home() {
               <div className="stack-layer stack-pq">
                 <Icon name="shield" size={18} />
                 {t("home.stack.pq")}
-              </div>
-              <div className="stack-layer stack-eu">
-                <span className="eu-dots" aria-hidden="true" />
-                {t("home.stack.eu")}
               </div>
             </div>
           </Reveal>
@@ -219,12 +199,8 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <Reveal className="europe-visual">
+          <Reveal>
             <Photo slot="europe" className="europe-photo" />
-            <p className="europe-caption mono">
-              <span className="eu-dots" aria-hidden="true" />
-              {t("home.europe.caption")}
-            </p>
           </Reveal>
         </div>
       </section>

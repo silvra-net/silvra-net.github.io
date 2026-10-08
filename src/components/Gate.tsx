@@ -17,7 +17,7 @@ type Side = "messenger" | "helix";
  * CSS: it crosses the middle of the gate and leans 7vw either way between top and bottom.
  */
 function fitsMessenger(x: number, y: number, w: number, W: number, H: number): boolean {
-  if (W < 820) return false;
+  if (W <= 820) return false;
   const blade = W * 0.5 + W * 0.07 * (1 - (2 * y) / H);
   return y > H * 0.66 && y < H * 0.82 && x > W * 0.05 && x + w < blade - 48;
 }
@@ -57,7 +57,9 @@ export default function Gate() {
   const section = useRef<HTMLElement>(null);
   const messenger = useRef<HTMLAnchorElement>(null);
   const helix = useRef<HTMLAnchorElement>(null);
-  // On a phone the halves stack top and bottom, so the helix lies along the blade instead.
+  // On a phone the halves stack top and bottom, so the helix lies along the blade instead, in a
+  // band of its own above the chain's kicker (see the CSS). The band is far wider than it is
+  // tall, hence the long axis.
   const stacked = useMediaQuery("(max-width: 820px)");
 
   const go = useCallback(
@@ -157,7 +159,7 @@ export default function Gate() {
           <div className="gate-camo" />
           <div className="gate-aura" />
           {stacked ? (
-            <HelixCanvas key="stacked" cx={0.5} cy={0.66} tilt={1.47} radius={70} length={0.9} pulse={status?.height} />
+            <HelixCanvas key="stacked" cx={0.5} cy={0.56} tilt={1.47} radius={70} length={6} pulse={status?.height} />
           ) : (
             <HelixCanvas key="side" cx={0.67} cy={0.44} tilt={0.22} radius={112} length={1.3} pulse={status?.height} />
           )}

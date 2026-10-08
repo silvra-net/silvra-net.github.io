@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import CipherLoop from "./CipherLoop";
 import CountUp from "./CountUp";
+import EuMark from "./EuMark";
 import Icon from "./Icon";
-import Photo from "./Photo";
 import { useI18n } from "../i18n";
 import { useNodeStatus } from "../lib/node";
 import { HELIX_REPO } from "../lib/links";
@@ -64,10 +64,9 @@ export default function Bento() {
       </div>
 
       <div className="tile tile-eu dark-zone">
-        <Photo slot="europe" className="tile-photo" />
         <div className="tile-overlay">
           <span className="tile-kicker mono">
-            <span className="eu-dots" aria-hidden="true" /> {t("home.bento.eu.kicker")}
+            <EuMark /> {t("home.bento.eu.kicker")}
           </span>
           <h3 className="tile-title">{t("home.bento.eu.title")}</h3>
         </div>

@@ -85,8 +85,8 @@
           "X-Wing · ML-KEM-768"
         ],
         [
-          "Status",
-          "Verschlüsselt"
+          "Modus",
+          "Ende-zu-Ende"
         ]
       ],
       "hudHelix": [
@@ -104,7 +104,7 @@
         ]
       ],
       "hudOffline": "nicht erreichbar",
-      "seal": "Silvra · Technologie aus der EU · Für das, was kommt · ",
+      "seal": "Silvra · Technologie aus der EU · Post-Quanten-Kryptographie · ",
       "scroll": "Mehr über Silvra",
       "messenger": {
         "kicker": "Kommunikation",
@@ -165,30 +165,19 @@
       ]
     },
     "marquee": [
-      "Ende-zu-Ende verschlüsselt",
-      "Post-Quanten",
-      "Entwickelt in der EU",
-      "Ohne Werbung",
-      "Ohne Datenhandel",
-      "Helix: Open Source",
-      "Transparenz statt Versprechen"
+      "Ende-zu-Ende verschlüsselte Chats",
+      "Post-Quanten-Schlüsselaustausch",
+      "Helix: Open Source (MIT)",
+      "Transparenz statt Versprechen",
+      "Signaturen nach FIPS 204"
     ],
     "stack": {
       "label": "Ökosystem",
       "title": "Zwei Produkte. Ein Fundament.",
       "lead": "Beide arbeiten an derselben Frage: Wie sieht digitale Infrastruktur aus, die man auch in zehn Jahren noch verantworten kann?",
-      "messenger": {
-        "kicker": "01 · Kommunikation",
-        "body": "Chats, Anrufe, Feed und Punktekonto — Ende-zu-Ende verschlüsselt nach MLS, hybrid mit X-Wing (X25519 + ML-KEM-768)."
-      },
-      "helix": {
-        "kicker": "02 · Infrastruktur",
-        "body": "Layer 1 im Mainnet: ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme."
-      },
       "kem": "Schlüsselaustausch im Messenger, als X-Wing",
       "dsa": "Signaturen auf Helix",
-      "pq": "Post-Quanten-Kryptographie nach NIST-Standard — von der ersten Zeile an",
-      "eu": "Entwickelt und betrieben in der EU"
+      "pq": "Post-Quanten-Kryptographie nach NIST-Standard — von der ersten Zeile an"
     },
     "why": {
       "label": "Warum jetzt",
@@ -363,8 +352,7 @@
           "title": "Offen statt abgeschottet",
           "body": "Helix ist Open Source (MIT) und für jeden nachprüfbar; der Messenger kann Ihre Nachrichten selbst nicht lesen."
         }
-      ],
-      "caption": "Entwickelt & betrieben in der EU"
+      ]
     },
     "live": {
       "label": "Live",
