@@ -141,6 +141,9 @@ export function useScrollProgress(ref: RefObject<HTMLElement>, start = 0.85, end
  *
  * `draw(now)` is called every frame while visible; with reduced motion it is called once per
  * resize instead, so the canvas still shows a composed still rather than a blank.
+ *
+ * `maxDpr` caps the backing store's device pixels per CSS pixel. Fill cost grows with its
+ * square, and a background effect behind text does not need a 3x phone's full sharpness.
  */
 export function useCanvasLoop(
   ref: RefObject<HTMLCanvasElement>,
@@ -149,6 +152,7 @@ export function useCanvasLoop(
     draw: (now: number) => void;
     dispose?: () => void;
   },
+  { maxDpr = 2 }: { maxDpr?: number } = {},
 ): void {
   // Switching motion off or on rebuilds the scene, so it can draw itself still or moving.
   const still = useReducedMotion();
@@ -162,9 +166,7 @@ export function useCanvasLoop(
 
     const fit = () => {
       const r = canvas.getBoundingClientRect();
-      // Two device pixels per CSS pixel is as sharp as a soft glow needs to be, and keeps a
-      // full-screen canvas on a 3x phone from costing nine times the fill.
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       canvas.width = Math.max(1, Math.round(r.width * dpr));
       canvas.height = Math.max(1, Math.round(r.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -203,5 +205,5 @@ export function useCanvasLoop(
     };
     // `setup` is a fresh closure every render; the scene is built once per mount on purpose,
     // and again only when motion is switched.
-  }, [ref, still]);
+  }, [ref, still, maxDpr]);
 }

@@ -16,10 +16,10 @@ export default function NotFound() {
           {t("notFound.cta")}
           <Icon name="arrowRight" size={16} />
         </Link>
-        <Link className="btn" to="/messenger">
+        <Link className="btn" to="/messenger/">
           Silvra Messenger
         </Link>
-        <Link className="btn" to="/helix">
+        <Link className="btn" to="/helix/">
           Helix Blockchain
         </Link>
       </div>

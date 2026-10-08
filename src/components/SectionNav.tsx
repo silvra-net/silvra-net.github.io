@@ -47,7 +47,7 @@ export default function SectionNav({ items, label }: { items: NavItem[]; label: 
     };
   }, [items]);
 
-  // Keep the active pill in view inside the horizontally scrolling bar on narrow screens.
+  // Keep the active link in view inside the horizontally scrolling bar on narrow screens.
   useEffect(() => {
     const el = bar.current?.querySelector<HTMLElement>(`[data-id="${active}"]`);
     const track = bar.current?.querySelector<HTMLElement>(".section-nav-track");

@@ -9,8 +9,8 @@ interface Step {
 
 /**
  * Harvest now, decrypt later — as three steps on a line that fills as it is scrolled past.
- * The colours are the design system's state colours: amber for the threat that is already
- * practice, red for the one that is coming, green for what holds.
+ * The colours are the design system's state colours: orange for the threat that is already
+ * practice, red for the one that is coming, and the signal teal for what holds.
  */
 export default function Timeline({ steps }: { steps: Step[] }) {
   const ref = useRef<HTMLOListElement>(null);

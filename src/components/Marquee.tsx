@@ -1,5 +1,5 @@
 /**
- * A slow band of large outlined claims, separated by the blade's slash.
+ * A slow mono band of claims, separated by the blade's slash.
  *
  * The list is rendered twice inside a track that translates by exactly half its width, which is
  * what makes the loop seamless without measuring anything. The duplicate is hidden from

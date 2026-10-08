@@ -6,6 +6,7 @@ import Icon from "../components/Icon";
 import Marquee from "../components/Marquee";
 import NextWorld from "../components/NextWorld";
 import Reveal from "../components/Reveal";
+import SectionLabel from "../components/SectionLabel";
 import Scramble from "../components/Scramble";
 import SupplyChart from "../components/SupplyChart";
 import Testnet from "../components/Testnet";
@@ -33,15 +34,6 @@ interface Row {
 interface Figure {
   value: string;
   label: string;
-}
-
-function Label({ index, text }: { index: string; text: string }) {
-  return (
-    <p className="label">
-      <span className="label-index">{index}</span>
-      <Scramble text={text} />
-    </p>
-  );
 }
 
 export default function Helix() {
@@ -143,7 +135,7 @@ export default function Helix() {
         {/* ---- 01 · The chain, live ---- */}
         <section className="section" id="live">
           <div className="container">
-            <Label index="01" text={t("helix.live.eyebrow")} />
+            <SectionLabel index="01" text={t("helix.live.eyebrow")} />
             <div className="section-head">
               <h2>{t("helix.live.title")}</h2>
               <p className="lead">{t("helix.live.lead")}</p>
@@ -159,7 +151,7 @@ export default function Helix() {
         <section className="section" id="fundament">
           <div className="container split-grid">
             <div>
-              <Label index="02" text={t("helix.intro.eyebrow")} />
+              <SectionLabel index="02" text={t("helix.intro.eyebrow")} />
               <h2>{t("helix.intro.title")}</h2>
               <p className="lead">{t("helix.intro.body")}</p>
             </div>
@@ -180,7 +172,7 @@ export default function Helix() {
         {/* ---- 03 · Why Helix ---- */}
         <section className="section band" id="warum">
           <div className="container">
-            <Label index="03" text={t("helix.why.eyebrow")} />
+            <SectionLabel index="03" text={t("helix.why.eyebrow")} />
             <div className="section-head">
               <h2>{t("helix.why.title")}</h2>
               <p className="lead">{t("helix.why.lead")}</p>
@@ -217,7 +209,7 @@ export default function Helix() {
         {/* ---- 04 · Architecture ---- */}
         <section className="section" id="architektur">
           <div className="container">
-            <Label index="04" text={t("helix.chain.eyebrow")} />
+            <SectionLabel index="04" text={t("helix.chain.eyebrow")} />
             <div className="section-head">
               <h2>{t("helix.chain.title")}</h2>
               <p className="lead">{t("helix.chain.lead")}</p>
@@ -243,7 +235,7 @@ export default function Helix() {
         {/* ---- 05 · Tokenomics ---- */}
         <section className="section band" id="tokenomics">
           <div className="container">
-            <Label index="05" text={t("helix.supply.eyebrow")} />
+            <SectionLabel index="05" text={t("helix.supply.eyebrow")} />
             <div className="section-head">
               <h2>{t("helix.supply.title")}</h2>
               <p className="lead">{t("helix.supply.lead")}</p>
@@ -278,7 +270,7 @@ export default function Helix() {
         {/* ---- 06 · Get started ---- */}
         <section className="section" id="loslegen">
           <div className="container">
-            <Label index="06" text={t("helix.start.eyebrow")} />
+            <SectionLabel index="06" text={t("helix.start.eyebrow")} />
             <div className="section-head">
               <h2>{t("helix.start.title")}</h2>
               <p className="lead">{t("helix.start.lead")}</p>
@@ -348,7 +340,7 @@ export default function Helix() {
                   <Icon name="alert" size={22} />
                 </span>
                 <div>
-                  <Label index="07" text={t("helix.honesty.eyebrow")} />
+                  <SectionLabel index="07" text={t("helix.honesty.eyebrow")} />
                   <h2>{t("helix.honesty.title")}</h2>
                   <ul className="honesty-list">
                     {list<{ title: string; body: string }>("helix.honesty.items").map((it) => (
@@ -369,7 +361,7 @@ export default function Helix() {
         <section className="section band" id="fragen">
           <div className="container faq-grid">
             <div>
-              <Label index="08" text={t("helix.faq.label")} />
+              <SectionLabel index="08" text={t("helix.faq.label")} />
               <h2>{t("helix.faq.title")}</h2>
             </div>
             <Faq items={list<QA>("helix.faq.items")} />
@@ -379,7 +371,7 @@ export default function Helix() {
         {/* ---- 09 · Open ---- */}
         <section className="section" id="offen">
           <div className="container">
-            <Label index="09" text={t("helix.cta.eyebrow")} />
+            <SectionLabel index="09" text={t("helix.cta.eyebrow")} />
             <div className="section-head">
               <h2>{t("helix.cta.title")}</h2>
               <p className="lead">{t("helix.cta.body")}</p>

@@ -20,7 +20,7 @@ export default function Bento() {
 
   return (
     <div className="bento">
-      <Link to="/messenger" className="tile tile-messenger dark-zone">
+      <Link to="/messenger/" className="tile tile-messenger dark-zone">
         <span className="tile-kicker mono">{t("home.bento.messenger.kicker")}</span>
         <h3 className="tile-title">{t("home.bento.messenger.title")}</h3>
         <p className="tile-body">{t("home.bento.messenger.body")}</p>
@@ -34,7 +34,7 @@ export default function Bento() {
         </span>
       </Link>
 
-      <Link to="/helix" className="tile tile-helix dark-zone">
+      <Link to="/helix/" className="tile tile-helix dark-zone">
         <span className="tile-kicker mono">
           {/* The words are the project's state, the dot is the node's: it lights only once the
               node has answered, like the panel's. */}

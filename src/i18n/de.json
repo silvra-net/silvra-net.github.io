@@ -2,35 +2,43 @@
   "meta": {
     "home": {
       "title": "Silvra — Digitale Infrastruktur aus Europa",
-      "description": "Silvra entwickelt in der EU post-quanten-sichere Technologie: den Silvra Messenger mit Ende-zu-Ende-Verschlüsselung und Helix, eine Layer-1-Blockchain mit ML-DSA-65. Ohne Werbung, ohne Datenhandel."
+      "description": "Silvra entwickelt in der EU post-quanten-sichere Technologie: den Silvra Messenger mit Ende-zu-Ende-Verschlüsselung und Helix, eine Layer-1-Blockchain mit ML-DSA-65. Ohne Werbung, ohne Datenhandel.",
+      "ogAlt": "Silvra-Logo und der Schriftzug „Digitale Infrastruktur aus Europa.“ neben einer leuchtenden goldenen Doppelhelix"
     },
     "messenger": {
       "title": "Silvra Messenger — Ende-zu-Ende verschlüsselt, ohne Datenhandel",
-      "description": "Kostenloser Messenger mit Ende-zu-Ende-Verschlüsselung. Ohne Werbung, ohne Tracking, ohne Datenhandel — entwickelt und betrieben in der EU."
+      "description": "Kostenloser Messenger mit Ende-zu-Ende-Verschlüsselung. Ohne Werbung, ohne Tracking, ohne Datenhandel — entwickelt und betrieben in der EU.",
+      "ogAlt": "Silvra Messenger: Willkommensbildschirm auf einem Android-Telefon neben dem Schriftzug „Ende-zu-Ende verschlüsselt. Post-Quanten-sicher.“"
     },
     "helix": {
       "title": "Helix — Post-Quanten-Blockchain von Silvra · Mainnet",
-      "description": "Helix ist eine Layer-1-Blockchain mit ML-DSA-65 auf jeder Signatur, BFT-Finalität in rund zwei Sekunden und Open Source (MIT). Mainnet seit Version 1.0.0."
+      "description": "Helix ist eine Layer-1-Blockchain mit ML-DSA-65 auf jeder Signatur, BFT-Finalität in rund zwei Sekunden und Open Source (MIT). Mainnet seit Version 1.0.0.",
+      "ogAlt": "Helix-Logo, der Hinweis „Mainnet seit 1.0.0“ und der Schriftzug „Post-Quanten-Blockchain.“ neben einer leuchtenden goldenen Doppelhelix"
     },
     "mission": {
       "title": "Mission — Warum wir Silvra bauen",
-      "description": "Unsere Mission: digitale Infrastruktur für Europa, die auch in 20 Jahren noch vertrauenswürdig ist. Post-quanten-sicher, transparent, ohne Datenhandel."
+      "description": "Unsere Mission: digitale Infrastruktur für Europa, die auch in 20 Jahren noch vertrauenswürdig ist. Post-quanten-sicher, transparent, ohne Datenhandel.",
+      "ogAlt": "Silvra-Logo und der Schriftzug „Digitale Infrastruktur aus Europa.“ neben einer leuchtenden goldenen Doppelhelix"
     },
     "contact": {
       "title": "Kontakt — Sprich mit uns",
-      "description": "Fragen, Feedback oder Mitreden? Kontaktiere das Silvra-Team — wir freuen uns über jeden Beitrag."
+      "description": "Fragen, Feedback oder Mitreden? Kontaktiere das Silvra-Team — wir freuen uns über jeden Beitrag.",
+      "ogAlt": "Silvra-Logo und der Schriftzug „Digitale Infrastruktur aus Europa.“ neben einer leuchtenden goldenen Doppelhelix"
     },
     "impressum": {
       "title": "Impressum — Silvra",
-      "description": "Impressum und Anbieterkennzeichnung von Silvra."
+      "description": "Impressum und Anbieterkennzeichnung von Silvra.",
+      "ogAlt": "Silvra-Logo und der Schriftzug „Digitale Infrastruktur aus Europa.“ neben einer leuchtenden goldenen Doppelhelix"
     },
     "accessibility": {
       "title": "Erklärung zur Barrierefreiheit — Silvra",
-      "description": "Wie barrierefrei silvra.net ist, wie wir das prüfen, was noch nicht geht und wo Sie eine Barriere melden."
+      "description": "Wie barrierefrei silvra.net ist, wie wir das prüfen, was noch nicht geht und wo Sie eine Barriere melden.",
+      "ogAlt": "Silvra-Logo und der Schriftzug „Digitale Infrastruktur aus Europa.“ neben einer leuchtenden goldenen Doppelhelix"
     },
     "notFound": {
       "title": "Seite nicht gefunden — Silvra",
-      "description": "Diese Seite gibt es nicht (mehr). Zurück zur Übersicht."
+      "description": "Diese Seite gibt es nicht (mehr). Zurück zur Übersicht.",
+      "ogAlt": "Silvra-Logo und der Schriftzug „Digitale Infrastruktur aus Europa.“ neben einer leuchtenden goldenen Doppelhelix"
     }
   },
   "nav": {
@@ -140,29 +148,7 @@
       ],
       "statement": "Wir bauen die digitale Infrastruktur, der Europa auch übermorgen noch vertrauen kann.",
       "body": "Kommunikation und Blockchain auf Verfahren, die dem standhalten, was auf heutige Verschlüsselung zukommt. Entwickelt und betrieben in der EU — ohne Werbung, ohne Datenhandel.",
-      "cta": "Unsere Mission",
-      "facts": [
-        {
-          "value": "2",
-          "label": "Produkte, ein Fundament",
-          "body": "Ein Messenger und eine Blockchain — beide von Anfang an post-quanten-sicher gebaut."
-        },
-        {
-          "value": "0",
-          "label": "Werbung, Tracking, Datenhandel",
-          "body": "Es gibt kein Geschäftsmodell, das auf Ihren Daten beruht."
-        },
-        {
-          "value": "EU",
-          "label": "Entwickelt & betrieben",
-          "body": "Eine Entscheidung über Zuständigkeiten, nicht bloß über Serverstandorte."
-        },
-        {
-          "value": "2024",
-          "label": "NIST-Standards",
-          "body": "ML-KEM und ML-DSA — eingebaut, solange die Projekte jung genug dafür sind."
-        }
-      ]
+      "cta": "Unsere Mission"
     },
     "marquee": [
       "Ende-zu-Ende verschlüsselte Chats",
@@ -1016,8 +1002,7 @@
           ".hlx-Namen und Wiederherstellung",
           "Validator-Knoten per Klick",
           "Schlüssel bleibt auf dem Gerät, Sperre nach 10 Minuten"
-        ],
-        "cta": "Wallet herunterladen"
+        ]
       },
       "cli": {
         "title": "Kommandozeile",
@@ -1078,7 +1063,6 @@
       "eyebrow": "Offen",
       "title": "Offen. MIT-lizenziert. Selbst nachprüfen.",
       "body": "Code, Dokumentation, Explorer und der öffentliche Knoten — alles einsehbar, alles ohne Konto.",
-      "wallet": "Wallet herunterladen",
       "explorer": "Explorer öffnen",
       "githubBody": "Quellcode, Releases und Dokumentation von Helix.",
       "explorerBody": "Blöcke, Transaktionen und Validatoren live durchsuchen.",

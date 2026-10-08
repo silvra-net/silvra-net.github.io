@@ -3,7 +3,7 @@ import Gate from "../components/Gate";
 import Marquee from "../components/Marquee";
 import ScrollWords from "../components/ScrollWords";
 import Reveal from "../components/Reveal";
-import Scramble from "../components/Scramble";
+import SectionLabel from "../components/SectionLabel";
 import Timeline from "../components/Timeline";
 import Testnet from "../components/Testnet";
 import BlockStream from "../components/BlockStream";
@@ -27,16 +27,6 @@ interface Step {
   body: string;
 }
 
-/** A section's small mono label: an index, a slash, a name — decrypted on first sight. */
-function Label({ index, text }: { index: string; text: string }) {
-  return (
-    <p className="label">
-      <span className="label-index">{index}</span>
-      <Scramble text={text} />
-    </p>
-  );
-}
-
 export default function Home() {
   const { t, list } = useI18n();
   useSeo(t("meta.home.title"), t("meta.home.description"));
@@ -49,7 +39,7 @@ export default function Home() {
       <section className="claim-band dark-zone" id="about" aria-labelledby="claim-title">
         <div className="container claim-grid">
           <div>
-            <Label index="00" text={t("home.about.label")} />
+            <SectionLabel index="00" text={t("home.about.label")} />
             <h2 className="claim" id="claim-title">
               {list<string>("home.about.claim").map((w) => (
                 <span key={w}>
@@ -63,11 +53,11 @@ export default function Home() {
             <ScrollWords className="statement" text={t("home.about.statement")} />
             <p className="lead">{t("home.about.body")}</p>
             <div className="btn-row">
-              <Link className="btn primary" to="/mission">
+              <Link className="btn primary" to="/mission/">
                 {t("home.about.cta")}
                 <Icon name="arrowRight" size={16} />
               </Link>
-              <Link className="btn" to="/contact">
+              <Link className="btn" to="/contact/">
                 {t("nav.contact")}
               </Link>
             </div>
@@ -91,7 +81,7 @@ export default function Home() {
       {/* ---- 01 · One foundation under both products ---- */}
       <section className="section">
         <div className="container">
-          <Label index="01" text={t("home.stack.label")} />
+          <SectionLabel index="01" text={t("home.stack.label")} />
           <div className="section-head">
             <h2>{t("home.stack.title")}</h2>
             <p className="lead">{t("home.stack.lead")}</p>
@@ -120,7 +110,7 @@ export default function Home() {
       {/* ---- 02 · Why now ---- */}
       <section className="section why band">
         <div className="container">
-          <Label index="02" text={t("home.why.label")} />
+          <SectionLabel index="02" text={t("home.why.label")} />
           <div className="section-head">
             <h2>{t("home.why.title")}</h2>
             <p className="lead">{t("home.why.lead")}</p>
@@ -141,7 +131,7 @@ export default function Home() {
       {/* ---- 03 · Inventory ---- */}
       <section className="section" id="inventar">
         <div className="container">
-          <Label index="03" text={t("home.inventory.label")} />
+          <SectionLabel index="03" text={t("home.inventory.label")} />
           <div className="section-head">
             <h2>{t("home.inventory.title")}</h2>
             <p className="lead">{t("home.inventory.lead")}</p>
@@ -159,7 +149,7 @@ export default function Home() {
             <Photo slot="work" className="craft-media" />
           </Reveal>
           <div className="craft-body">
-            <Label index="04" text={t("home.craft.label")} />
+            <SectionLabel index="04" text={t("home.craft.label")} />
             <h2>{t("home.craft.title")}</h2>
             <ul className="craft-list">
               {list<Point>("home.craft.points").map((p, i) => (
@@ -172,7 +162,7 @@ export default function Home() {
                 </Reveal>
               ))}
             </ul>
-            <Link className="text-link" to="/mission">
+            <Link className="text-link" to="/mission/">
               {t("home.craft.cta")}
               <Icon name="arrowRight" size={16} />
             </Link>
@@ -184,7 +174,7 @@ export default function Home() {
       <section className="section europe">
         <div className="container europe-grid">
           <div>
-            <Label index="05" text={t("home.europe.label")} />
+            <SectionLabel index="05" text={t("home.europe.label")} />
             <h2>{t("home.europe.title")}</h2>
             <p className="lead">{t("home.europe.lead")}</p>
             <ul className="europe-points">
@@ -209,10 +199,10 @@ export default function Home() {
       <section className="section live band">
         <div className="container live-grid">
           <div>
-            <Label index="06" text={t("home.live.label")} />
+            <SectionLabel index="06" text={t("home.live.label")} />
             <h2>{t("home.live.title")}</h2>
             <p className="lead">{t("home.live.lead")}</p>
-            <Link className="text-link" to="/helix">
+            <Link className="text-link" to="/helix/">
               {t("home.live.cta")}
               <Icon name="arrowRight" size={16} />
             </Link>
@@ -230,10 +220,10 @@ export default function Home() {
       <section className="section band" id="faq">
         <div className="container faq-grid">
           <div>
-            <Label index="07" text={t("home.faq.label")} />
+            <SectionLabel index="07" text={t("home.faq.label")} />
             <h2>{t("home.faq.title")}</h2>
             <p className="lead">{t("home.faq.lead")}</p>
-            <Link className="text-link" to="/contact">
+            <Link className="text-link" to="/contact/">
               {t("home.faq.more")}
               <Icon name="arrowRight" size={16} />
             </Link>
@@ -245,7 +235,7 @@ export default function Home() {
       {/* ---- 08 · Join ---- */}
       <section className="section join">
         <div className="container">
-          <Label index="08" text={t("home.join.label")} />
+          <SectionLabel index="08" text={t("home.join.label")} />
           <h2 className="join-title">{t("home.join.title")}</h2>
           <div className="join-grid">
             <p className="lead">{t("home.join.body")}</p>
@@ -258,7 +248,7 @@ export default function Home() {
                 <Icon name="people" size={16} />
                 Discord
               </a>
-              <Link className="btn" to="/contact">
+              <Link className="btn" to="/contact/">
                 {t("nav.contact")}
                 <Icon name="arrowRight" size={16} />
               </Link>

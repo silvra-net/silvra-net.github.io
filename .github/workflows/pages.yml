@@ -10,6 +10,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # The footer's copyright year is fixed at build time (vite.config.ts), so the site is rebuilt
+  # early on 1 January even when nothing else has changed.
+  schedule:
+    - cron: "0 3 1 1 *"
 
 permissions:
   contents: read

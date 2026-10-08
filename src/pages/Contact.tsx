@@ -24,7 +24,7 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero label={t("contact.eyebrow")} title={t("contact.title")} lead={t("contact.subtitle")} media={<Photo slot="contact" eager />}>
+      <PageHero label={t("contact.eyebrow")} title={t("contact.title")} lead={t("contact.subtitle")} media={<Photo slot="contact" priority />}>
         <div className="btn-row">
           <a className="btn primary" href={`mailto:${t("contact.email")}`}>
             <Icon name="mail" size={16} />

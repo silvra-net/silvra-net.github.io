@@ -23,13 +23,18 @@ const DARK_BANDS = ".gate, .p-hero, .page-hero, .claim-band, .marquee-band, .nex
 const BEHIND_MENU = ".skip-link, #main, .site-footer, .to-top, .sticky-cta";
 
 const PAGES = [
-  { to: "/messenger", key: "nav.messenger", world: "messenger" },
-  { to: "/helix", key: "nav.helix", world: "helix" },
-  { to: "/mission", key: "nav.mission" },
-  { to: "/contact", key: "nav.contact" },
+  { to: "/messenger/", key: "nav.messenger", world: "messenger" },
+  { to: "/helix/", key: "nav.helix", world: "helix" },
+  { to: "/mission/", key: "nav.mission" },
+  { to: "/contact/", key: "nav.contact" },
 ];
 
-/** Which world a path belongs to. The two product pages carry their own colour; the rest is Silvra. */
+/** A path without its trailing slash. Pages answers and links every page as /page/, the dev server
+ *  and an old bookmark may say /page; both are the same page. */
+export const pagePath = (pathname: string) => pathname.replace(/\/+$/, "") || "/";
+
+/** Which world a path belongs to (with or without the trailing slash). The two product pages
+ *  carry their own colour; the rest is Silvra. */
 export function worldOf(pathname: string): "messenger" | "helix" | "silvra" {
   if (pathname.startsWith("/messenger")) return "messenger";
   if (pathname.startsWith("/helix")) return "helix";
@@ -343,12 +348,12 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <div id="mobile-menu" ref={menu} className={open ? "mobile-menu open" : "mobile-menu"} hidden={!open}>
         <nav className="mobile-nav" aria-label={t("nav.main")}>
-          <NavLink to="/messenger" className="mobile-world mobile-messenger">
+          <NavLink to="/messenger/" className="mobile-world mobile-messenger">
             <span className="mobile-index">01</span>
             <span className="mobile-title">Silvra Messenger</span>
             <span className="mobile-tag">{t("nav.messengerTag")}</span>
           </NavLink>
-          <NavLink to="/helix" className="mobile-world mobile-helix">
+          <NavLink to="/helix/" className="mobile-world mobile-helix">
             <span className="mobile-index">02</span>
             <span className="mobile-title">Helix Blockchain</span>
             <span className="mobile-tag">{t("nav.helixTag")}</span>
@@ -357,8 +362,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             <NavLink to="/" end>
               {t("nav.home")}
             </NavLink>
-            <NavLink to="/mission">{t("nav.mission")}</NavLink>
-            <NavLink to="/contact">{t("nav.contact")}</NavLink>
+            <NavLink to="/mission/">{t("nav.mission")}</NavLink>
+            <NavLink to="/contact/">{t("nav.contact")}</NavLink>
             <a href={EXPLORER}>
               {t("nav.explorer")} <Icon name="arrowUpRight" size={14} />
             </a>
@@ -366,9 +371,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <MotionToggle labelled />
           <ThemeToggle labelled />
           <p className="mobile-legal mono">
-            <Link to="/impressum">{t("footer.impressum")}</Link>
+            <Link to="/impressum/">{t("footer.impressum")}</Link>
             <a href={privacy}>{t("footer.privacy")}</a>
-            <Link to="/barrierefreiheit">{t("footer.accessibility")}</Link>
+            <Link to="/barrierefreiheit/">{t("footer.accessibility")}</Link>
           </p>
         </nav>
       </div>
@@ -403,8 +408,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             <div className="footer-cols">
               <div className="footer-col">
                 <h2>{t("footer.products")}</h2>
-                <Link to="/messenger">Silvra Messenger</Link>
-                <Link to="/helix">Helix Blockchain</Link>
+                <Link to="/messenger/">Silvra Messenger</Link>
+                <Link to="/helix/">Helix Blockchain</Link>
                 <a href={EXPLORER}>
                   Helix {t("nav.explorer")}
                   <Icon name="arrowUpRight" size={12} />
@@ -412,8 +417,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <div className="footer-col">
                 <h2>Silvra</h2>
-                <Link to="/mission">{t("nav.mission")}</Link>
-                <Link to="/contact">{t("nav.contact")}</Link>
+                <Link to="/mission/">{t("nav.mission")}</Link>
+                <Link to="/contact/">{t("nav.contact")}</Link>
                 <a href={GITHUB} rel="noreferrer noopener" target="_blank">
                   GitHub
                   <span className="sr-only">{t("footer.newTab")}</span>
@@ -427,11 +432,11 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <div className="footer-col">
                 <h2>{t("footer.legal")}</h2>
-                <Link to="/impressum">{t("footer.impressum")}</Link>
+                <Link to="/impressum/">{t("footer.impressum")}</Link>
                 {/* Plain anchor: the privacy policy is a static page, not a route. Both languages
                     live on it; the English reader lands on the English half. */}
                 <a href={privacy}>{t("footer.privacy")}</a>
-                <Link to="/barrierefreiheit">{t("footer.accessibility")}</Link>
+                <Link to="/barrierefreiheit/">{t("footer.accessibility")}</Link>
                 <a href={`mailto:info@silvra.net?subject=${encodeURIComponent(t("footer.reportBarrier"))}`}>
                   {t("footer.reportBarrier")}
                 </a>
@@ -442,7 +447,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             SILVRA
           </div>
           <div className="footer-bottom">
-            <span>{t("footer.copyright", { year: new Date().getFullYear() })}</span>
+            <span>{t("footer.copyright", { year: __BUILD_YEAR__ })}</span>
             <span className="mono">{t("footer.stack")}</span>
           </div>
         </div>

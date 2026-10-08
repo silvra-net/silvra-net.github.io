@@ -6,6 +6,8 @@ import Marquee from "../components/Marquee";
 import MessageJourney from "../components/MessageJourney";
 import NextWorld from "../components/NextWorld";
 import Reveal from "../components/Reveal";
+import SectionLabel from "../components/SectionLabel";
+import { HIGH_PRIORITY } from "../components/Photo";
 import Scramble from "../components/Scramble";
 import SectionNav from "../components/SectionNav";
 import AppTour from "../components/AppTour";
@@ -35,15 +37,6 @@ interface Group {
 interface Spec {
   label: string;
   value: string;
-}
-
-function Label({ index, text }: { index: string; text: string }) {
-  return (
-    <p className="label">
-      <span className="label-index">{index}</span>
-      <Scramble text={text} />
-    </p>
-  );
 }
 
 /**
@@ -126,7 +119,14 @@ export default function Messenger() {
             </dl>
           </div>
           <div className="p-hero-visual">
-            <img className="phone-shot" src={shots[0]} alt={t("messenger.hero.shotAlt")} width={600} height={1182} />
+            <img
+              className="phone-shot"
+              src={shots[0]}
+              alt={t("messenger.hero.shotAlt")}
+              width={600}
+              height={1182}
+              {...HIGH_PRIORITY}
+            />
             <CipherLoop className="float float-bubble" messages={list<string>("messenger.hero.bubbles")} />
             <span className="float float-chip chip-a" aria-hidden="true">
               <Icon name="key" size={14} />
@@ -151,7 +151,7 @@ export default function Messenger() {
         {/* ---- 01 · The route of a message ---- */}
         <section className="section" id="weg">
           <div className="container">
-            <Label index="01" text={t("messenger.journey.eyebrow")} />
+            <SectionLabel index="01" text={t("messenger.journey.eyebrow")} />
             <div className="section-head">
               <h2>{t("messenger.journey.title")}</h2>
               <p className="lead">{t("messenger.journey.lead")}</p>
@@ -165,7 +165,7 @@ export default function Messenger() {
         {/* ---- 02 · Three pillars ---- */}
         <section className="section" id="funktionen">
           <div className="container">
-            <Label index="02" text={t("messenger.pillars.eyebrow")} />
+            <SectionLabel index="02" text={t("messenger.pillars.eyebrow")} />
             <div className="section-head">
               <h2>{t("messenger.pillars.title")}</h2>
             </div>
@@ -187,7 +187,7 @@ export default function Messenger() {
         {/* ---- 03 · Everything else ---- */}
         <section className="section band">
           <div className="container">
-            <Label index="03" text={t("messenger.features.eyebrow")} />
+            <SectionLabel index="03" text={t("messenger.features.eyebrow")} />
             <div className="section-head">
               <h2>{t("messenger.features.title")}</h2>
               <p className="lead">{t("messenger.features.lead")}</p>
@@ -209,7 +209,7 @@ export default function Messenger() {
         {/* ---- 04 · Against what ---- */}
         <section className="section" id="schutz">
           <div className="container">
-            <Label index="04" text={t("messenger.intro.eyebrow")} />
+            <SectionLabel index="04" text={t("messenger.intro.eyebrow")} />
             <div className="section-head wide">
               <h2>{t("messenger.intro.title")}</h2>
               <p className="lead">{t("messenger.adversary.title")}</p>
@@ -265,7 +265,7 @@ export default function Messenger() {
         <section className="section demo">
           <div className="container demo-grid">
             <div>
-              <Label index="05" text={t("messenger.crypto.eyebrow")} />
+              <SectionLabel index="05" text={t("messenger.crypto.eyebrow")} />
               <h2>{t("messenger.crypto.title")}</h2>
               <p className="lead">{t("messenger.crypto.body")}</p>
             </div>
@@ -275,7 +275,7 @@ export default function Messenger() {
 
         <section className="section band" id="app">
           <div className="container">
-            <Label index="06" text={t("messenger.tour.eyebrow")} />
+            <SectionLabel index="06" text={t("messenger.tour.eyebrow")} />
             <div className="section-head">
               <h2>{t("messenger.tour.title")}</h2>
               <p className="lead">{t("messenger.tour.lead")}</p>
@@ -289,7 +289,7 @@ export default function Messenger() {
         <div className="section-group" id="transparenz">
           <section className="section">
             <div className="container">
-              <Label index="07" text={t("messenger.transparency.eyebrow")} />
+              <SectionLabel index="07" text={t("messenger.transparency.eyebrow")} />
               <div className="section-head">
                 <h2>{t("messenger.transparency.title")}</h2>
                 <p className="lead">{t("messenger.transparency.subtitle")}</p>
@@ -320,7 +320,7 @@ export default function Messenger() {
 
           <section className="section">
             <div className="container">
-              <Label index="08" text={t("messenger.boundaries.eyebrow")} />
+              <SectionLabel index="08" text={t("messenger.boundaries.eyebrow")} />
               <div className="section-head">
                 <h2>{t("messenger.boundaries.title")}</h2>
               </div>
@@ -342,7 +342,7 @@ export default function Messenger() {
         <section className="section band" id="fragen">
           <div className="container faq-grid">
             <div>
-              <Label index="09" text={t("messenger.faq.label")} />
+              <SectionLabel index="09" text={t("messenger.faq.label")} />
               <h2>{t("messenger.faq.title")}</h2>
             </div>
             <Faq items={list<QA>("messenger.faq.items")} />
@@ -354,7 +354,7 @@ export default function Messenger() {
             <div className="download-panel dark-zone">
               <div className="download-aura" aria-hidden="true" />
               <div className="download-text">
-                <Label index="10" text={t("messenger.download.label")} />
+                <SectionLabel index="10" text={t("messenger.download.label")} />
                 <h2>{t("messenger.download.title")}</h2>
                 <p className="lead">{t("messenger.download.body")}</p>
                 <div className="btn-row">

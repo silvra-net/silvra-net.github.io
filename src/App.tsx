@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Layout, { worldOf } from "./components/Layout";
+import Layout, { pagePath, worldOf } from "./components/Layout";
 import { prefersReducedMotion } from "./lib/motion";
 import Home from "./pages/Home";
 import Messenger from "./pages/Messenger";
@@ -14,7 +14,8 @@ import NotFound from "./pages/NotFound";
 /** A client router leaves the scroll position where the last page left it; a new page should
  *  start at the top, the way a real navigation does. */
 function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const { pathname: raw, hash } = useLocation();
+  const pathname = pagePath(raw);
   const last = useRef<string | null>(null);
   useEffect(() => {
     // A jump within the same page scrolls itself; only a new page is placed here.
@@ -44,7 +45,7 @@ function ScrollToTop() {
  * the site's page transition. Not from the gate into a product: the gate sweeps on its own.
  */
 function RouteWipe() {
-  const { pathname } = useLocation();
+  const pathname = pagePath(useLocation().pathname);
   const prev = useRef(pathname);
   const [run, setRun] = useState(0);
   useEffect(() => {

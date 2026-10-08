@@ -99,7 +99,7 @@ export default function CryptoInventory() {
           {t("home.inventory.sourceHelix")}
         </a>
         <span aria-hidden="true">·</span>
-        <Link to="/messenger#transparenz">{t("home.inventory.sourceMessenger")}</Link>
+        <Link to="/messenger/#transparenz">{t("home.inventory.sourceMessenger")}</Link>
       </p>
     </div>
   );

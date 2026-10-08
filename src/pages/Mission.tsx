@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PageHero from "../components/PageHero";
 import Photo from "../components/Photo";
 import Reveal from "../components/Reveal";
-import Scramble from "../components/Scramble";
+import SectionLabel from "../components/SectionLabel";
 import ScrollWords from "../components/ScrollWords";
 import Icon from "../components/Icon";
 import { useI18n } from "../i18n";
@@ -29,15 +29,12 @@ export default function Mission() {
         label={t("mission.eyebrow")}
         title={t("mission.title")}
         lead={t("mission.subtitle")}
-        media={<Photo slot="mission" eager />}
+        media={<Photo slot="mission" priority />}
       />
 
       <section className="section">
         <div className="container">
-          <p className="label">
-            <span className="label-index">01</span>
-            <Scramble text={t("mission.approach.eyebrow")} />
-          </p>
+          <SectionLabel index="01" text={t("mission.approach.eyebrow")} />
           <ScrollWords className="statement" text={t("mission.approach.statement")} />
           <div className="prose-grid">
             {list<string>("mission.approach.paragraphs").map((p, i) => (
@@ -60,10 +57,7 @@ export default function Mission() {
 
       <section className="section">
         <div className="container">
-          <p className="label">
-            <span className="label-index">02</span>
-            <Scramble text={t("mission.principles.eyebrow")} />
-          </p>
+          <SectionLabel index="02" text={t("mission.principles.eyebrow")} />
           <div className="section-head">
             <h2>{t("mission.principles.title")}</h2>
           </div>
@@ -95,10 +89,7 @@ export default function Mission() {
 
       <section className="section join">
         <div className="container">
-          <p className="label">
-            <span className="label-index">03</span>
-            <Scramble text={t("home.join.label")} />
-          </p>
+          <SectionLabel index="03" text={t("home.join.label")} />
           <h2 className="join-title">{t("home.join.title")}</h2>
           <div className="join-grid">
             <p className="lead">{t("home.join.body")}</p>
@@ -107,7 +98,7 @@ export default function Mission() {
                 <Icon name="mail" size={16} />
                 {t("home.join.email")}
               </a>
-              <Link className="btn" to="/contact">
+              <Link className="btn" to="/contact/">
                 {t("nav.contact")}
                 <Icon name="arrowRight" size={16} />
               </Link>

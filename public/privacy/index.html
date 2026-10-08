@@ -100,13 +100,13 @@ body:has(#en:target) .lang a[href="#de"] { background: none; color: var(--muted)
 .opening { position: relative; isolation: isolate; overflow: hidden; padding: calc(72px + 56px) 0 calc(56px + 14px); }
 .opening::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background: url("/privacy/camo-dark.svg") 0 0 / 384px; opacity: 0.55;
+  background: url("/privacy/camo-dark.png") 0 0 / 384px; image-rendering: pixelated; opacity: 0.55;
   -webkit-mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
   mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
 }
 .opening::after {
   content: ""; position: absolute; inset: auto 0 0; height: 14px;
-  background: url("/privacy/camo-dark.svg") 0 0 / 384px;
+  background: url("/privacy/camo-dark.png") 0 0 / 384px; image-rendering: pixelated;
   border-top: 1px solid rgba(214, 222, 196, 0.16);
 }
 .corner { position: absolute; width: 24px; height: 24px; border: 0 solid #d4b86a; }
@@ -135,7 +135,7 @@ section p a { padding-block: 2px; }
 .site-footer { position: relative; background: #10140d; padding: calc(14px + 32px) 0 40px; }
 .site-footer::before {
   content: ""; position: absolute; inset: 0 0 auto; height: 14px;
-  background: url("/privacy/camo-dark.svg") 0 0 / 384px;
+  background: url("/privacy/camo-dark.png") 0 0 / 384px; image-rendering: pixelated;
   border-bottom: 1px solid rgba(214, 222, 196, 0.16);
 }
 .site-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 14px; }

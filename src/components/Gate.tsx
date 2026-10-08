@@ -68,7 +68,7 @@ export default function Gate() {
       if (reduced) return;
       e.preventDefault();
       setLeaving(side);
-      window.setTimeout(() => navigate(`/${side}`), 640);
+      window.setTimeout(() => navigate(`/${side}/`), 640);
     },
     [navigate, reduced],
   );
@@ -122,7 +122,7 @@ export default function Gate() {
 
       <Link
         ref={messenger}
-        to="/messenger"
+        to="/messenger/"
         className="gate-side gate-messenger"
         onClick={go("messenger")}
       >
@@ -151,7 +151,7 @@ export default function Gate() {
 
       <Link
         ref={helix}
-        to="/helix"
+        to="/helix/"
         className="gate-side gate-helix"
         onClick={go("helix")}
       >
@@ -208,16 +208,20 @@ export default function Gate() {
       {/* The name starts with the words written on the ring, so someone who reads them aloud to
           a voice control finds the link (WCAG 2.5.3). */}
       <a className="gate-seal" href="#about" aria-label={`${t("home.gate.seal").replace(/ · $/, "")} — ${t("home.gate.scroll")}`}>
-        <svg className="gate-seal-ring" viewBox="0 0 200 200" aria-hidden="true">
-          <defs>
-            <path id="seal-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
-          </defs>
-          <text>
-            <textPath href="#seal-path" textLength="488">
-              {t("home.gate.seal")}
-            </textPath>
-          </text>
-        </svg>
+        {/* The ring turns on an HTML wrapper: an <svg> turned by itself is laid out again on
+            every frame, a span is turned by the compositor. */}
+        <span className="gate-seal-ring" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <path id="seal-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
+            </defs>
+            <text>
+              <textPath href="#seal-path" textLength="488">
+                {t("home.gate.seal")}
+              </textPath>
+            </text>
+          </svg>
+        </span>
         {/* A bezel of ticks, still while the text ring turns: the emblem's fixed frame. */}
         <svg className="gate-seal-bezel" viewBox="0 0 200 200" aria-hidden="true">
           <circle cx="100" cy="100" r="95" pathLength="360" />

@@ -2,35 +2,43 @@
   "meta": {
     "home": {
       "title": "Silvra — Digital infrastructure from Europe",
-      "description": "Silvra builds post-quantum secure technology in the EU: Silvra Messenger with end-to-end encryption, and Helix, a layer-1 blockchain signed with ML-DSA-65. No ads, no data trading."
+      "description": "Silvra builds post-quantum secure technology in the EU: Silvra Messenger with end-to-end encryption, and Helix, a layer-1 blockchain signed with ML-DSA-65. No ads, no data trading.",
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
     },
     "messenger": {
       "title": "Silvra Messenger — End-to-end encrypted, no data trading",
-      "description": "Free messenger with end-to-end encryption. No ads, no tracking, no data trading — developed and operated in the EU."
+      "description": "Free messenger with end-to-end encryption. No ads, no tracking, no data trading — developed and operated in the EU.",
+      "ogAlt": "Silvra Messenger: welcome screen on an Android phone beside the headline “End-to-end encrypted. Post-quantum secure.”, set in German"
     },
     "helix": {
       "title": "Helix — Silvra's post-quantum blockchain · mainnet",
-      "description": "Helix is a layer-1 blockchain with ML-DSA-65 on every signature, BFT finality in about two seconds, and open source (MIT). Mainnet since version 1.0.0."
+      "description": "Helix is a layer-1 blockchain with ML-DSA-65 on every signature, BFT finality in about two seconds, and open source (MIT). Mainnet since version 1.0.0.",
+      "ogAlt": "Helix logo, the note “Mainnet since 1.0.0” and the headline “Post-quantum blockchain.”, set in German, beside a glowing gold double helix"
     },
     "mission": {
       "title": "Mission — Why we build Silvra",
-      "description": "Our mission: digital infrastructure for Europe that will still be trustworthy in 20 years. Post-quantum secure, transparent, no data trading."
+      "description": "Our mission: digital infrastructure for Europe that will still be trustworthy in 20 years. Post-quantum secure, transparent, no data trading.",
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
     },
     "contact": {
       "title": "Contact — Talk to us",
-      "description": "Questions, feedback, or want to get involved? Reach out to the Silvra team — we appreciate every contribution."
+      "description": "Questions, feedback, or want to get involved? Reach out to the Silvra team — we appreciate every contribution.",
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
     },
     "impressum": {
       "title": "Legal Notice — Silvra",
-      "description": "Imprint and provider information of Silvra."
+      "description": "Imprint and provider information of Silvra.",
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
     },
     "accessibility": {
       "title": "Accessibility statement — Silvra",
-      "description": "How accessible silvra.net is, how we check it, what does not work yet and where to report a barrier."
+      "description": "How accessible silvra.net is, how we check it, what does not work yet and where to report a barrier.",
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
     },
     "notFound": {
       "title": "Page not found — Silvra",
-      "description": "This page does not exist (anymore). Back to the overview."
+      "description": "This page does not exist (anymore). Back to the overview.",
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
     }
   },
   "nav": {
@@ -140,29 +148,7 @@
       ],
       "statement": "We build the digital infrastructure Europe can still trust the day after tomorrow.",
       "body": "Communication and blockchain on methods that withstand what is coming for today's encryption. Developed and operated in the EU — without ads, without trading data.",
-      "cta": "Our mission",
-      "facts": [
-        {
-          "value": "2",
-          "label": "Products, one foundation",
-          "body": "A messenger and a blockchain — both built post-quantum secure from the start."
-        },
-        {
-          "value": "0",
-          "label": "Ads, tracking, data trading",
-          "body": "There is no business model that depends on your data."
-        },
-        {
-          "value": "EU",
-          "label": "Developed & operated",
-          "body": "A decision about jurisdiction, not just about where the servers are."
-        },
-        {
-          "value": "2024",
-          "label": "NIST standards",
-          "body": "ML-KEM and ML-DSA — built in while the projects are young enough for it."
-        }
-      ]
+      "cta": "Our mission"
     },
     "marquee": [
       "End-to-end encrypted chats",
@@ -1016,8 +1002,7 @@
           ".hlx names and recovery",
           "A validator node at a click",
           "The key stays on your machine; locks after 10 minutes"
-        ],
-        "cta": "Download the wallet"
+        ]
       },
       "cli": {
         "title": "Command line",
@@ -1078,7 +1063,6 @@
       "eyebrow": "Open",
       "title": "Open. MIT-licensed. Check it yourself.",
       "body": "Code, documentation, explorer and the public node — all of it open, none of it behind an account.",
-      "wallet": "Download the wallet",
       "explorer": "Open the explorer",
       "githubBody": "Helix source code, releases and documentation.",
       "explorerBody": "Browse blocks, transactions and validators live.",

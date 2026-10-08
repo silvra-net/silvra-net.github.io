@@ -50,14 +50,20 @@
   --accent: var(--sand);
   --accent-ink: #14110a;
   --accent-text: var(--sand-text);
-  --camo: url("./assets/camo-dark.svg");
+  /* One pixel per camouflage cell (scripts/camo.mjs), drawn at 384px. Every rule that lays it
+     down also sets image-rendering: pixelated, so the cells stay hard-edged squares. Each tile is
+     named once, as a token, so the stylesheet carries each inlined image once. --camo follows
+     the theme; bands that are night olive in both themes take --camo-dark. */
+  --camo-dark: url("./assets/camo-dark.png");
+  --camo-light: url("./assets/camo-light.png");
+  --camo: var(--camo-dark);
   /* The two world colours as flat type colours, for titles on the always-dark openings. */
   --metal: #d9ddd3;
   --gold: #e0a44a;
 }
 
 :root {
-  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --display: "Barlow Condensed", "Barlow Condensed Fallback", "Barlow Condensed Fallback Sans", sans-serif;
   --brand: "Unbounded Variable", "Unbounded", system-ui, sans-serif;
   --font: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -97,7 +103,7 @@
     --accent: #0f2535;
     --accent-ink: #ffffff;
     --accent-text: #7a5c12;
-    --camo: url("./assets/camo-light.svg");
+    --camo: var(--camo-light);
   }
 }
 :root[data-theme="light"] {
@@ -124,7 +130,7 @@
   --accent: #0f2535;
   --accent-ink: #ffffff;
   --accent-text: #7a5c12;
-  --camo: url("./assets/camo-light.svg");
+  --camo: var(--camo-light);
 }
 
 /* Worlds. Restated on zones (and terminals, which carry the dark palette) for the same reason
@@ -823,7 +829,8 @@ p {
   bottom: 0;
   right: 0;
   width: 28px;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   opacity: 0.7;
 }
 .mobile-helix {
@@ -1238,9 +1245,12 @@ p {
 .gate-seal-ring {
   position: absolute;
   inset: 0;
+  animation: spin 40s linear infinite;
+}
+.gate-seal-ring svg {
+  display: block;
   width: 100%;
   height: 100%;
-  animation: spin 40s linear infinite;
 }
 .gate-seal-ring text {
   font: 500 10.5px var(--mono);
@@ -1849,7 +1859,8 @@ p {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   opacity: 0.06;
 }
 .join-title {
@@ -3008,7 +3019,8 @@ p {
   position: absolute;
   inset: 0 0 auto;
   height: 14px;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   border-bottom: 1px solid rgba(214, 222, 196, 0.16);
 }
 .footer-top {
@@ -4630,6 +4642,7 @@ a.tile:hover {
   padding: 0;
   min-height: 220px;
   background: #0a0c09 var(--camo) 0 0 / 384px;
+  image-rendering: pixelated;
 }
 .tile-zero {
   grid-column: span 3;
@@ -5466,7 +5479,8 @@ a.tile-messenger:hover .tile-phone {
 .gate-camo {
   position: absolute;
   inset: 0;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   opacity: 0.6;
 }
 .gate-messenger .gate-camo {
@@ -5670,8 +5684,15 @@ a.tile-messenger:hover .tile-phone {
   position: relative;
   isolation: isolate;
   padding: var(--section-y) 0;
-  background: #0a0c09 url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: #0a0c09 var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   border-block: 1px solid rgba(214, 222, 196, 0.12);
+}
+/* image-rendering is inherited: only the band's own pattern is drawn pixelated, not a picture
+   that may sit inside it. The same holds for the EU tile. */
+.claim-band > *,
+.tile-eu > * {
+  image-rendering: auto;
 }
 .claim-band::before {
   content: "";
@@ -5742,6 +5763,7 @@ a.tile-messenger:hover .tile-phone {
     z-index: 70;
     width: 10px;
     background: var(--camo) 0 0 / 384px;
+    image-rendering: pixelated;
     pointer-events: none;
   }
   .camo-frame i:first-child {
@@ -5765,7 +5787,8 @@ a.tile-messenger:hover .tile-phone {
 .hud-camo {
   position: absolute;
   inset: 0;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   opacity: 0.55;
   -webkit-mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
   mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);

@@ -8,11 +8,17 @@
 // site's own night-olive greys. A few cells in the base colour carry the signal colour, like
 // noise on a line — the only place the pattern admits it is digital.
 //
-// Run by hand when the palette changes; the SVGs are committed. Same seed, same tile.
+// Each tile is written twice. The site draws the PNG: 96 × 96 cells, one pixel each, indexed
+// colour, small enough for Vite to inline into the stylesheet, so the pattern behind the first
+// screen costs no request and no SVG rasterising; CSS scales it up 4× with crisp edges. The SVG
+// is the same tile for tools that want vectors (scripts/og.mjs).
+//
+// Run by hand when the palette changes; the files are committed. Same seed, same tile.
 //
 //   node scripts/camo.mjs
 
 import { writeFileSync } from "node:fs";
+import { deflateSync } from "node:zlib";
 
 const CELLS = 96; // cells per side; the tile is CELLS × CELLS and wraps seamlessly
 const CELL_PX = 4; // intrinsic size of one cell; CSS may scale the tile
@@ -134,10 +140,67 @@ function svg({ bands: palette, signal: signalColour, signalOpacity }, { bands, s
   );
 }
 
+const hex = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
+
+/** CRC-32 as PNG chunks need it. */
+const CRC = Array.from({ length: 256 }, (_, n) => {
+  let c = n;
+  for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+  return c >>> 0;
+});
+function crc32(buf) {
+  let c = 0xffffffff;
+  for (const b of buf) c = CRC[(c ^ b) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+function chunk(type, data) {
+  const body = Buffer.concat([Buffer.from(type, "latin1"), data]);
+  const len = Buffer.alloc(4);
+  len.writeUInt32BE(data.length);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(body));
+  return Buffer.concat([len, body, crc]);
+}
+
+function png({ bands: palette, signal: signalColour, signalOpacity }, { bands, signal }) {
+  // Palette: the four bands, then the signal colour laid over the base at its opacity — the
+  // same colour the SVG's translucent cells end up as.
+  const base = hex(palette[0]);
+  const lit = hex(signalColour).map((v, i) => Math.round(base[i] * (1 - signalOpacity) + v * signalOpacity));
+  const colours = [...palette.map(hex), lit];
+  const rows = [];
+  for (let y = 0; y < CELLS; y++) {
+    const row = Buffer.alloc(CELLS + 1); // filter byte 0, then one index per cell
+    for (let x = 0; x < CELLS; x++) {
+      const k = y * CELLS + x;
+      row[x + 1] = signal[k] ? 4 : bands[k];
+    }
+    rows.push(row);
+  }
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(CELLS, 0);
+  ihdr.writeUInt32BE(CELLS, 4);
+  ihdr[8] = 8; // bit depth
+  ihdr[9] = 3; // indexed colour
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk("IHDR", ihdr),
+    chunk("PLTE", Buffer.from(colours.flat())),
+    chunk("IDAT", deflateSync(Buffer.concat(rows), { level: 9 })),
+    chunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+
 const pattern = field(20261007);
 for (const [name, theme] of Object.entries(THEMES)) {
   const out = `src/assets/camo-${name}.svg`;
   const text = svg(theme, pattern);
   writeFileSync(out, text);
   console.log(`camo: ${out} (${(text.length / 1024).toFixed(1)} kB)`);
+  const image = png(theme, pattern);
+  // The JS-free privacy page carries its own copy of the dark tile.
+  for (const file of [`src/assets/camo-${name}.png`, ...(name === "dark" ? ["public/privacy/camo-dark.png"] : [])]) {
+    writeFileSync(file, image);
+    console.log(`camo: ${file} (${(image.length / 1024).toFixed(1)} kB)`);
+  }
 }
