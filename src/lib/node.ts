@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { motionChoice, subscribeMotion } from "./motion";
+import { prefersReducedMotion, subscribeMotion } from "./motion";
 
 /** The public node. The only place the site's numbers come from — nothing here is cached or
  *  precomputed on our side, and the node answers browsers directly (CORS is open). */
@@ -48,19 +48,28 @@ export interface NodeState {
 
   Blocks come every two seconds, so the status is asked for every three — often enough that the
   height visibly moves, rare enough to be a light load on the node. A hidden tab asks for
-  nothing: nobody is looking. Nor does a page whose visitor pressed "Bewegung anhalten": WCAG
-  2.2.2 counts numbers that update themselves as moving content, so after the first reading they
-  hold still until motion is switched back on.
+  nothing: nobody is looking. Nor does a page that stands still, whether by the "Bewegung
+  anhalten" switch or by the OS setting it starts from: WCAG 2.2.2 counts numbers that update
+  themselves as moving content, so after the first reading they hold still until motion is
+  switched back on.
+
+  A request that takes longer than four seconds is given up, and only one status request is ever
+  out at a time, so a slow node is not buried under a queue of them. One miss can be a dropped
+  packet; two in a row mean the node is down, and only then does the page say so.
 */
 const STATUS_EVERY = 3_000;
 const VALIDATORS_EVERY = 30_000;
 const KEEP_BLOCKS = 14;
+const TIMEOUT = 4_000;
+const MISSES_TO_FAIL = 2;
 
 let state: NodeState = { status: null, failed: false, validators: null, blocks: [], blockTime: null };
 const listeners = new Set<() => void>();
 let statusTimer: ReturnType<typeof setInterval> | undefined;
 let validatorTimer: ReturnType<typeof setInterval> | undefined;
 let streamWanted = 0;
+let inFlight = false;
+let misses = 0;
 
 function emit(patch: Partial<NodeState>) {
   state = { ...state, ...patch };
@@ -68,21 +77,29 @@ function emit(patch: Partial<NodeState>) {
 }
 
 const hidden = () => typeof document !== "undefined" && document.visibilityState === "hidden";
-/** Only the page's own switch pauses the data; the OS setting asks for less animation, not stale numbers. */
-const paused = () => motionChoice() === "still";
+/** Pauses whenever the switch shows paused — the page's own choice, or else the OS setting — so
+ *  the switch and the numbers always agree. */
+const paused = () => prefersReducedMotion();
+
+const get = (path: string) => fetch(`${NODE}${path}`, { cache: "no-store", signal: AbortSignal.timeout(TIMEOUT) });
 
 async function loadStatus() {
-  if (hidden() || (paused() && state.status)) return;
+  if (inFlight || hidden() || (paused() && state.status)) return;
+  inFlight = true;
   try {
-    const res = await fetch(`${NODE}/status`, { cache: "no-store" });
+    const res = await get("/status");
     if (!res.ok) throw new Error(String(res.status));
     const status = (await res.json()) as NodeStatus;
+    misses = 0;
     emit({ status, failed: false });
     if (streamWanted > 0) await loadBlocks(status.height);
   } catch {
     // A node that cannot be reached is reported as such rather than as a frozen number: a stale
     // height that looks live is worse than an honest gap.
-    emit({ status: null, failed: true });
+    misses += 1;
+    if (misses >= MISSES_TO_FAIL) emit({ status: null, failed: true });
+  } finally {
+    inFlight = false;
   }
 }
 
@@ -92,7 +109,7 @@ async function loadBlocks(height: number) {
   if (height <= known) return;
   const from = Math.max(known + 1, height - KEEP_BLOCKS + 1);
   try {
-    const res = await fetch(`${NODE}/blocks/range?from=${from}&count=${height - from + 1}`, { cache: "no-store" });
+    const res = await get(`/blocks/range?from=${from}&count=${height - from + 1}`);
     if (!res.ok) return;
     const fresh = ((await res.json()) as SeenBlock[])
       .map(({ height: h, hash, timestamp, tx_count, validator }) => ({ height: h, hash, timestamp, tx_count, validator }))
@@ -109,7 +126,7 @@ async function loadBlocks(height: number) {
 async function loadValidators() {
   if (hidden() || (paused() && state.validators !== null)) return;
   try {
-    const res = await fetch(`${NODE}/validators`, { cache: "no-store" });
+    const res = await get("/validators");
     if (!res.ok) throw new Error(String(res.status));
     const data = (await res.json()) as { validators?: { active?: boolean }[] };
     const active = (data.validators ?? []).filter((v) => v.active !== false).length;

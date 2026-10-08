@@ -376,6 +376,7 @@
       "title": "Helix Mainnet",
       "live": "live · node.silvra.net",
       "offline": "Node unreachable",
+      "connecting": "Connecting …",
       "explorer": "Open in the explorer",
       "stats": {
         "height": "Block height",
@@ -962,7 +963,8 @@
       "cap": "Hard cap: 33M HLX",
       "aria": "Line chart: HLX supply rises from 100,000 at genesis to about 31.6 million after 30 years, as the block reward halves every year. The hard cap is 33 million. Use the arrow keys to pick a year.",
       "caption": "Computed from the protocol parameters: 1 HLX per block, halved every 15,768,000 blocks (≈ 1 year at 2 s). Burned fees are not subtracted.",
-      "table": "Show as a table",
+      "tableShow": "Show as a table",
+      "tableHide": "Hide table",
       "colYear": "Year",
       "colMinted": "Newly issued (HLX)",
       "colSupply": "Total supply (HLX)",

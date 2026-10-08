@@ -3215,13 +3215,14 @@ p {
 
 /* ---------- block stream ---------- */
 
+/* The 6px of side padding leave room for a focus ring (2px, 3px out), which the clipping would
+   otherwise cut; the negative margin keeps the tiles on the column's edges. */
 .stream {
   position: relative;
-  margin: 0 0 24px;
-  padding: 26px 0 8px;
+  margin: 0 -6px 24px;
+  padding: 26px 6px 8px;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent);
-  mask-image: linear-gradient(90deg, #000 70%, transparent);
+  container: stream / inline-size;
 }
 .stream-row {
   list-style: none;
@@ -3230,11 +3231,44 @@ p {
   display: flex;
   gap: 14px;
 }
+/* Tiles share the row evenly and are never narrower than 168px: the queries below show only as
+   many as fit (k tiles need 182k − 14px), so the row always ends on a whole tile. Their selectors
+   carry the row so they outrank the empty tile's display: grid further down. */
 .stream-block {
   position: relative;
-  flex: 0 0 auto;
-  width: 168px;
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 132px;
+}
+@container stream (width < 1442px) {
+  .stream-row > .stream-block:nth-child(n + 8) {
+    display: none;
+  }
+}
+@container stream (width < 1260px) {
+  .stream-row > .stream-block:nth-child(n + 7) {
+    display: none;
+  }
+}
+@container stream (width < 1078px) {
+  .stream-row > .stream-block:nth-child(n + 6) {
+    display: none;
+  }
+}
+@container stream (width < 896px) {
+  .stream-row > .stream-block:nth-child(n + 5) {
+    display: none;
+  }
+}
+@container stream (width < 714px) {
+  .stream-row > .stream-block:nth-child(n + 4) {
+    display: none;
+  }
+}
+@container stream (width < 532px) {
+  .stream-row > .stream-block:nth-child(n + 3) {
+    display: none;
+  }
 }
 .stream-link,
 .stream-block.empty {
@@ -3394,6 +3428,8 @@ p {
 }
 .chart-box svg {
   display: block;
+  width: 100%;
+  height: auto;
   touch-action: pan-y;
   outline: none;
 }
@@ -3453,7 +3489,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 170px;
+  width: 176px;
   padding: 10px 12px;
   border-radius: var(--r-ctl);
   background: var(--surface-2);
@@ -3477,12 +3513,20 @@ p {
   font-size: 14px;
 }
 .chart-table summary {
+  list-style: none;
   cursor: pointer;
   color: var(--text);
-  font-weight: 500;
-  min-height: 32px;
+  min-height: 44px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.chart-table summary::-webkit-details-marker {
+  display: none;
 }
 .chart-table table {
   width: 100%;
@@ -4059,10 +4103,6 @@ p {
   .features {
     grid-template-columns: minmax(0, 1fr);
   }
-  .stream-block,
-  .stream-block .stream-link {
-    width: 140px;
-  }
   .compare thead {
     display: none;
   }
@@ -4392,12 +4432,14 @@ dd {
 .faq-icon svg {
   transition: transform 0.4s var(--ease-out);
 }
-.faq-item[open] .faq-icon {
+.faq-item[open] .faq-icon,
+.chart-table[open] .faq-icon {
   background: var(--accent);
   color: var(--accent-ink);
   border-color: transparent;
 }
-.faq-item[open] .faq-icon svg {
+.faq-item[open] .faq-icon svg,
+.chart-table[open] .faq-icon svg {
   transform: rotate(45deg);
 }
 .faq-answer {

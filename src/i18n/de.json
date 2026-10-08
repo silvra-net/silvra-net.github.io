@@ -376,6 +376,7 @@
       "title": "Helix Mainnet",
       "live": "live · node.silvra.net",
       "offline": "Knoten nicht erreichbar",
+      "connecting": "Verbinde …",
       "explorer": "Im Explorer ansehen",
       "stats": {
         "height": "Blockhöhe",
@@ -962,7 +963,8 @@
       "cap": "Obergrenze: 33 Mio. HLX",
       "aria": "Liniendiagramm: Die HLX-Menge steigt von 100.000 bei Genesis auf etwa 31,6 Millionen nach 30 Jahren, weil sich die Blockbelohnung jährlich halbiert. Die Obergrenze liegt bei 33 Millionen. Mit den Pfeiltasten lässt sich ein Jahr auswählen.",
       "caption": "Berechnet aus den Protokollparametern: 1 HLX pro Block, halbiert alle 15.768.000 Blöcke (≈ 1 Jahr bei 2 s). Verbrannte Gebühren sind nicht abgezogen.",
-      "table": "Als Tabelle anzeigen",
+      "tableShow": "Als Tabelle anzeigen",
+      "tableHide": "Tabelle ausblenden",
       "colYear": "Jahr",
       "colMinted": "Neu ausgegeben (HLX)",
       "colSupply": "Menge gesamt (HLX)",

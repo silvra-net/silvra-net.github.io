@@ -15,7 +15,7 @@ import welcomeEn from "../assets/Welcome_EN.webp";
  */
 export default function Bento() {
   const { t, list, lang } = useI18n();
-  const { status, validators } = useNodeStatus();
+  const { status, failed, validators } = useNodeStatus();
   const locale = lang === "de" ? "de-DE" : "en-GB";
 
   return (
@@ -36,7 +36,10 @@ export default function Bento() {
 
       <Link to="/helix" className="tile tile-helix dark-zone">
         <span className="tile-kicker mono">
-          <span className={status ? "dot ok pulse" : "dot off"} /> {t("home.bento.helix.kicker")}
+          {/* The words are the project's state, the dot is the node's: it lights only once the
+              node has answered, like the panel's. */}
+          <span className={status ? "dot ok pulse" : "dot off"} />{" "}
+          {failed ? `Helix · ${t("home.testnet.offline")}` : t("home.bento.helix.kicker")}
         </span>
         <h3 className="tile-title">{t("home.bento.helix.title")}</h3>
         <p className="tile-big mono">{status ? <CountUp value={status.height} locale={locale} /> : "—"}</p>

@@ -96,7 +96,7 @@ export default function Gate() {
         k,
         v
           .replace("{{height}}", height ?? (failed ? t("home.gate.hudOffline") : "…"))
-          .replace("{{version}}", status?.version ?? "1.0.0"),
+          .replace("{{version}}", status?.version ?? "—"),
       ] as [string, string],
   );
 

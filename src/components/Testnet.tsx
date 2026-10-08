@@ -29,7 +29,11 @@ export default function Testnet({ explorer = true }: { explorer?: boolean }) {
       <div className="testnet-head">
         <span className={status && !failed ? "dot ok pulse" : "dot off"} />
         <span className="testnet-title">{t("home.testnet.title")}</span>
-        <span className="testnet-source mono">{failed ? t("home.testnet.offline") : t("home.testnet.live")}</span>
+        {/* "live" only once the node has answered: the prerendered page, and a visitor without
+            JavaScript, never get further than "connecting". */}
+        <span className="testnet-source mono">
+          {status ? t("home.testnet.live") : failed ? t("home.testnet.offline") : t("home.testnet.connecting")}
+        </span>
       </div>
       <div className="testnet-height">
         <span className="testnet-label">{t("home.testnet.stats.height")}</span>
