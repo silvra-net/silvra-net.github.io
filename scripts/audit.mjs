@@ -64,7 +64,7 @@ for (const theme of ["dark", "light"]) {
         for (const el of document.querySelectorAll("a, button, input, select, [role=button]")) {
           if (!vis(el)) continue;
           const r = el.getBoundingClientRect();
-          const name = (el.getAttribute("aria-label") || el.innerText || el.value || el.title || "").trim();
+          const name = (el.getAttribute("aria-label") || el.innerText || el.labels?.[0]?.innerText || el.value || el.title || "").trim();
           const tag = `${el.tagName.toLowerCase()}${el.className ? "." + String(el.className).split(" ")[0] : ""}`;
           if (r.width < 24 || r.height < 24) out.small.push(`${tag} ${Math.round(r.width)}x${Math.round(r.height)} "${name.slice(0, 24)}"`);
           if (!name) out.unnamed.push(tag);

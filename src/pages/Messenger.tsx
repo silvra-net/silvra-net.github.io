@@ -5,7 +5,6 @@ import Icon from "../components/Icon";
 import Marquee from "../components/Marquee";
 import MessageJourney from "../components/MessageJourney";
 import NextWorld from "../components/NextWorld";
-import Photo from "../components/Photo";
 import Reveal from "../components/Reveal";
 import Scramble from "../components/Scramble";
 import SectionNav from "../components/SectionNav";
@@ -21,8 +20,6 @@ import { useSeo } from "../lib/seo";
 import { PLAY_STORE } from "../lib/links";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
-import profilDe from "../assets/Profil_DE.webp";
-import profilEn from "../assets/Profil_EN.webp";
 import settingsDe from "../assets/Settings_DE.webp";
 import settingsEn from "../assets/setting_EN.webp";
 
@@ -49,11 +46,27 @@ function Label({ index, text }: { index: string; text: string }) {
   );
 }
 
-function PlayButton({ label }: { label: string }) {
+/**
+ * Where the hero's ciphertext may surface a message: on a wide screen only to the right of the
+ * words, over the screenshot's side; stacked, only in the lower half, under the buttons.
+ */
+function fitsHero(x: number, y: number, w: number, W: number, H: number): boolean {
+  return W >= 900 ? x > W * 0.56 && x + w < W - 40 : y > H * 0.5 && x + w < W - 16;
+}
+
+/** `short` is the label used where the long one would not fit on one line (narrow phones). */
+function PlayButton({ label, short }: { label: string; short?: string }) {
   return (
     <a className="btn primary" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
       <Icon name="play" size={16} />
-      {label}
+      {short ? (
+        <>
+          <span className="btn-long">{label}</span>
+          <span className="btn-short">{short}</span>
+        </>
+      ) : (
+        label
+      )}
     </a>
   );
 }
@@ -64,7 +77,7 @@ export default function Messenger() {
 
   // The screenshots are of the app in the visitor's language; German UI next to an English
   // caption is the kind of detail that makes a product look unfinished.
-  const shots = lang === "de" ? [welcomeDe, profilDe, settingsDe] : [welcomeEn, profilEn, settingsEn];
+  const shots = lang === "de" ? [welcomeDe, settingsDe] : [welcomeEn, settingsEn];
   const screens = list<Item>("messenger.screens.items");
   const nav = [
     { id: "weg", label: t("messenger.nav.journey") },
@@ -83,7 +96,7 @@ export default function Messenger() {
       <section className="p-hero p-hero-messenger dark-zone">
         <div className="p-hero-bg" aria-hidden="true">
           <div className="p-hero-aura" />
-          <CipherCanvas phrases={list<string>("home.gate.messenger.phrases")} cell={22} />
+          <CipherCanvas phrases={list<string>("home.gate.messenger.phrases")} fits={fitsHero} cell={22} />
         </div>
         <HudFrame />
         <div className="container p-hero-grid">
@@ -103,13 +116,14 @@ export default function Messenger() {
                 <Icon name="arrowDown" size={16} />
               </a>
             </div>
-            <ul className="chip-row">
-              {list<string>("messenger.hero.badges").map((b) => (
-                <li className="chip" key={b}>
-                  {b}
-                </li>
+            <dl className="gate-readout readout-messenger p-hero-readout">
+              {list<[string, string]>("home.gate.hudMessenger").map(([k, v]) => (
+                <div key={k}>
+                  <dt>{k}</dt>
+                  <dd>{v}</dd>
+                </div>
               ))}
-            </ul>
+            </dl>
           </div>
           <div className="p-hero-visual">
             <img className="phone-shot" src={shots[0]} alt={t("messenger.hero.shotAlt")} width={600} height={1182} />
@@ -148,7 +162,7 @@ export default function Messenger() {
       </section>
 
       {/* ---- 02 · Three pillars ---- */}
-      <section className="section">
+      <section className="section" id="funktionen">
         <div className="container">
           <Label index="02" text={t("messenger.pillars.eyebrow")} />
           <div className="section-head">
@@ -170,7 +184,7 @@ export default function Messenger() {
       </section>
 
       {/* ---- 03 · Everything else ---- */}
-      <section className="section band" id="funktionen">
+      <section className="section band">
         <div className="container">
           <Label index="03" text={t("messenger.features.eyebrow")} />
           <div className="section-head">
@@ -192,24 +206,12 @@ export default function Messenger() {
       </section>
 
       {/* ---- 04 · Against what ---- */}
-      <section className="section photo-split">
-        <div className="container photo-split-grid">
-          <Reveal>
-            <Photo slot="messenger" className="photo-frame" />
-          </Reveal>
-          <div>
-            <Label index="04" text={t("messenger.intro.eyebrow")} />
-            <h2>{t("messenger.intro.title")}</h2>
-            <p className="lead">{t("messenger.intro.body")}</p>
-          </div>
-        </div>
-      </section>
-
       <section className="section" id="schutz">
         <div className="container">
-          <Label index="05" text={t("messenger.adversary.eyebrow")} />
+          <Label index="04" text={t("messenger.intro.eyebrow")} />
           <div className="section-head wide">
-            <h2>{t("messenger.adversary.title")}</h2>
+            <h2>{t("messenger.intro.title")}</h2>
+            <p className="lead">{t("messenger.adversary.title")}</p>
           </div>
           <div className="adversary-grid">
             <div>
@@ -262,7 +264,7 @@ export default function Messenger() {
       <section className="section demo">
         <div className="container demo-grid">
           <div>
-            <Label index="06" text={t("messenger.crypto.eyebrow")} />
+            <Label index="05" text={t("messenger.crypto.eyebrow")} />
             <h2>{t("messenger.crypto.title")}</h2>
             <p className="lead">{t("messenger.crypto.body")}</p>
           </div>
@@ -272,7 +274,7 @@ export default function Messenger() {
 
       <section className="section band" id="app">
         <div className="container">
-          <Label index="07" text={t("messenger.tour.eyebrow")} />
+          <Label index="06" text={t("messenger.tour.eyebrow")} />
           <div className="section-head">
             <h2>{t("messenger.tour.title")}</h2>
             <p className="lead">{t("messenger.tour.lead")}</p>
@@ -281,61 +283,65 @@ export default function Messenger() {
         </div>
       </section>
 
-      <section className="section" id="transparenz">
-        <div className="container">
-          <Label index="08" text={t("messenger.transparency.eyebrow")} />
-          <div className="section-head">
-            <h2>{t("messenger.transparency.title")}</h2>
-            <p className="lead">{t("messenger.transparency.subtitle")}</p>
+      {/* Ledger and boundaries are one subject, what is protected and what is not, so the section
+          nav keeps "Transparenz" lit across both. */}
+      <div className="section-group" id="transparenz">
+        <section className="section">
+          <div className="container">
+            <Label index="07" text={t("messenger.transparency.eyebrow")} />
+            <div className="section-head">
+              <h2>{t("messenger.transparency.title")}</h2>
+              <p className="lead">{t("messenger.transparency.subtitle")}</p>
+            </div>
+            <div className="ledger">
+              {[
+                { g: encrypted, kind: "yes", icon: "lock" },
+                { g: notEncrypted, kind: "no", icon: "alert" },
+              ].map(({ g, kind, icon }) => (
+                <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
+                  <h3>
+                    <Icon name={icon} size={18} />
+                    {g.heading}
+                  </h3>
+                  <ul>
+                    {g.items.map((it) => (
+                      <li key={it.title}>
+                        <strong>{it.title}</strong>
+                        <span className="muted">{it.body}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
           </div>
-          <div className="ledger">
-            {[
-              { g: encrypted, kind: "yes", icon: "lock" },
-              { g: notEncrypted, kind: "no", icon: "alert" },
-            ].map(({ g, kind, icon }) => (
-              <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
-                <h3>
-                  <Icon name={icon} size={18} />
-                  {g.heading}
-                </h3>
-                <ul>
-                  {g.items.map((it) => (
-                    <li key={it.title}>
-                      <strong>{it.title}</strong>
-                      <span className="muted">{it.body}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="section">
-        <div className="container">
-          <Label index="09" text={t("messenger.boundaries.eyebrow")} />
-          <div className="section-head">
-            <h2>{t("messenger.boundaries.title")}</h2>
+        <section className="section">
+          <div className="container">
+            <Label index="08" text={t("messenger.boundaries.eyebrow")} />
+            <div className="section-head">
+              <h2>{t("messenger.boundaries.title")}</h2>
+            </div>
+            <div className="nots">
+              {list<Item>("messenger.boundaries.items").map((b, i) => (
+                <Reveal key={b.title} delay={i * 70} className="not">
+                  <span className="not-icon">
+                    <Icon name={b.icon ?? "ban"} size={22} />
+                  </span>
+                  <h3>{b.title}</h3>
+                  <p className="muted">{b.body}</p>
+                </Reveal>
+              ))}
+            </div>
           </div>
-          <div className="nots">
-            {list<Item>("messenger.boundaries.items").map((b, i) => (
-              <Reveal key={b.title} delay={i * 70} className="not">
-                <span className="not-icon">
-                  <Icon name={b.icon ?? "ban"} size={22} />
-                </span>
-                <h3>{b.title}</h3>
-                <p className="muted">{b.body}</p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <section className="section band" id="fragen">
         <div className="container faq-grid">
           <div>
-            <Label index="10" text={t("messenger.faq.label")} />
+            <Label index="09" text={t("messenger.faq.label")} />
             <h2>{t("messenger.faq.title")}</h2>
           </div>
           <Faq items={list<QA>("messenger.faq.items")} />
@@ -347,11 +353,11 @@ export default function Messenger() {
           <div className="download-panel dark-zone">
             <div className="download-aura" aria-hidden="true" />
             <div className="download-text">
-              <p className="label">{t("messenger.download.label")}</p>
+              <Label index="10" text={t("messenger.download.label")} />
               <h2>{t("messenger.download.title")}</h2>
               <p className="lead">{t("messenger.download.body")}</p>
               <div className="btn-row">
-                <PlayButton label={t("messenger.playStore")} />
+                <PlayButton label={t("messenger.playStore")} short={t("messenger.sticky.cta")} />
               </div>
               <p className="download-note">{t("messenger.download.platforms")}</p>
             </div>

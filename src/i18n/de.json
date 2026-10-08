@@ -480,11 +480,6 @@
       "label": "Jetzt auf Google Play",
       "lead": "Ende-zu-Ende verschlüsselte Kommunikation aus Europa — mit Post-Quanten-Kryptographie vom ersten Handshake an.",
       "more": "So reist eine Nachricht",
-      "badges": [
-        "MLS + ML-KEM-768",
-        "Ohne Telefonnummer",
-        "Deutsch & Englisch"
-      ],
       "shotAlt": "Startbildschirm des Silvra Messenger: Willkommen, Anmeldung per E-Mail mit sechsstelligem Code",
       "bubbles": [
         "Bis morgen! Ich bring Kuchen mit.",
@@ -528,11 +523,9 @@
     },
     "intro": {
       "eyebrow": "Post-Quanten von Anfang an",
-      "title": "Verschlüsselt gegen einen Gegner von übermorgen",
-      "body": "Chats sind Ende-zu-Ende verschlüsselt mit MLS — dem IETF-Standard RFC 9420 — und dem hybriden Verfahren X-Wing: X25519 und ML-KEM-768 zusammen. Was heute abgefangen wird, bleibt auch später unlesbar."
+      "title": "Verschlüsselt gegen einen Gegner von übermorgen"
     },
     "adversary": {
-      "eyebrow": "Warum das nicht dasselbe ist wie „verschlüsselt“",
       "title": "Fast jeder Messenger verschlüsselt. Der Unterschied liegt darin, wogegen.",
       "paragraphs": [
         "Heute gängige Verfahren beruhen auf mathematischen Problemen, die ein hinreichend großer Quantenrechner lösen kann. Niemand weiß, wann es solche Maschinen geben wird — dass abgefangene Daten bis dahin aufbewahrt werden, ist dagegen gängige Praxis.",
@@ -572,17 +565,10 @@
       ]
     },
     "screens": {
-      "eyebrow": "Ein Blick in die App",
-      "title": "Nah dran",
-      "subtitle": "Drei Ansichten aus der Live-App — Anmeldung, Profil und Einstellungen.",
       "items": [
         {
           "title": "Willkommen",
           "body": "Anmeldung per E-Mail mit 6-stelligem Code — kein Passwort zu merken."
-        },
-        {
-          "title": "Profil",
-          "body": "Ihre Identität in Chats, Gruppen und dem Kontakt-Feed."
         },
         {
           "title": "Einstellungen",
@@ -664,6 +650,7 @@
       "eyebrow": "Live-Demo · WebCrypto",
       "title": "Verschlüsselung, live im Browser",
       "body": "Geben Sie eine Nachricht ein: Sie wird direkt hier mit AES-256-GCM verschlüsselt und sofort wieder entschlüsselt. Der Schlüssel entsteht beim Laden der Seite zufällig, jede Verschlüsselung bekommt eine frische Nonce — und nichts davon verlässt Ihren Browser.",
+      "inputLabel": "Nachricht zum Verschlüsseln — bleibt in diesem Browser",
       "placeholder": "Ihre Nachricht …",
       "keyLabel": "Schlüssel · AES-256",
       "nonceLabel": "Nonce",
@@ -777,7 +764,7 @@
     },
     "tour": {
       "eyebrow": "Die App",
-      "title": "In drei Schritten drin.",
+      "title": "In zwei Schritten startklar.",
       "lead": "Kein Passwort, keine Telefonnummer, keine Einstellungen, die man erst verstehen muss.",
       "steps": [
         {
@@ -787,16 +774,10 @@
           "body": "Sie bekommen einen sechsstelligen Code per E-Mail — kein Passwort zum Merken, keine Telefonnummer in fremden Adressbüchern."
         },
         {
-          "icon": "people",
-          "kicker": "Profil",
-          "title": "Ihre Identität in Chats, Gruppen und Feed.",
-          "body": "Profilbild, Name und Status: so erkennen Ihre Kontakte Sie — in Einzelchats, in Gruppen und im Aktuelles-Feed."
-        },
-        {
           "icon": "shield",
           "kicker": "Einstellungen",
           "title": "Alles Wichtige an einem Ort.",
-          "body": "Benachrichtigungen, angemeldete Geräte, App-Sperre, Darstellung und Sprache — übersichtlich, ohne Untermenüs-Labyrinth."
+          "body": "Benachrichtigungen, angemeldete Geräte, App-Sperre, Darstellung und Sprache — übersichtlich, ohne verschachtelte Untermenüs."
         }
       ]
     },

@@ -52,8 +52,10 @@ export default function MessageJourney() {
   return (
     <div className="journey">
       <div className="journey-track" aria-hidden="true">
-        <span className="journey-packet">
-          <Icon name="lock" size={12} />
+        <span className="journey-lane">
+          <span className="journey-packet">
+            <Icon name="lock" size={12} />
+          </span>
         </span>
       </div>
       <ol className="journey-stops">

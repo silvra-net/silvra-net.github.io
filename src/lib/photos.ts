@@ -7,7 +7,7 @@
  */
 import credits from "../assets/photos/credits.json";
 
-export type Slot = "work" | "europe" | "messenger" | "helix" | "mission" | "contact";
+export type Slot = "work" | "europe" | "helix" | "mission" | "contact";
 
 export interface Credit {
   author: string;

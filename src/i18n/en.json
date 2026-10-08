@@ -480,11 +480,6 @@
       "label": "Now on Google Play",
       "lead": "End-to-end encrypted communication from Europe — with post-quantum cryptography from the very first handshake.",
       "more": "How a message travels",
-      "badges": [
-        "MLS + ML-KEM-768",
-        "No phone number",
-        "German & English"
-      ],
       "shotAlt": "Silvra Messenger welcome screen: sign in by email with a six-digit code",
       "bubbles": [
         "See you tomorrow! I'll bring cake.",
@@ -528,11 +523,9 @@
     },
     "intro": {
       "eyebrow": "Post-quantum by design",
-      "title": "Encrypted against an adversary from the day after tomorrow",
-      "body": "Chats are end-to-end encrypted with MLS — the IETF standard RFC 9420 — and the hybrid scheme X-Wing: X25519 and ML-KEM-768 together. What is intercepted today stays unreadable later."
+      "title": "Encrypted against an adversary from the day after tomorrow"
     },
     "adversary": {
-      "eyebrow": "Why this is not the same as \"encrypted\"",
       "title": "Almost every messenger encrypts. The difference lies in what against.",
       "paragraphs": [
         "Methods common today rest on mathematical problems a sufficiently large quantum computer can solve. Nobody knows when such machines will exist — that intercepted data is kept until they do is, by contrast, common practice.",
@@ -572,17 +565,10 @@
       ]
     },
     "screens": {
-      "eyebrow": "Inside the app",
-      "title": "A closer look",
-      "subtitle": "Three screens from the live app — sign-in, profile and settings.",
       "items": [
         {
           "title": "Welcome",
           "body": "Email sign-in with a 6-digit code — no password to remember."
-        },
-        {
-          "title": "Profile",
-          "body": "Your identity across chats, groups and the contact-only feed."
         },
         {
           "title": "Settings",
@@ -664,6 +650,7 @@
       "eyebrow": "Live demo · WebCrypto",
       "title": "Encryption, live in your browser",
       "body": "Type a message: it is encrypted right here with AES-256-GCM and decrypted straight back. The key is generated at random when the page loads, every encryption gets a fresh nonce — and none of it leaves your browser.",
+      "inputLabel": "Message to encrypt — stays in this browser",
       "placeholder": "Your message …",
       "keyLabel": "Key · AES-256",
       "nonceLabel": "Nonce",
@@ -777,7 +764,7 @@
     },
     "tour": {
       "eyebrow": "The app",
-      "title": "In, in three steps.",
+      "title": "Ready in two steps.",
       "lead": "No password, no phone number, no settings you have to study first.",
       "steps": [
         {
@@ -787,16 +774,10 @@
           "body": "You get a six-digit code by email — no password to remember, no phone number in strangers' address books."
         },
         {
-          "icon": "people",
-          "kicker": "Profile",
-          "title": "Your identity in chats, groups and the feed.",
-          "body": "Photo, name and status: how your contacts know you — in one-to-one chats, in groups and in the Updates feed."
-        },
-        {
           "icon": "shield",
           "kicker": "Settings",
           "title": "Everything that matters in one place.",
-          "body": "Notifications, signed-in devices, app lock, appearance and language — clearly laid out, no maze of submenus."
+          "body": "Notifications, signed-in devices, app lock, appearance and language — clear, without nested submenus."
         }
       ]
     },

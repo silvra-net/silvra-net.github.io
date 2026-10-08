@@ -77,17 +77,20 @@ export default function CryptoDemo() {
         </span>
       </div>
       <div className="terminal-body">
-        <label className="terminal-input">
-          <span className="terminal-prompt mono" aria-hidden="true">
-            &gt;
+        {/* A visible label, not only a placeholder: the placeholder is gone as soon as one types. */}
+        <label>
+          <span className="terminal-label mono">{t("messenger.crypto.inputLabel")}</span>
+          <span className="terminal-input">
+            <span className="terminal-prompt mono" aria-hidden="true">
+              &gt;
+            </span>
+            <input
+              placeholder={t("messenger.crypto.placeholder")}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              maxLength={280}
+            />
           </span>
-          <input
-            placeholder={t("messenger.crypto.placeholder")}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            maxLength={280}
-            aria-label={t("messenger.crypto.placeholder")}
-          />
         </label>
         <dl className="terminal-out mono">
           <dt>{t("messenger.crypto.keyLabel")}</dt>

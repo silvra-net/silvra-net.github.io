@@ -226,7 +226,8 @@ main:focus,
 main h1:focus {
   outline: none;
 }
-section[id] {
+section[id],
+.section-group[id] {
   scroll-margin-top: calc(var(--header-h) + 56px);
 }
 
@@ -397,7 +398,7 @@ p {
   grid-template-columns: minmax(0, 1fr);
 }
 .section-head.wide h2 {
-  max-width: 22ch;
+  max-width: 32ch;
 }
 
 /* ---------- controls ---------- */
@@ -467,8 +468,7 @@ p {
   border-color: var(--text);
 }
 
-.badge,
-.chip {
+.badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -481,17 +481,13 @@ p {
   color: var(--text);
   background: color-mix(in srgb, var(--text) 4%, transparent);
 }
-.badge-row,
-.chip-row {
+.badge-row {
   list-style: none;
   padding: 0;
   margin: 40px 0 0;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-.chip-row {
-  margin-top: 32px;
 }
 
 .dot {
@@ -2042,20 +2038,20 @@ p {
   position: absolute;
   animation: float 8s ease-in-out infinite;
 }
+/* Chips are labels on a display, not stickers: mono caps on night olive, like the readout. */
 .float-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
-  font: 500 12px/1 var(--mono);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   padding: 10px 14px;
   border-radius: var(--r-ctl);
   color: #eef0e9;
-  background: rgba(22, 24, 28, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  background: rgba(10, 12, 9, 0.84);
+  border: 1px solid rgba(238, 240, 233, 0.18);
 }
 .chip-a {
   right: -26%;
@@ -2072,10 +2068,10 @@ p {
   bottom: 9%;
   animation-delay: -6s;
 }
-/* Over the empty lower half of the screenshot, never over its words. */
+/* Over the empty lower half of the screenshot, below its sign-in button, never over its words. */
 .float-bubble {
   left: -46%;
-  top: 64%;
+  top: 70%;
 }
 @keyframes float {
   0%,
@@ -2232,15 +2228,20 @@ p {
   height: 40px;
   background: linear-gradient(var(--line-2), var(--accent));
 }
+/* The result of the combination, framed like a plate rather than filled like a button: it is
+   not something to press. */
 .hybrid-out {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 14px 22px;
   border-radius: var(--r-ctl);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--text);
+  font: 600 18px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 .hybrid-note {
   margin: 16px 0 0;
@@ -2321,8 +2322,18 @@ p {
   border: 1px solid var(--line-2);
   background: var(--surface);
 }
+.terminal-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* The field's own outline is off, so the frame carries focus: 1px border plus 1px ring. */
 .terminal-input:focus-within {
   border-color: var(--silver);
+  box-shadow: 0 0 0 1px var(--silver);
 }
 .terminal-prompt {
   color: var(--ok);
@@ -2504,9 +2515,22 @@ p {
   z-index: -1;
   transition: opacity 0.6s;
 }
-.next-messenger .fx-canvas {
-  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 75%);
-  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 75%);
+/* The words sit on the left, so the picture fades out there; on a phone the words take the
+   whole width, and the picture keeps to the lower edge, under them. */
+.next-helix .next-world-bg {
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0 45%, #000 60%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0 45%, #000 60%);
+}
+.next-messenger .next-world-bg {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0 40%, #000 80%);
+  mask-image: linear-gradient(90deg, transparent 0 40%, #000 80%);
+}
+@media (max-width: 760px) {
+  .next-helix .next-world-bg,
+  .next-messenger .next-world-bg {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0 62%, #000 82%);
+    mask-image: linear-gradient(180deg, transparent 0 62%, #000 82%);
+  }
 }
 .next-world-title {
   font-family: var(--display);
@@ -2529,6 +2553,7 @@ p {
   font-size: 18px;
   max-width: 34rem;
 }
+/* Set like the site's primary buttons: condensed caps on a filled, square-cornered plate. */
 .next-world-cta {
   display: inline-flex;
   align-items: center;
@@ -2536,13 +2561,17 @@ p {
   min-height: 52px;
   padding: 0 26px;
   margin-top: 12px;
+  border: 1.5px solid var(--silver);
   border-radius: var(--r-ctl);
-  font-weight: 600;
-  background: #eef0e9;
+  font: 600 18px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--silver);
   color: #0a0c09;
   transition: gap 0.5s var(--ease-out);
 }
 .next-helix .next-world-cta {
+  border-color: var(--amber);
   background: var(--amber);
   color: #160f04;
 }
@@ -2552,8 +2581,14 @@ p {
 .next-world:hover .next-world-title {
   transform: translateX(12px);
 }
+/* The door is the whole band, but a ring around the band would be clipped by its diagonal
+   edge; the ring goes round the button inside it instead. */
 .next-world:focus-visible {
-  outline-offset: -6px;
+  outline: none;
+}
+.next-world:focus-visible .next-world-cta {
+  outline: 2px solid #eef0e9;
+  outline-offset: 4px;
 }
 
 /* ---------- helix ---------- */
@@ -3102,7 +3137,6 @@ p {
     flex-direction: column;
   }
   .float-chip {
-    font-size: 11px;
     padding: 8px 11px;
   }
   .chip-a {
@@ -3116,11 +3150,12 @@ p {
   }
   .cipher-loop {
     width: 200px;
+    max-width: calc(100vw - 32px);
     font-size: 13px;
   }
   .float-bubble {
-    left: -34%;
-    top: 66%;
+    left: -22%;
+    top: 70%;
   }
   .footer-bottom {
     flex-direction: column;
@@ -3660,8 +3695,10 @@ p {
 
 /* ---------- the route of a message ---------- */
 
+/* Clipped sideways: the packet's lane, moved a full track's width, would otherwise widen the page. */
 .journey {
   position: relative;
+  overflow-x: clip;
 }
 .journey-track {
   position: absolute;
@@ -3671,6 +3708,13 @@ p {
   height: 2px;
   background: linear-gradient(90deg, var(--silver), var(--line-2) 30%, var(--line-2) 70%, var(--silver));
   opacity: 0.8;
+}
+/* The packet rides a lane as wide as the track, and the lane is what moves: a transform in
+   percent of its own width covers the track exactly, without animating layout. */
+.journey-lane {
+  position: absolute;
+  inset: 0;
+  animation: packet 5.2s var(--ease) infinite;
 }
 .journey-packet {
   position: absolute;
@@ -3682,15 +3726,14 @@ p {
   border-radius: var(--r-ctl);
   display: grid;
   place-items: center;
-  color: #0a0c09;
-  background: #eef0e9;
-  box-shadow: 0 0 0 6px color-mix(in srgb, #eef0e9 18%, transparent);
-  animation: packet 5.2s var(--ease) infinite;
+  color: var(--inverse);
+  background: var(--signal);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--signal) 18%, transparent);
 }
 @keyframes packet {
   0%,
   8% {
-    left: 0;
+    transform: translateX(0);
     opacity: 0;
   }
   12% {
@@ -3698,15 +3741,15 @@ p {
   }
   44%,
   56% {
-    left: 50%;
+    transform: translateX(50%);
   }
   88% {
-    left: 100%;
+    transform: translateX(100%);
     opacity: 1;
   }
   96%,
   100% {
-    left: 100%;
+    transform: translateX(100%);
     opacity: 0;
   }
 }
@@ -4753,8 +4796,9 @@ a.tile-helix:hover .tile-go {
 
 .download-note {
   margin: 18px 0 0;
-  font: 500 12px/1.4 var(--mono);
-  letter-spacing: 0.06em;
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 .download-qr {
@@ -4783,6 +4827,27 @@ a.tile-helix:hover .tile-go {
   }
   .download-panel {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* On a phone the store button is the panel's one job: full width, on one line. */
+@media (max-width: 480px) {
+  .download-panel {
+    padding-inline: 16px;
+  }
+  .download-panel .btn {
+    width: 100%;
+    white-space: nowrap;
+  }
+}
+.btn-short {
+  display: none;
+}
+@media (max-width: 380px) {
+  .download-panel .btn-long {
+    display: none;
+  }
+  .download-panel .btn-short {
+    display: inline;
   }
 }
 .path-note {
@@ -5124,9 +5189,9 @@ a.tile-messenger:hover .tile-phone {
 :root[data-motion="still"] .route-wipe {
   display: none;
 }
-:root[data-motion="still"] .journey-packet {
+:root[data-motion="still"] .journey-lane {
   animation: none;
-  left: 50%;
+  transform: translateX(50%);
 }
 /* Without a script nothing sets data-motion, so the OS setting is followed directly. */
 @media (prefers-reduced-motion: reduce) {
@@ -5367,6 +5432,13 @@ a.tile-messenger:hover .tile-phone {
 .readout-helix {
   right: var(--edge);
   top: calc(var(--header-h) + 40px);
+}
+/* The messenger opening reads out the same channel as the gate's messenger half, but in flow
+   under the buttons and at every width (the gate hides its own readouts on narrower screens). */
+.gate-readout.p-hero-readout {
+  position: static;
+  display: grid;
+  margin-top: 40px;
 }
 .readout-helix div {
   justify-content: flex-end;
@@ -5659,7 +5731,8 @@ a.tile-messenger:hover .tile-phone {
     scroll-padding-top: 16px;
     scroll-padding-bottom: 16px;
   }
-  section[id] {
+  section[id],
+  .section-group[id] {
     scroll-margin-top: 16px;
   }
   .to-top {
