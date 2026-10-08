@@ -42,7 +42,14 @@ export default function BackToTop() {
       className={shown ? "to-top shown" : "to-top"}
       aria-label={t("nav.top")}
       tabIndex={shown ? 0 : -1}
-      onClick={() => window.scrollTo({ top: 0 })}
+      onClick={() => {
+        window.scrollTo({ top: 0 });
+        // Focus goes up with the view, to the start of the document, as after a page load: the
+        // next Tab reaches the skip link, then the header. Left on this button (which now hides),
+        // it would continue in the footer.
+        document.body.setAttribute("tabindex", "-1");
+        document.body.focus({ preventScroll: true });
+      }}
     >
       <svg className="to-top-svg" viewBox="0 0 44 44" aria-hidden="true">
         <circle cx="22" cy="22" r={R} className="to-top-track" />

@@ -224,7 +224,11 @@ a {
   outline-offset: 3px;
   border-radius: var(--r-ctl);
 }
-main:focus {
+/* Focus is moved to these on purpose (skip link, back to top, a new page), never by Tab: a ring
+   round the whole page or its heading would only look like a fault. */
+body:focus,
+main:focus,
+main h1:focus {
   outline: none;
 }
 section[id] {
@@ -639,15 +643,14 @@ p {
   height: var(--header-h);
   color: var(--text);
   border-bottom: 1px solid transparent;
-  transition:
-    background 0.4s,
-    border-color 0.4s,
-    backdrop-filter 0.4s;
 }
+/* Opaque, not frosted: a translucent paper strip over a dark opening turns into a muddy grey
+   band with the page's words ghosting through it. Over the dark bands the layout adds
+   .dark-zone, so var(--bg) and var(--line) are night olive there and paper everywhere else.
+   The switch is a cut, not a fade: the text colour flips at once with the zone, and a fading
+   background would pass through grey with navy words on it. */
 .site-header.is-solid {
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
+  background: var(--bg);
   border-bottom-color: var(--line);
 }
 .header-row {
@@ -681,9 +684,10 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--brand);
-  font-size: 14px;
-  letter-spacing: 0.06em;
+  /* The wordmark alone is Unbounded; the world beside it is a label, in the labels' type. */
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .brand-slash {
   color: var(--faint);
@@ -709,15 +713,16 @@ p {
   border-radius: var(--r-ctl);
   transition:
     color 0.25s,
-    background 0.25s;
+    box-shadow 0.25s;
 }
+/* No fills: the current page is marked the way a tab is, with a bar in the accent under it. */
 .nav-link:hover {
   color: var(--text);
-  background: color-mix(in srgb, var(--text) 7%, transparent);
+  box-shadow: inset 0 -1px 0 var(--line-2);
 }
 .nav-link.active {
   color: var(--text);
-  background: color-mix(in srgb, var(--text) 10%, transparent);
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
 .nav-helix.active {
   color: var(--amber-text);
@@ -732,20 +737,18 @@ p {
   align-items: center;
   gap: 6px;
   min-height: 38px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
+  font: 600 15px/1 var(--display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
   text-decoration: none;
   padding: 0 14px;
-  border: 1px solid var(--line-2);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 60%, transparent);
   border-radius: var(--r-ctl);
-  transition:
-    color 0.25s,
-    border-color 0.25s;
+  transition: border-color 0.25s;
 }
 .explorer-link:hover {
-  color: var(--text);
-  border-color: var(--text);
+  border-color: var(--accent);
 }
 .lang {
   display: flex;
@@ -814,40 +817,47 @@ p {
   flex-direction: column;
   gap: 12px;
 }
+/* The two worlds as HUD tiles: night olive in both themes, the world's colour as a bar on the
+   left, a strip of camouflage on the right where the text never reaches. The tile colours are
+   the dark palette's own values, written out: the menu around them is paper in the light theme,
+   and its tokens would turn them navy on night olive. */
 .mobile-world {
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 4px 16px;
-  padding: 24px 22px;
+  padding: 24px 44px 24px 22px;
   border-radius: var(--radius);
-  color: #fff;
+  background: #12160f;
+  border: 1px solid rgba(214, 222, 196, 0.14);
+  border-left: 3px solid #d9ddd3;
+  color: #eef0e9;
   text-decoration: none;
   overflow: hidden;
-  isolation: isolate;
 }
 .mobile-world::after {
   content: "";
   position: absolute;
-  top: -20%;
-  bottom: -20%;
-  right: 18%;
-  width: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  transform: skewX(-14deg);
-  z-index: -1;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-}
-.mobile-messenger {
-  background: linear-gradient(135deg, #272a30, #0b0c0e);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  opacity: 0.7;
 }
 .mobile-helix {
-  background: linear-gradient(135deg, #3d290a, #110b03);
+  border-left-color: #e0a44a;
+}
+/* Outside the tile, so it is drawn against the menu and takes the page's own accent. */
+.mobile-world[aria-current="page"] {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
 }
 .mobile-index {
   grid-row: span 2;
-  font: 500 12px var(--mono);
-  color: rgba(255, 255, 255, 0.7);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  color: #dcc27e;
   padding-top: 6px;
 }
 .mobile-title {
@@ -858,11 +868,11 @@ p {
   text-transform: uppercase;
 }
 .mobile-helix .mobile-title {
-  color: #f6c56f;
+  color: #e8b15c;
 }
 .mobile-tag {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.72);
+  color: #a8ae9c;
 }
 .mobile-links {
   margin-top: 16px;
@@ -877,8 +887,38 @@ p {
   border-bottom: 1px solid var(--line);
   font-family: var(--display);
   font-size: 19px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--text);
   text-decoration: none;
+}
+.mobile-links a[aria-current="page"] {
+  color: var(--accent-text);
+  box-shadow: inset 3px 0 0 var(--accent);
+  padding-left: 12px;
+}
+/* Spaced, not dotted: on a narrow phone the row wraps, and a separator would hang at a line end. */
+.mobile-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 24px;
+  margin: 8px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.mobile-legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.mobile-legal a:hover {
+  color: var(--text);
 }
 
 @media (max-width: 1020px) {
@@ -893,11 +933,29 @@ p {
     display: grid;
   }
 }
+/* On a phone the SILVRA wordmark stays and the world beside it goes, for sight only: the link
+   is still read as "Silvra / Messenger — Startseite". */
 @media (max-width: 560px) {
-  .brand:has(.brand-world) .brand-name {
-    display: none;
+  .brand-world {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
-  .brand-world .brand-slash {
+}
+/* Below 375 px the row has room for the wordmark, the language pair and the menu button, not
+   for the theme button as well; the open menu carries a labelled one. From 375 px up (most
+   phones) it fits and stays. */
+@media (max-width: 374px) {
+  .header-row {
+    gap: 8px;
+  }
+  .header-tools {
+    gap: 4px;
+  }
+  .header-tools > .theme-toggle {
     display: none;
   }
 }
@@ -1898,6 +1956,20 @@ p {
   background: var(--bg);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5vw), 0 100%);
 }
+/* Pages that are read rather than entered (Impressum, Barrierefreiheit) open on a short band, so
+   the first lines of text are on the first screen. */
+.page-hero--compact {
+  min-height: 0;
+  padding: calc(var(--header-h) + 56px) 0 calc(5vw + 56px);
+}
+.page-hero--compact .page-hero-body h1 {
+  font-size: clamp(40px, 4.6vw, 68px);
+}
+/* A hero with nothing after it but the footer: no diagonal edge, which would only show a wedge
+   of paper between two dark bands. */
+.page-hero--last {
+  clip-path: none;
+}
 .page-hero-media {
   position: absolute;
   inset: 0;
@@ -2854,14 +2926,27 @@ p {
   max-width: 36ch;
   margin: 20px 0 0;
 }
+/* One line, like a stamp: the 36ch measure of the paragraph above would break it. */
 .footer-intro .footer-eu {
   display: flex;
   align-items: center;
   gap: 10px;
+  max-width: none;
+  white-space: nowrap;
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text);
+}
+.footer-eu .eu-mark {
+  flex: none;
+  color: var(--sand-text);
+}
+@media (max-width: 400px) {
+  .footer-intro .footer-eu {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
 }
 .footer-cols {
   display: grid;
@@ -2889,6 +2974,10 @@ p {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+.footer-col a .icon {
+  margin-left: 6px;
+  opacity: 0.7;
+}
 .footer-mark {
   margin: clamp(48px, 7vw, 96px) 0 0;
   font-family: var(--brand);
@@ -2914,6 +3003,11 @@ p {
   border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--muted);
+}
+.footer-bottom .mono {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* ---------- responsive ---------- */
@@ -4064,6 +4158,15 @@ dd {
 .to-top:hover {
   border-color: var(--text);
 }
+/* Two rings, page colour then accent, so the focus shows over the paper page and the night
+   olive footer alike; and round, where the global focus style would square it off. */
+.to-top:focus-visible {
+  outline: none;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--accent-text);
+}
 .to-top .to-top-svg {
   position: absolute;
   inset: 2px;
@@ -4081,6 +4184,16 @@ dd {
   stroke: var(--accent);
   stroke-width: 2;
   stroke-linecap: round;
+}
+/* Smaller and tighter to the corner on a phone, where it otherwise covers the controls at the
+   right edge of the content. */
+@media (max-width: 820px) {
+  .to-top {
+    width: 44px;
+    height: 44px;
+    right: 12px;
+    bottom: 12px;
+  }
 }
 
 /* ---------- sticky action on phones ---------- */
@@ -4107,10 +4220,17 @@ dd {
     backdrop-filter: blur(16px) saturate(1.4);
     box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.6);
     transform: translateY(140%);
-    transition: transform 0.5s var(--ease-out);
+    /* Hidden means hidden: out of the tab order and the accessibility tree once it has slid
+       away, not just below the edge of the screen. */
+    visibility: hidden;
+    transition:
+      transform 0.5s var(--ease-out),
+      visibility 0s linear 0.5s;
   }
   .sticky-cta.shown {
     transform: none;
+    visibility: visible;
+    transition-delay: 0s;
   }
   .sticky-cta .btn {
     flex: none;
@@ -4161,10 +4281,9 @@ dd {
     background 0.3s,
     border-color 0.3s;
 }
+/* Opaque for the same reason as the header: frosted paper over a dark band is a grey slab. */
 .section-nav.stuck {
-  background: color-mix(in srgb, var(--bg) 84%, transparent);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  backdrop-filter: blur(16px) saturate(1.4);
+  background: var(--bg);
   border-bottom-color: var(--line);
 }
 .section-nav-track {
@@ -4249,6 +4368,13 @@ dd {
 .faq-item summary:focus-visible {
   outline-offset: -2px;
   border-radius: var(--r-ctl);
+}
+/* On a phone the back-to-top button sits over the right edge of the list; the open/close mark
+   moves in from under it. */
+@media (max-width: 820px) {
+  .faq-item summary {
+    padding-right: 64px;
+  }
 }
 .faq-icon {
   flex: none;
@@ -5077,6 +5203,10 @@ a.tile-messenger:hover .tile-phone {
   text-transform: uppercase;
   color: var(--muted);
 }
+/* The theme row sits right under the motion row, as one group of display settings. */
+.motion-row + .theme-row {
+  margin-top: 8px;
+}
 .motion-row[aria-pressed="true"] {
   border-color: var(--accent);
 }
@@ -5503,4 +5633,37 @@ a.tile-messenger:hover .tile-phone {
 /* The photo has no border to sit on and clips what overhangs it, so its marks sit inside. */
 .craft-media::after {
   inset: 0;
+}
+
+/* ---------- short viewports: 400 % zoom, a phone on its side ----------
+   At 1440 × 900 zoomed to 400 % the page is 360 × 225 CSS pixels. Fixed and sticky bars that
+   take a third of that each would leave a slit to read through (WCAG 1.4.10), so here they
+   scroll away with the page, the sticky call to action goes (the page offers it in place), and
+   focused elements only need to clear the edges. The open menu keeps its header fixed: its
+   close button must stay on screen. */
+@media (max-height: 480px) {
+  .site-header {
+    position: absolute;
+  }
+  .site-header.is-open {
+    position: fixed;
+  }
+  .section-nav {
+    position: relative;
+    top: auto;
+  }
+  .sticky-cta {
+    display: none;
+  }
+  html {
+    scroll-padding-top: 16px;
+    scroll-padding-bottom: 16px;
+  }
+  section[id] {
+    scroll-margin-top: 16px;
+  }
+  .to-top {
+    width: 40px;
+    height: 40px;
+  }
 }

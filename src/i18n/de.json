@@ -45,7 +45,10 @@
     "explorer": "Explorer",
     "open": "Navigation öffnen",
     "close": "Navigation schließen",
-    "theme": "Design wechseln",
+    "themeLight": "Helles Design einschalten",
+    "themeDark": "Dunkles Design einschalten",
+    "themeIsDark": "dunkel",
+    "themeIsLight": "hell",
     "motion": "Bewegung und Live-Werte anhalten",
     "motionPaused": "angehalten",
     "motionRunning": "läuft",
@@ -64,7 +67,8 @@
     "privacy": "Datenschutz",
     "stack": "MLS · X-Wing · ML-DSA-65",
     "accessibility": "Barrierefreiheit",
-    "reportBarrier": "Barriere melden"
+    "reportBarrier": "Barriere melden",
+    "newTab": " (neues Fenster)"
   },
   "home": {
     "gate": {

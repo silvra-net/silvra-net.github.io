@@ -45,7 +45,10 @@
     "explorer": "Explorer",
     "open": "Open navigation",
     "close": "Close navigation",
-    "theme": "Switch theme",
+    "themeLight": "Switch to light design",
+    "themeDark": "Switch to dark design",
+    "themeIsDark": "dark",
+    "themeIsLight": "light",
     "motion": "Pause motion and live values",
     "motionPaused": "paused",
     "motionRunning": "running",
@@ -64,7 +67,8 @@
     "privacy": "Privacy",
     "stack": "MLS · X-Wing · ML-DSA-65",
     "accessibility": "Accessibility",
-    "reportBarrier": "Report a barrier"
+    "reportBarrier": "Report a barrier",
+    "newTab": " (opens in a new tab)"
   },
   "home": {
     "gate": {

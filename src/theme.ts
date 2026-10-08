@@ -23,10 +23,3 @@ export function setTheme(t: Theme): void {
   if (t === null) root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", t);
 }
-
-/** What the page is actually showing right now, OS preference included. */
-export function resolvedTheme(): "light" | "dark" {
-  const explicit = getTheme();
-  if (explicit) return explicit;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-}
