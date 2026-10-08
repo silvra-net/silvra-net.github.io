@@ -1,4 +1,5 @@
 import PageHero from "../components/PageHero";
+import MailText from "../components/MailText";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { photoCredits } from "../lib/photos";
@@ -9,9 +10,10 @@ interface Block {
 }
 
 /**
- * A legal notice is a list of details, so it is set as one: a single panel, label above value,
- * at reading measure rather than full width. Photo credits are read from the photo registry, so
- * the list names exactly the photographs the site currently shows.
+ * A legal notice is a list of details, set in a single panel at reading measure rather than full
+ * width. Each detail is its own headed block, so a screen reader can jump from one to the next.
+ * Photo credits are read from the photo registry, so the list names exactly the photographs the
+ * site currently shows.
  */
 export default function Impressum() {
   const { t, list } = useI18n();
@@ -20,21 +22,21 @@ export default function Impressum() {
 
   return (
     <>
-      <PageHero label={t("impressum.eyebrow")} title={t("impressum.title")} lead={t("impressum.subtitle")} />
+      <PageHero label={t("impressum.eyebrow")} title={t("impressum.title")} lead={t("impressum.subtitle")} compact />
       <section className="section">
         <div className="container">
-          <dl className="legal">
+          <div className="legal">
             {list<Block>("impressum.sections").map((s) => (
-              <div key={s.title}>
-                <dt>{s.title}</dt>
+              <section className="legal-block" key={s.title}>
+                <h2 className="legal-title">{s.title}</h2>
                 {/* Addresses and multi-line details keep their own line breaks. */}
-                <dd>{s.body}</dd>
-              </div>
+                <div className="legal-body"><MailText text={s.body} /></div>
+              </section>
             ))}
             {credits.length > 0 && (
-              <div>
-                <dt>{t("impressum.photos")}</dt>
-                <dd>
+              <section className="legal-block">
+                <h2 className="legal-title">{t("impressum.photos")}</h2>
+                <div className="legal-body">
                   {t("impressum.photosBody")}
                   <ul className="credits">
                     {credits.map(({ slot, credit }) => (
@@ -45,10 +47,10 @@ export default function Impressum() {
                       </li>
                     ))}
                   </ul>
-                </dd>
-              </div>
+                </div>
+              </section>
             )}
-          </dl>
+          </div>
         </div>
       </section>
     </>

@@ -2,15 +2,20 @@ import PageHero from "../components/PageHero";
 import Photo from "../components/Photo";
 import Reveal from "../components/Reveal";
 import Icon from "../components/Icon";
+import MailText from "../components/MailText";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { DISCORD, EXPLORER, GITHUB, NODE_HOST } from "../lib/links";
 
 interface Card {
+  /** Which line of work the card is for; it picks the colour of the card's top rule. */
+  kind: "dev" | "validator" | "security";
   icon: string;
   title: string;
   body: string;
   detail?: string[];
+  /** Pre-fills the subject when the body's address is used. */
+  subject?: string;
 }
 
 export default function Contact() {
@@ -40,12 +45,14 @@ export default function Contact() {
           </div>
           <div className="contact-grid">
             {list<Card>("contact.cards").map((c, i) => (
-              <Reveal key={c.title} delay={i * 90} as="article" className={`contact-card contact-${i === 0 ? "dev" : "validator"}`}>
+              <Reveal key={c.title} delay={i * 90} as="article" className={`contact-card contact-${c.kind}`}>
                 <span className="contact-icon">
                   <Icon name={c.icon} size={24} />
                 </span>
                 <h3>{c.title}</h3>
-                <p>{c.body}</p>
+                <p>
+                  <MailText text={c.body} subject={c.subject} />
+                </p>
                 {c.detail?.map((d) => (
                   <p className="muted small" key={d.slice(0, 40)}>
                     {d}

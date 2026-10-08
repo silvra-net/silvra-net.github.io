@@ -10,7 +10,7 @@ export default function NotFound() {
   useSeo(t("meta.notFound.title"), t("meta.notFound.description"));
 
   return (
-    <PageHero label="404" title={<Scramble text={t("notFound.title")} />} lead={t("notFound.body")}>
+    <PageHero label="404" title={<Scramble text={t("notFound.title")} />} lead={t("notFound.body")} compact last>
       <div className="btn-row">
         <Link className="btn primary" to="/">
           {t("notFound.cta")}

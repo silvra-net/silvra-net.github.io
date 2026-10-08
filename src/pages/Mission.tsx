@@ -42,7 +42,8 @@ export default function Mission() {
           <div className="prose-grid">
             {list<string>("mission.approach.paragraphs").map((p, i) => (
               <Reveal key={p.slice(0, 40)} delay={i * 80}>
-                <span className="prose-num mono">0{i + 1}</span>
+                {/* Letters, not numbers: the section itself already carries the index 01. */}
+                <span className="prose-num mono">{["A", "B", "C"][i]}</span>
                 <p className="muted">{p}</p>
               </Reveal>
             ))}
@@ -70,7 +71,7 @@ export default function Mission() {
           <div className="versus">
             {[
               { g: expect, kind: "yes", icon: "check" },
-              { g: noPromise, kind: "no", icon: "ban" },
+              { g: noPromise, kind: "no", icon: "close" },
             ].map(({ g, kind, icon }) => (
               <Reveal key={kind} className={`versus-col versus-${kind}`}>
                 <h3>{g.heading}</h3>

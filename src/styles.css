@@ -2873,24 +2873,46 @@ p {
 .versus-col li p {
   margin: 4px 0 0;
 }
+/* Both columns mark their items in the same square frame; what we refuse to claim is a plain
+   cross in the text colour, not an alarm. */
+.versus-col li .icon {
+  box-sizing: content-box;
+  padding: 3px;
+  border: 1px solid var(--line-2);
+  margin-top: 1px;
+}
 .versus-yes .icon {
   color: var(--ok);
-  margin-top: 3px;
 }
 .versus-no .icon {
-  color: var(--bad);
-  margin-top: 3px;
+  color: var(--muted);
 }
 
 /* ---------- contact & legal ---------- */
 
+/* Three cards side by side on a wide screen. Between that and a phone they pair up, and the
+   security card takes the full row below rather than standing alone in half of it. */
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
+.contact-security {
+  grid-column: 1 / -1;
+}
+.contact-security p {
+  max-width: 64ch;
+}
+@media (min-width: 1100px) {
+  .contact-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .contact-security {
+    grid-column: auto;
+  }
+}
 /* A flat 2px band in the world's colour along the top: the developers' card in the page
-   accent, the validators' in Helix amber. */
+   accent, the validators' in Helix amber, the security card in sand. */
 .contact-card {
   position: relative;
   padding: clamp(28px, 4vw, 44px);
@@ -2914,6 +2936,12 @@ p {
 .contact-validator .contact-icon {
   color: var(--amber-text);
 }
+.contact-security {
+  background: linear-gradient(var(--sand-text), var(--sand-text)) top / 100% 2px no-repeat, var(--surface);
+}
+.contact-security .contact-icon {
+  color: var(--sand-text);
+}
 .contact-card h3 {
   font-family: var(--display);
   font-weight: 600;
@@ -2932,20 +2960,20 @@ p {
   border: 1px solid var(--line);
   background: var(--surface);
 }
-.legal > div + div {
+.legal-block + .legal-block {
   margin-top: 28px;
   padding-top: 28px;
   border-top: 1px solid var(--line);
 }
-.legal dt {
+/* Real h2s, so the outline lists every block, set as the small mono label they replace. */
+.legal-title {
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
-.legal dd {
-  margin: 0;
+.legal-body {
   white-space: pre-line;
 }
 .legal-list {
@@ -4201,6 +4229,12 @@ p {
 .supply-note a {
   display: inline-block;
   padding: 4px 0;
+}
+/* An address inside a sentence is exempt from the 24px minimum, but padding on the inline box
+   gives a thumb a full 24px to hit without moving the line. */
+.legal-body a,
+.contact-card p a {
+  padding-block: 2px;
 }
 
 /* =====================================================================================
@@ -5746,6 +5780,9 @@ a.tile-messenger:hover .tile-phone {
 }
 .hud-frame .hud-corner.br {
   bottom: calc(5vw + 18px);
+}
+.page-hero--last .hud-frame .hud-corner.br {
+  bottom: 18px;
 }
 @media (max-width: 820px) {
   .hud-frame .hud-corner {

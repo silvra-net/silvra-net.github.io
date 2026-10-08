@@ -3,102 +3,181 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Datenschutz — Silvra</title>
+<title>Datenschutz – Silvra · Privacy</title>
 <meta name="description" content="Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.">
+<link rel="canonical" href="https://silvra.net/privacy/">
 <link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#0a0c09">
+<link rel="preload" href="/privacy/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/privacy/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+  // The theme chosen on the rest of the site, applied before first paint, as index.html does.
+  // Without script, or with storage blocked, the OS preference decides.
+  try {
+    var t = localStorage.getItem("silvra-theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
 <style>
-/* The Helix shared design system, same token hexes as the rest of the site. This page carries
-   its own copy because it is deliberately standalone: no bundle, no framework, nothing that has
-   to load before a legally required text is readable. */
-:root {
+/* A copy of the site's tokens (src/styles.css). This page carries its own because it is
+   deliberately standalone: no bundle, no framework, nothing that has to load before a legally
+   required text is readable. The fonts are the site's own files, copied next to the page. */
+@font-face { font-family: "Barlow Condensed"; font-weight: 600; font-display: swap;
+  src: url("/privacy/fonts/barlow-condensed-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap;
+  src: url("/privacy/fonts/barlow-condensed-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Variable"; font-weight: 100 900; font-display: swap;
+  src: url("/privacy/fonts/inter-latin-wght-normal.woff2") format("woff2-variations"); }
+@font-face { font-family: "JetBrains Mono Variable"; font-weight: 100 800; font-display: swap;
+  src: url("/privacy/fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2-variations"); }
+@font-face { font-family: "Unbounded Variable"; font-weight: 200 900; font-display: swap;
+  src: url("/privacy/fonts/unbounded-latin-wght-normal.woff2") format("woff2-variations"); }
+
+/* Dark is the default, and the bands that are dark in both themes (.dark) restate it, so the
+   light blocks below change only the paper in between. */
+:root,
+.dark {
   color-scheme: dark;
-  --bg: #0a0c09; --surface: #12160f; --surface-2: #181d15; --border: #262d22;
-  --text: #eef0e9; --muted: #a8ae9c; --accent: #eef0e9; --accent-ink: #0a0c09;
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --bg: #0a0c09; --surface: #12160f; --line: rgba(214, 222, 196, 0.1); --line-2: rgba(214, 222, 196, 0.2);
+  --text: #eef0e9; --muted: #a8ae9c; --accent: #d4b86a; --accent-text: #dcc27e;
+}
+:root {
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --brand: "Unbounded Variable", "Unbounded", system-ui, sans-serif;
+  --font: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --gutter: clamp(20px, 4vw, 56px);
 }
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme="dark"]) {
     color-scheme: light;
-    --bg: #f7f7f3; --surface: #ffffff; --surface-2: #f1f2ec; --border: #dcdfd3;
-    --text: #0f2535; --muted: #44525c; --accent: #0f2535; --accent-ink: #ffffff;
+    --bg: #f7f7f3; --surface: #ffffff; --line: rgba(15, 37, 53, 0.12); --line-2: rgba(15, 37, 53, 0.24);
+    --text: #0f2535; --muted: #44525c; --accent: #0f2535; --accent-text: #7a5c12;
   }
 }
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f7f7f3; --surface: #ffffff; --line: rgba(15, 37, 53, 0.12); --line-2: rgba(15, 37, 53, 0.24);
+  --text: #0f2535; --muted: #44525c; --accent: #0f2535; --accent-text: #7a5c12;
+}
+
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font);
   font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.dark { background: #0a0c09; color: var(--text); }
+.wrap { max-width: calc(52rem + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
 
-.site-header { border-bottom: 1px solid var(--border); }
-.inner { max-width: 52rem; margin: 0 auto; padding: 0 24px;
-  display: flex; align-items: center; gap: 10px; height: 64px; }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600;
-  font-size: 17px; letter-spacing: 0.02em; }
-.brand img { height: 28px; width: 28px; border-radius: 7px; box-shadow: 0 0 0 1px var(--border); }
-@media (prefers-color-scheme: light) { .brand img { box-shadow: none; } }
-/* A thumb needs more than the 24px floor; a mouse does not. */
-@media (pointer: coarse) {
-  .inner { height: 72px; }
-  .lang a, footer a { min-height: 44px; min-width: 44px; }
-}
-.lang { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 12px; }
+/* ---------- header ---------- */
+/* Laid over the opening, as the site's header is over its dark openings, so the camouflage runs
+   behind it without a seam. */
+.site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 1; background: none; }
+.site-header .wrap { display: flex; align-items: center; gap: 12px; height: 72px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand img { width: 30px; height: 30px; border-radius: 8px; box-shadow: 0 0 0 1px var(--line-2); }
+.brand span { font: 500 14px/1 var(--brand); letter-spacing: 0.26em; text-transform: uppercase; }
+.lang { margin-left: auto; display: flex; border: 1px solid var(--line-2); border-radius: 2px; padding: 3px; }
 .lang a {
-  color: var(--muted); text-decoration: none; letter-spacing: 0.04em;
-  display: inline-flex; align-items: center; justify-content: center;
-  min-height: 24px; min-width: 24px; padding: 0 5px;
+  display: inline-flex; align-items: center; justify-content: center; min-width: 34px; min-height: 30px;
+  border-radius: 2px; color: var(--muted); text-decoration: none;
+  font: 600 11px/1 var(--mono); letter-spacing: 0.08em;
 }
 .lang a:hover { color: var(--text); }
-.lang span { color: var(--border); }
-
-main { max-width: 52rem; margin: 0 auto; padding: 64px 24px 96px; }
-.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--muted); margin: 0 0 12px; }
-h1 { font-size: clamp(30px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -0.02em;
-  margin: 0 0 16px; font-weight: 600; }
-.lead { font-size: 18px; color: var(--muted); margin: 0 0 8px; max-width: 62ch; }
-.updated { font-size: 13px; color: var(--muted); margin: 0 0 48px; font-family: var(--font); }
-section { margin-top: 32px; }
-h2 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 8px; }
-section p { margin: 0; color: var(--muted); max-width: 70ch; }
-
-footer { border-top: 1px solid var(--border); margin-top: 64px; padding-top: 24px;
-  display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; color: var(--muted); }
-footer a {
-  text-decoration: none;
-  display: inline-flex; align-items: center; min-height: 24px;
+/* The language on screen is filled, as on the rest of the site. German is the default; once the
+   English article is the target, the fill moves with it. */
+.lang a[href="#de"], body:has(#en:target) .lang a[href="#en"] { background: var(--text); color: #0a0c09; }
+body:has(#en:target) .lang a[href="#de"] { background: none; color: var(--muted); }
+/* A thumb needs more than the 24px floor; a mouse does not. */
+@media (pointer: coarse) {
+  .lang a { min-width: 44px; min-height: 38px; }
+  .site-footer a { line-height: 44px; }
 }
-footer a:hover { color: var(--text); }
 
-/* Language switching without a line of JavaScript: the English section is revealed by :target,
+/* ---------- opening ---------- */
+/* The dark band every page of the site opens on: camouflage at the edges, a strip of it along
+   the lower edge, two corner marks in sand. */
+.opening { position: relative; isolation: isolate; overflow: hidden; padding: calc(72px + 56px) 0 calc(56px + 14px); }
+.opening::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: url("/privacy/camo-dark.svg") 0 0 / 384px; opacity: 0.55;
+  -webkit-mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
+  mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
+}
+.opening::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 14px;
+  background: url("/privacy/camo-dark.svg") 0 0 / 384px;
+  border-top: 1px solid rgba(214, 222, 196, 0.16);
+}
+.corner { position: absolute; width: 24px; height: 24px; border: 0 solid #d4b86a; }
+.corner.tl { top: calc(72px + 14px); left: 18px; border-top-width: 2px; border-left-width: 2px; }
+.corner.br { bottom: 32px; right: 18px; border-bottom-width: 2px; border-right-width: 2px; }
+.eyebrow { font: 500 11px/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 20px; }
+h1 { font: 700 clamp(40px, 6vw, 72px)/1 var(--display); text-transform: uppercase;
+  letter-spacing: 0.005em; margin: 0 0 20px; text-wrap: balance; }
+.lead { font-size: 18px; color: var(--muted); margin: 0 0 12px; max-width: 60ch; }
+.updated { font: 500 11px/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent-text); margin: 0; }
+
+/* ---------- text ---------- */
+.text { padding-top: clamp(48px, 7vw, 88px); padding-bottom: clamp(64px, 8vw, 104px); }
+section + section { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--line); }
+h2 { font: 600 24px/1.15 var(--display); text-transform: uppercase; letter-spacing: 0.01em;
+  margin: 0 0 10px; text-wrap: balance; }
+section p { margin: 0; color: var(--muted); max-width: 70ch; }
+/* Inline addresses are exempt from the 24px minimum; padding on the inline box gives a thumb 24px
+   anyway without moving the line. */
+section p a { padding-block: 2px; }
+
+/* ---------- footer ---------- */
+/* Night olive in both themes, with the camouflage band along its top edge. */
+.site-footer { position: relative; background: #10140d; padding: calc(14px + 32px) 0 40px; }
+.site-footer::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 14px;
+  background: url("/privacy/camo-dark.svg") 0 0 / 384px;
+  border-bottom: 1px solid rgba(214, 222, 196, 0.16);
+}
+.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 14px; }
+.site-footer a { display: inline-block; line-height: 24px; color: var(--muted); text-decoration: none; }
+.site-footer a:hover { color: var(--text); }
+
+/* Language switching without a line of JavaScript: the English article is revealed by :target,
    and :has() hides the German one when it is. Where :has() is unsupported the page simply shows
-   both, which is what it did before — a degradation, not a failure. */
+   both — a degradation, not a failure. */
 #en { display: none; }
 #en:target { display: block; }
 body:has(#en:target) #de { display: none; }
 </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="inner">
+<header class="site-header dark">
+  <div class="wrap">
     <a class="brand" href="/">
-      <img src="/favicon.png" alt="">
+      <img src="/favicon.png" alt="" width="30" height="30">
       <span>Silvra</span>
     </a>
-    <nav class="lang" aria-label="Sprache">
-      <a href="#de">DE</a><span aria-hidden="true">|</span><a href="#en">EN</a>
+    <nav class="lang" aria-label="Sprache / Language">
+      <a href="#de" lang="de">DE</a><a href="#en" lang="en">EN</a>
     </nav>
   </div>
 </header>
 
 <main>
   <article id="de" lang="de">
-    <p class="eyebrow">Rechtliches</p>
-    <h1>Datenschutz</h1>
-    <p class="lead">Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.</p>
-    <p class="updated">Stand: 07.10.2026</p>
+    <div class="opening dark">
+      <i class="corner tl" aria-hidden="true"></i><i class="corner br" aria-hidden="true"></i>
+      <div class="wrap">
+        <p class="eyebrow">Rechtliches</p>
+        <h1>Datenschutz</h1>
+        <p class="lead">Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.</p>
+        <p class="updated">Stand: 8. Oktober 2026</p>
+      </div>
+    </div>
+    <div class="wrap text">
       <section>
         <h2>1. Verantwortlicher</h2>
-        <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist Silvra. Die vollständigen Angaben zum Betreiber finden Sie im Impressum. Sie erreichen uns jederzeit unter info@silvra.net.</p>
+        <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist Silvra. Die vollständigen Angaben zum Betreiber finden Sie im Impressum. Sie erreichen uns jederzeit unter <a href="mailto:info@silvra.net">info@silvra.net</a>.</p>
       </section>
       <section>
         <h2>2. Grundsätzliches</h2>
@@ -110,15 +189,15 @@ body:has(#en:target) #de { display: none; }
       </section>
       <section>
         <h2>4. Hosting und Server-Logfiles</h2>
-        <p>Beim Aufruf dieser Website verarbeitet der Hosting-Anbieter technisch notwendige Verbindungsdaten in Server-Logfiles, insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs, abgerufene Datei, Browsertyp und Betriebssystem. Die Verarbeitung erfolgt auf Grundlage unseres berechtigten Interesses an einem stabilen und sicheren Betrieb der Website (Art. 6 Abs. 1 lit. f DSGVO). Die Logdaten werden nicht mit anderen Datenquellen zusammengeführt und nicht ausgewertet.</p>
+        <p>Diese Website wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc. (USA). Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten (IP-Adresse, Zeitpunkt, abgerufene Datei, Browserkennung), um die Seite auszuliefern und den Dienst abzusichern. Dabei können Daten in die USA übermittelt werden. Wir selbst erhalten und werten diese Daten nicht aus. Die Verarbeitung erfolgt auf Grundlage unseres berechtigten Interesses an einer stabilen und sicheren Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO).</p>
       </section>
       <section>
         <h2>5. Schriftarten und Bilder</h2>
-        <p>Alle Schriftarten und Bilder dieser Website werden von unserem eigenen Webspace ausgeliefert. Es wird keine Verbindung zu Google Fonts, Bilddatenbanken oder anderen externen Anbietern hergestellt, um die Seite darzustellen.</p>
+        <p>Alle Schriftarten und Bilder dieser Website werden zusammen mit der Website über GitHub Pages ausgeliefert; es wird keine Verbindung zu Google Fonts oder anderen Schriftdiensten aufgebaut. Auch Bilder werden nicht von Bilddatenbanken oder anderen externen Anbietern nachgeladen.</p>
       </section>
       <section>
         <h2>6. Externe Dienste und Links</h2>
-        <p>Auf der Startseite und der Helix-Seite greift Ihr Browser direkt auf die öffentliche Schnittstelle von node.silvra.net zu, um den aktuellen Stand des Helix-Netzes anzuzeigen; dabei wird Ihre IP-Adresse an diesen Dienst übermittelt. Auf andere Dienste, auf die wir verlinken (z. B. Google Play und X), haben wir keinen Einfluss; für dortige Datenverarbeitungen gelten ausschließlich die Datenschutzerklärungen der jeweiligen Anbieter.</p>
+        <p>Auf der Startseite und der Helix-Seite greift Ihr Browser direkt auf die öffentliche Schnittstelle von node.silvra.net zu, um den aktuellen Stand des Helix-Netzes anzuzeigen; dabei wird Ihre IP-Adresse an diesen Dienst übermittelt. Dieser Dienst wird über das Netzwerk der Cloudflare, Inc. (USA) bereitgestellt; dabei verarbeitet Cloudflare Ihre IP-Adresse und technische Verbindungsdaten. Ihr Browser kann außerdem Fehlerberichte zu Netzwerkverbindungen an Cloudflare senden (Network Error Logging). Auf andere Dienste, auf die wir verlinken (z. B. Google Play, GitHub und Discord), haben wir keinen Einfluss; für dortige Datenverarbeitungen gelten ausschließlich die Datenschutzerklärungen der jeweiligen Anbieter.</p>
       </section>
       <section>
         <h2>7. Kontaktaufnahme</h2>
@@ -126,22 +205,29 @@ body:has(#en:target) #de { display: none; }
       </section>
       <section>
         <h2>8. Ihre Rechte</h2>
-        <p>Sie haben das Recht auf Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Berichtigung, Löschung und Einschränkung der Verarbeitung sowie auf Datenübertragbarkeit. Sie können der Verarbeitung jederzeit widersprechen. Zudem besteht das Recht auf Beschwerde bei einer zuständigen Datenschutz-Aufsichtsbehörde. Wenden Sie sich dazu an info@silvra.net.</p>
+        <p>Sie haben das Recht auf Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Berichtigung, Löschung und Einschränkung der Verarbeitung sowie auf Datenübertragbarkeit. Sie können der Verarbeitung jederzeit widersprechen. Zudem besteht das Recht auf Beschwerde bei einer zuständigen Datenschutz-Aufsichtsbehörde. Wenden Sie sich dazu an <a href="mailto:info@silvra.net">info@silvra.net</a>.</p>
       </section>
       <section>
         <h2>9. Änderungen dieser Erklärung</h2>
         <p>Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich die Website oder die rechtlichen Anforderungen ändern. Es gilt die jeweils auf dieser Seite veröffentlichte Fassung.</p>
       </section>
+    </div>
   </article>
 
   <article id="en" lang="en">
-    <p class="eyebrow">Legal</p>
-    <h1>Privacy Policy</h1>
-    <p class="lead">Information on the processing of personal data on this website.</p>
-    <p class="updated">Last updated: 07.10.2026</p>
+    <div class="opening dark">
+      <i class="corner tl" aria-hidden="true"></i><i class="corner br" aria-hidden="true"></i>
+      <div class="wrap">
+        <p class="eyebrow">Legal</p>
+        <h1>Privacy Policy</h1>
+        <p class="lead">Information on the processing of personal data on this website.</p>
+        <p class="updated">Last updated: 8 October 2026</p>
+      </div>
+    </div>
+    <div class="wrap text">
       <section>
         <h2>1. Controller</h2>
-        <p>Silvra is responsible for the processing of personal data on this website. You can find the full operator details in the legal notice (Impressum). You can reach us at any time at info@silvra.net.</p>
+        <p>Silvra is responsible for the processing of personal data on this website. You can find the full operator details in the legal notice (Impressum). You can reach us at any time at <a href="mailto:info@silvra.net">info@silvra.net</a>.</p>
       </section>
       <section>
         <h2>2. General</h2>
@@ -153,15 +239,15 @@ body:has(#en:target) #de { display: none; }
       </section>
       <section>
         <h2>4. Hosting and server log files</h2>
-        <p>When you visit this website, the hosting provider processes technically necessary connection data in server log files, in particular your IP address, the date and time of access, the file requested, browser type and operating system. This processing is based on our legitimate interest in the stable and secure operation of the website (Art. 6 para. 1 lit. f GDPR). Log data is not merged with other data sources and is not analysed.</p>
+        <p>This website is served by GitHub Pages, a service of GitHub, Inc. (USA). When you visit, GitHub processes technically necessary connection data (IP address, time, requested file, browser identifier) to deliver the page and secure the service. This data may be transferred to the USA. We do not receive or analyse it ourselves. The processing is based on our legitimate interest in delivering the website stably and securely (Art. 6 para. 1 lit. f GDPR).</p>
       </section>
       <section>
         <h2>5. Fonts and images</h2>
-        <p>All fonts and images on this website are served from our own web space. No connection is made to Google Fonts, image libraries or any other external provider to display the site.</p>
+        <p>All fonts and images on this website are delivered together with the website through GitHub Pages; no connection is made to Google Fonts or any other font service. Images are not loaded from image libraries or other external providers either.</p>
       </section>
       <section>
         <h2>6. External services and links</h2>
-        <p>On the home page and the Helix page, your browser connects directly to the public interface of node.silvra.net to show the current state of the Helix network; your IP address is transmitted to that service in the process. We have no control over other services we link to (e.g. Google Play and X); the privacy policies of the respective providers apply exclusively to any data processing there.</p>
+        <p>On the home page and the Helix page, your browser connects directly to the public interface of node.silvra.net to show the current state of the Helix network; your IP address is transmitted to that service in the process. This service is delivered through the network of Cloudflare, Inc. (USA), which processes your IP address and technical connection data. Your browser may also send network error reports to Cloudflare (Network Error Logging). We have no control over other services we link to (e.g. Google Play, GitHub and Discord); the privacy policies of the respective providers apply exclusively to any data processing there.</p>
       </section>
       <section>
         <h2>7. Contacting us</h2>
@@ -169,19 +255,23 @@ body:has(#en:target) #de { display: none; }
       </section>
       <section>
         <h2>8. Your rights</h2>
-        <p>You have the right to access your stored personal data, to have it rectified or erased, to restrict its processing and to data portability. You may object to the processing at any time. You also have the right to lodge a complaint with a competent data protection supervisory authority. Contact us at info@silvra.net for this.</p>
+        <p>You have the right to access your stored personal data, to have it rectified or erased, to restrict its processing and to data portability. You may object to the processing at any time. You also have the right to lodge a complaint with a competent data protection supervisory authority. Contact us at <a href="mailto:info@silvra.net">info@silvra.net</a> for this.</p>
       </section>
       <section>
         <h2>9. Changes to this policy</h2>
         <p>We reserve the right to adapt this privacy policy if the website or legal requirements change. The version published on this page applies.</p>
       </section>
+    </div>
   </article>
-
-  <footer>
-    <a href="/">silvra.net</a>
-    <a href="/impressum">Impressum</a>
-    <a href="mailto:info@silvra.net">info@silvra.net</a>
-  </footer>
 </main>
+
+<footer class="site-footer dark">
+  <div class="wrap">
+    <a href="/">silvra.net</a>
+    <a href="/impressum/">Impressum / <span lang="en">Legal notice</span></a>
+    <a href="/barrierefreiheit/">Barrierefreiheit / <span lang="en">Accessibility</span></a>
+    <a href="mailto:info@silvra.net">info@silvra.net</a>
+  </div>
+</footer>
 </body>
 </html>

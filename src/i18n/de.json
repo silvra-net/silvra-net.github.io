@@ -1205,6 +1205,7 @@
     "email": "info@silvra.net",
     "cards": [
       {
+        "kind": "dev",
         "title": "Mitentwickeln",
         "body": "Sie arbeiten an Post-Quanten-Kryptographie, verteilten Systemen oder mobilen Clients? Schreiben Sie uns — wir tauschen uns gerne aus.",
         "detail": [
@@ -1214,6 +1215,7 @@
         "icon": "code"
       },
       {
+        "kind": "validator",
         "title": "Validator-Betrieb",
         "body": "Sie möchten einen Helix-Validator betreiben? Die Anleitung steht in der Dokumentation — und wir helfen gern beim Einstieg.",
         "detail": [
@@ -1221,6 +1223,16 @@
           "Ein Knoten läuft über die Kommandozeile oder per Klick aus der Desktop-Wallet — unter Linux, macOS, Windows oder in Docker, auch hinter NAT oder Proxy."
         ],
         "icon": "server"
+      },
+      {
+        "kind": "security",
+        "title": "Schwachstelle melden",
+        "body": "Sie haben eine Sicherheitslücke in Helix, im Silvra Messenger oder auf dieser Website gefunden? Bitte melden Sie sie vertraulich an info@silvra.net mit dem Betreff „Sicherheit“ — bevor Sie sie veröffentlichen.",
+        "detail": [
+          "Wir bestätigen den Eingang, prüfen den Fund und informieren Sie, sobald er behoben ist. Bitte testen Sie nicht mit fremden Konten oder Daten."
+        ],
+        "icon": "shield",
+        "subject": "Sicherheit"
       }
     ]
   },

@@ -1205,6 +1205,7 @@
     "email": "info@silvra.net",
     "cards": [
       {
+        "kind": "dev",
         "title": "Contribute",
         "body": "Do you work on post-quantum cryptography, distributed systems or mobile clients? Write to us — we love to exchange ideas.",
         "detail": [
@@ -1214,6 +1215,7 @@
         "icon": "code"
       },
       {
+        "kind": "validator",
         "title": "Run a validator",
         "body": "Want to run a Helix validator? The guide is in the documentation — and we're happy to help you get started.",
         "detail": [
@@ -1221,6 +1223,16 @@
           "A node runs from the command line or at a click from the desktop wallet — on Linux, macOS, Windows or in Docker, behind NAT or a proxy too."
         ],
         "icon": "server"
+      },
+      {
+        "kind": "security",
+        "title": "Report a vulnerability",
+        "body": "Found a security issue in Helix, Silvra Messenger or this website? Please report it privately to info@silvra.net with the subject “Security” — before you publish it.",
+        "detail": [
+          "We confirm receipt, assess the finding and let you know once it is fixed. Please do not test with other people's accounts or data."
+        ],
+        "icon": "shield",
+        "subject": "Security"
       }
     ]
   },
