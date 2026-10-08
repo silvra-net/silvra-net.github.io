@@ -200,9 +200,12 @@ export default function Gate() {
           <b />
         </i>
         <i className="gate-core" />
+        <i className="gate-pulse" />
       </div>
 
-      <a className="gate-seal" href="#about" aria-label={t("home.gate.scroll")}>
+      {/* The name starts with the words written on the ring, so someone who reads them aloud to
+          a voice control finds the link (WCAG 2.5.3). */}
+      <a className="gate-seal" href="#about" aria-label={`${t("home.gate.seal").replace(/ · $/, "")} — ${t("home.gate.scroll")}`}>
         <svg className="gate-seal-ring" viewBox="0 0 200 200" aria-hidden="true">
           <defs>
             <path id="seal-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />

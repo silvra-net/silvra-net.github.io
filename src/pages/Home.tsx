@@ -63,7 +63,7 @@ export default function Home() {
             <ScrollWords className="statement" text={t("home.about.statement")} />
             <p className="lead">{t("home.about.body")}</p>
             <div className="btn-row">
-              <Link className="btn primary magnetic" to="/mission">
+              <Link className="btn primary" to="/mission">
                 {t("home.about.cta")}
                 <Icon name="arrowRight" size={16} />
               </Link>
@@ -96,7 +96,7 @@ export default function Home() {
           <Reveal>
             <div className="stack">
               <div className="stack-products dark-zone">
-                <Link to="/messenger" className="stack-product stack-messenger spot">
+                <Link to="/messenger" className="stack-product stack-messenger">
                   <span className="stack-kicker">{t("home.stack.messenger.kicker")}</span>
                   <span className="stack-name">Silvra Messenger</span>
                   <span className="stack-body">{t("home.stack.messenger.body")}</span>
@@ -105,7 +105,7 @@ export default function Home() {
                   </span>
                 </Link>
                 <span className="stack-blade" aria-hidden="true" />
-                <Link to="/helix" className="stack-product stack-helix spot">
+                <Link to="/helix" className="stack-product stack-helix">
                   <span className="stack-kicker">{t("home.stack.helix.kicker")}</span>
                   <span className="stack-name">Helix Blockchain</span>
                   <span className="stack-body">{t("home.stack.helix.body")}</span>
@@ -274,7 +274,7 @@ export default function Home() {
           <div className="join-grid">
             <p className="lead">{t("home.join.body")}</p>
             <div className="btn-row">
-              <a className="btn primary magnetic" href={`mailto:${t("home.join.email")}`}>
+              <a className="btn primary" href={`mailto:${t("home.join.email")}`}>
                 <Icon name="mail" size={16} />
                 {t("home.join.email")}
               </a>

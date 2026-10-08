@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "../lib/motion";
 
 /**
  * Count from the previous value to the current one.
@@ -20,7 +21,7 @@ export default function CountUp({ value, locale = "de-DE" }: { value: number; lo
       setShown(value);
       return;
     }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setShown(value);
       from.current = value;
       return;

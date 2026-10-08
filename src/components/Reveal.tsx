@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ElementType, ReactNode } from "react";
+import { prefersReducedMotion } from "../lib/motion";
 
 /**
  * Fade a block in the first time it comes into view.
@@ -8,7 +9,9 @@ import type { ElementType, ReactNode } from "react";
  * ordinary content. Anything that re-animates on the way back up turns scrolling into a
  * performance, which is the opposite of what a page about restraint should do.
  *
- * Visitors who ask for reduced motion get the content immediately, never a fade.
+ * Visitors who ask for reduced motion get the content immediately, never a fade. Content is
+ * hidden only once a script has marked the page (`.js` on <html>), so without JavaScript nothing
+ * waits for a reveal that will never come; the stylesheet also shows it if the bundle never runs.
  */
 export default function Reveal({
   children,
@@ -27,7 +30,7 @@ export default function Reveal({
 
   useEffect(() => {
     if (shown) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setShown(true);
       return;
     }
@@ -47,15 +50,7 @@ export default function Reveal({
       { rootMargin: "200px 0px 0px 0px" },
     );
     io.observe(el);
-
-    // Backstop: content that has waited this long is content the visitor cannot see appearing,
-    // so there is nothing left to reveal — only something left to hide by mistake.
-    const failsafe = setTimeout(() => setShown(true), 3000);
-
-    return () => {
-      io.disconnect();
-      clearTimeout(failsafe);
-    };
+    return () => io.disconnect();
   }, [shown]);
 
   return (

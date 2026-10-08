@@ -70,10 +70,11 @@ export default function CryptoDemo() {
   return (
     <div className="terminal">
       <div className="terminal-bar" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-        <span className="mono">aes-256-gcm · webcrypto</span>
+        <span className="dot ok" />
+        <span className="mono">{t("messenger.crypto.channel")} · AES-256-GCM · WebCrypto</span>
+        <span className="terminal-state mono">
+          {verified ? t("messenger.crypto.stateVerified") : t("messenger.crypto.stateReady")}
+        </span>
       </div>
       <div className="terminal-body">
         <label className="terminal-input">

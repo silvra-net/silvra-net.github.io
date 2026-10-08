@@ -51,7 +51,7 @@ function Label({ index, text }: { index: string; text: string }) {
 
 function PlayButton({ label }: { label: string }) {
   return (
-    <a className="btn primary magnetic" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
+    <a className="btn primary" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">
       <Icon name="play" size={16} />
       {label}
     </a>
@@ -156,7 +156,7 @@ export default function Messenger() {
           </div>
           <div className="pillars">
             {list<Item>("messenger.pillars.items").map((p, i) => (
-              <Reveal key={p.title} delay={i * 90} className="pillar spot">
+              <Reveal key={p.title} delay={i * 90} className="pillar">
                 <span className="pillar-num mono">0{i + 1}</span>
                 <span className="pillar-icon">
                   <Icon name={p.icon ?? "chat"} size={26} />
@@ -179,7 +179,7 @@ export default function Messenger() {
           </div>
           <ul className="features">
             {list<Item>("messenger.features.items").map((f, i) => (
-              <Reveal as="li" key={f.title} delay={(i % 4) * 60} className="feature spot">
+              <Reveal as="li" key={f.title} delay={(i % 4) * 60} className="feature">
                 <Icon name={f.icon ?? "check"} size={20} />
                 <div>
                   <h3>{f.title}</h3>
@@ -293,7 +293,7 @@ export default function Messenger() {
               { g: encrypted, kind: "yes", icon: "lock" },
               { g: notEncrypted, kind: "no", icon: "alert" },
             ].map(({ g, kind, icon }) => (
-              <Reveal key={kind} className={`ledger-col ledger-${kind} spot`}>
+              <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
                 <h3>
                   <Icon name={icon} size={18} />
                   {g.heading}
@@ -320,7 +320,7 @@ export default function Messenger() {
           </div>
           <div className="nots">
             {list<Item>("messenger.boundaries.items").map((b, i) => (
-              <Reveal key={b.title} delay={i * 70} className="not spot">
+              <Reveal key={b.title} delay={i * 70} className="not">
                 <span className="not-icon">
                   <Icon name={b.icon ?? "ban"} size={22} />
                 </span>

@@ -50,14 +50,15 @@
   --signal: #3fe0b0;
   --ok: #3fe0b0;
   --bad: #f26b5b;
-  --warn: #e0a44a;
+  /* Warnings have their own orange, so "classical" never reads as Helix. */
+  --warn: #f08a4b;
   --accent: var(--sand);
   --accent-ink: #14110a;
   --accent-text: var(--sand-text);
-  --glow: rgba(212, 184, 106, 0.2);
   --camo: url("./assets/camo-dark.svg");
-  --metal: linear-gradient(100deg, #8d939b 0%, #ffffff 22%, #b4b9c1 42%, #f3f4f6 60%, #80868e 82%, #e9ebee 100%);
-  --gold: linear-gradient(100deg, #c08328 0%, #ffd892 26%, #e0a44a 52%, #fff0cf 70%, #c8903a 100%);
+  /* The two world colours as flat type colours, for titles on the always-dark openings. */
+  --metal: #d9ddd3;
+  --gold: #e0a44a;
 }
 
 :root {
@@ -97,14 +98,11 @@
     --signal: #0a6e53;
     --ok: #0a6e53;
     --bad: #b42318;
-    --warn: #7a5c12;
+    --warn: #9a4a0b;
     --accent: #0f2535;
     --accent-ink: #ffffff;
     --accent-text: #7a5c12;
-    --glow: rgba(15, 37, 53, 0.12);
     --camo: url("./assets/camo-light.svg");
-    --metal: linear-gradient(100deg, #1c2a35 0%, #4d5d69 25%, #0f2535 50%, #43535f 75%, #1c2a35 100%);
-    --gold: linear-gradient(100deg, #7a4d0a 0%, #b8791f 35%, #8a5a06 65%, #a8701c 100%);
   }
 }
 :root[data-theme="light"] {
@@ -127,30 +125,28 @@
   --signal: #0a6e53;
   --ok: #0a6e53;
   --bad: #b42318;
-  --warn: #7a5c12;
+  --warn: #9a4a0b;
   --accent: #0f2535;
   --accent-ink: #ffffff;
   --accent-text: #7a5c12;
-  --glow: rgba(15, 37, 53, 0.12);
   --camo: url("./assets/camo-light.svg");
-  --metal: linear-gradient(100deg, #1c2a35 0%, #4d5d69 25%, #0f2535 50%, #43535f 75%, #1c2a35 100%);
-  --gold: linear-gradient(100deg, #7a4d0a 0%, #b8791f 35%, #8a5a06 65%, #a8701c 100%);
 }
 
-/* Worlds. Restated on zones for the same reason the palette is. */
+/* Worlds. Restated on zones (and terminals, which carry the dark palette) for the same reason
+   the palette is. */
 :root[data-world="messenger"],
-:root[data-world="messenger"] .dark-zone {
+:root[data-world="messenger"] .dark-zone,
+:root[data-world="messenger"] .terminal {
   --accent: var(--silver);
   --accent-ink: var(--inverse);
   --accent-text: var(--text);
-  --glow: rgba(200, 215, 235, 0.22);
 }
 :root[data-world="helix"],
-:root[data-world="helix"] .dark-zone {
+:root[data-world="helix"] .dark-zone,
+:root[data-world="helix"] .terminal {
   --accent: var(--amber);
   --accent-ink: #160f04;
   --accent-text: var(--amber-text);
-  --glow: rgba(224, 164, 74, 0.28);
 }
 /* Light amber is too pale for a button label to sit on; the light helix world uses the ink. */
 @media (prefers-color-scheme: light) {
@@ -311,6 +307,57 @@ p {
   font-family: var(--mono);
 }
 
+/* Card titles: the display face in sentence case, one step below the section heads. Questions,
+   list entries and running text stay in Inter. */
+.craft-list h3,
+.europe-points h3,
+.journey-stop h3,
+.feature h3,
+.ledger-col h3,
+.not h3,
+.block h3,
+.link-card-title,
+.testnet-title,
+.chart-title,
+.honesty-list strong {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.12;
+}
+.journey-stop h3,
+.ledger-col h3 {
+  font-size: 23px;
+}
+.craft-list h3,
+.europe-points h3 {
+  font-size: clamp(20px, 1.6vw, 23px);
+}
+.feature h3,
+.not h3,
+.block h3,
+.link-card-title {
+  font-size: 21px;
+}
+.testnet-title,
+.chart-title,
+.honesty-list strong {
+  font-size: 20px;
+}
+
+/* Readout labels: what a value is, in the instrument voice of the section labels. */
+.hero-stats dt,
+.testnet-label,
+.testnet-stats dt,
+.testnet-source,
+.inventory-group th,
+.tile-helix .tile-body {
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* A section's mono label: index, rule, name. */
 .label {
   display: flex;
@@ -387,10 +434,16 @@ p {
   color: var(--accent-ink);
   border-color: var(--accent);
 }
+/* A hard inner edge rather than a halo: the button answers the pointer without glowing. */
 .btn.primary:hover {
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--accent) 24%, transparent),
-    0 14px 40px var(--glow);
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+/* An address is read and copied letter for letter, so it keeps its case and a mono face. */
+.btn[href^="mailto:"] {
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 .btn-row {
   display: flex;
@@ -443,6 +496,7 @@ p {
 }
 
 .dot {
+  position: relative;
   width: 8px;
   height: 8px;
   border-radius: var(--r-ctl);
@@ -455,16 +509,25 @@ p {
 .dot.off {
   background: var(--faint);
 }
-.dot.pulse {
+/* The ping is a copy of the dot that grows and fades: transform and opacity only, so it runs
+   on the compositor instead of repainting a shadow every frame. */
+.dot.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
   animation: ping 2.4s infinite;
 }
 @keyframes ping {
   0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent);
+    transform: scale(1);
+    opacity: 0.6;
   }
   70%,
   100% {
-    box-shadow: 0 0 0 9px transparent;
+    transform: scale(3.2);
+    opacity: 0;
   }
 }
 
@@ -504,19 +567,35 @@ p {
   max-width: 21em;
   margin: 0 0 clamp(48px, 7vw, 96px);
 }
-.scroll-words span {
-  opacity: clamp(0.14, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
+/* Words not yet reached are dimmed, never faded out: a statement read at rest is still a
+   statement. Only with a script running, which is what lights them. */
+.js .scroll-words span {
+  opacity: clamp(0.55, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
   transition: opacity 0.25s linear;
 }
 
 /* ---------- reveal ---------- */
 
+/* Hidden only on a scripted page (.js, set in index.html before paint). Should the bundle
+   never run, the content appears on its own after four seconds; once it runs (.app), each
+   block waits for its observer instead. */
 .reveal {
-  opacity: 0;
-  transform: translateY(28px);
   transition:
     opacity 0.9s var(--ease-out),
     transform 0.9s var(--ease-out);
+}
+.js .reveal:not(.shown) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.js:not(.app) .reveal:not(.shown) {
+  animation: reveal-failsafe 0s 4s forwards;
+}
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .reveal.shown {
   opacity: 1;
@@ -525,19 +604,25 @@ p {
 
 /* ---------- skip link ---------- */
 
+/* Sand in both themes: every page opens on a dark block, and navy would vanish into it. */
 .skip-link {
   position: absolute;
   left: 12px;
   top: -80px;
   z-index: 100;
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: #d4b86a;
+  color: #14110a;
+  border: 1.5px solid #d4b86a;
   padding: 12px 18px;
   border-radius: var(--r-ctl);
-  font-weight: 600;
-  font-size: 14px;
+  font: 600 16px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   text-decoration: none;
   transition: top 0.15s;
+}
+.skip-link:focus-visible {
+  outline-color: #d4b86a;
 }
 .skip-link:focus {
   top: 12px;
@@ -937,30 +1022,14 @@ p {
 .gate-title span {
   display: block;
 }
+/* Each world's name in its own flat colour: paint, not polished metal. */
 .gate-messenger .gate-title span:last-child,
 .metal {
-  background: var(--metal);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 9s linear infinite;
+  color: var(--metal);
 }
 .gate-helix .gate-title span:last-child,
 .gold {
-  background: var(--gold);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 9s linear infinite;
-}
-@keyframes shimmer {
-  to {
-    background-position: -220% 0;
-  }
+  color: var(--gold);
 }
 .gate-text {
   font-size: 17px;
@@ -989,18 +1058,19 @@ p {
   background: var(--amber);
   color: #160f04;
 }
+/* A second, offset edge in the button's own colour: a gold-edged plate, not a glow. */
 .gate-side:hover .gate-cta,
 .gate-side:focus-visible .gate-cta {
   gap: 22px;
   box-shadow:
-    0 0 0 4px rgba(238, 240, 233, 0.16),
-    0 0 50px rgba(220, 230, 245, 0.3);
+    0 0 0 2px #0a0c09,
+    0 0 0 4px #eef0e9;
 }
 .gate-helix:hover .gate-cta,
 .gate-helix:focus-visible .gate-cta {
   box-shadow:
-    0 0 0 4px rgba(224, 164, 74, 0.25),
-    0 0 50px rgba(224, 164, 74, 0.45);
+    0 0 0 2px #0a0c09,
+    0 0 0 4px var(--amber);
 }
 .gate-side:focus-visible .gate-cta {
   outline: 2px solid #fff;
@@ -1008,7 +1078,8 @@ p {
 }
 
 /* The blade itself: a white core, a silver glow on the messenger side, an amber one on the
-   helix side, and a pulse of light that runs down it. */
+   helix side, and a pulse of light that runs down the core. The pulse sits outside the blurred
+   glow and only moves by transform, so the blur is drawn once and never again. */
 .gate-blade {
   position: absolute;
   inset: 0;
@@ -1051,23 +1122,35 @@ p {
   clip-path: polygon(var(--a) 0, calc(var(--a) + 64px) 0, calc(var(--b) + 64px) 100%, var(--b) 100%);
   background: rgba(224, 164, 74, 0.5);
 }
-.gate-glow b::after {
+.gate-pulse {
+  --w: 7px;
+  overflow: hidden;
+  clip-path: polygon(
+    calc(var(--a) - var(--w)) 0,
+    calc(var(--a) + var(--w)) 0,
+    calc(var(--b) + var(--w)) 100%,
+    calc(var(--b) - var(--w)) 100%
+  );
+}
+.gate-pulse::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
+  top: 0;
   height: 34%;
-  top: -34%;
+  transform: translateY(-100%);
   background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.95), transparent);
   animation: blade-pulse 6s var(--ease) infinite;
 }
+/* From just above the gate to just below it: 110% of the gate is 3.24 times the pulse. */
 @keyframes blade-pulse {
   0% {
-    top: -34%;
+    transform: translateY(-100%);
   }
   60%,
   100% {
-    top: 110%;
+    transform: translateY(324%);
   }
 }
 
@@ -1085,9 +1168,7 @@ p {
   color: #fff;
   background: radial-gradient(circle, #0c0c0e 0 52%, rgba(6, 6, 7, 0.9) 53% 100%);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow:
-    0 0 0 10px rgba(0, 0, 0, 0.35),
-    0 0 70px rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.35);
   transition:
     transform 0.6s var(--ease-out),
     opacity 0.4s;
@@ -1223,12 +1304,21 @@ p {
   .gate-glow-amber b {
     clip-path: polygon(0 var(--l), 100% var(--r), 100% calc(var(--r) + 56px), 0 calc(var(--l) + 56px));
   }
-  .gate-glow b::after {
+  .gate-pulse {
+    clip-path: polygon(
+      0 calc(var(--l) - var(--w)),
+      100% calc(var(--r) - var(--w)),
+      100% calc(var(--r) + var(--w)),
+      0 calc(var(--l) + var(--w))
+    );
+  }
+  .gate-pulse::after {
     top: 0;
     bottom: 0;
     height: auto;
     width: 40%;
-    left: -40%;
+    left: 0;
+    transform: translateX(-100%);
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
     animation-name: blade-pulse-x;
   }
@@ -1296,11 +1386,11 @@ p {
 }
 @keyframes blade-pulse-x {
   0% {
-    left: -40%;
+    transform: translateX(-100%);
   }
   60%,
   100% {
-    left: 110%;
+    transform: translateX(275%);
   }
 }
 @media (max-width: 820px) and (max-height: 700px) {
@@ -1310,59 +1400,6 @@ p {
 }
 
 /* ---------- home ---------- */
-
-.about-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 48px 96px;
-  align-items: start;
-}
-.facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin: 0;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.fact {
-  background: var(--bg);
-  padding: 28px;
-}
-.fact dt {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-.fact-value {
-  font-family: var(--display);
-  font-size: clamp(40px, 4.2vw, 60px);
-  line-height: 1;
-  letter-spacing: 0.005em;
-  background: var(--metal);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  font-weight: 600;
-}
-.fact:nth-child(2) .fact-value,
-.fact:nth-child(4) .fact-value {
-  background-image: var(--gold);
-}
-.fact-label {
-  font-weight: 600;
-  font-size: 15px;
-}
-.fact dd {
-  margin: 0;
-  font-size: 14.5px;
-  color: var(--muted);
-}
 
 .marquee {
   overflow: hidden;
@@ -1375,9 +1412,6 @@ p {
   display: flex;
   width: max-content;
   animation: marquee 48s linear infinite;
-}
-.marquee.reverse .marquee-track {
-  animation-direction: reverse;
 }
 .marquee-run {
   display: flex;
@@ -1396,7 +1430,6 @@ p {
 }
 .marquee-slash {
   color: var(--faint);
-  -webkit-text-stroke: 0;
   margin: 0 1.4em;
   font-weight: 400;
 }
@@ -1409,11 +1442,6 @@ p {
 @keyframes marquee {
   to {
     transform: translateX(-50%);
-  }
-}
-@supports not (-webkit-text-stroke: 1px black) {
-  .marquee-item {
-    color: var(--faint);
   }
 }
 
@@ -1494,7 +1522,7 @@ p {
   color: #f0bb68;
 }
 .stack-body {
-  color: #b9b9c2;
+  color: rgba(238, 240, 233, 0.8);
   font-size: 15px;
   max-width: 34ch;
 }
@@ -1561,7 +1589,7 @@ p {
   background: var(--surface-2);
 }
 .stack-eu {
-  background: linear-gradient(90deg, var(--surface), var(--surface-2), var(--surface));
+  background: var(--surface);
 }
 
 .timeline {
@@ -1634,10 +1662,10 @@ p {
   gap: clamp(40px, 7vw, 112px);
   align-items: center;
 }
+/* Square, so all four corner marks of a reading (further down) stay on the photo. */
 .craft-media {
   aspect-ratio: 4 / 5;
   border-radius: var(--radius);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 12% 100%);
 }
 .craft-list {
   list-style: none;
@@ -1693,10 +1721,7 @@ p {
 .europe-photo {
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  box-shadow:
-    0 0 0 1px var(--line-2),
-    0 0 0 18px color-mix(in srgb, var(--text) 3%, transparent),
-    0 0 0 19px var(--line);
+  box-shadow: 0 0 0 1px var(--line-2);
 }
 .europe-caption {
   position: absolute;
@@ -1729,9 +1754,7 @@ p {
   position: relative;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background:
-    radial-gradient(80% 70% at 100% 0%, color-mix(in srgb, var(--amber) 14%, transparent), transparent 70%),
-    var(--surface);
+  background: var(--surface);
   padding: clamp(24px, 3vw, 36px);
   overflow: hidden;
 }
@@ -1741,14 +1764,16 @@ p {
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
 }
 .testnet-title {
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .testnet-source {
   margin-left: auto;
-  font-size: 12px;
-  color: var(--muted);
 }
 .testnet-height {
   display: flex;
@@ -1756,10 +1781,6 @@ p {
   gap: 6px;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
-}
-.testnet-label {
-  font-size: 13px;
-  color: var(--muted);
 }
 .testnet-big {
   font-size: clamp(40px, 4.6vw, 62px);
@@ -1774,10 +1795,6 @@ p {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin: 24px 0 0;
-}
-.testnet-stats dt {
-  font-size: 13px;
-  color: var(--muted);
 }
 .testnet-stats dd {
   margin: 4px 0 0;
@@ -1801,14 +1818,14 @@ p {
 .join {
   overflow: hidden;
 }
+/* A whisper of the camouflage under the closing call, instead of coloured light. */
 .join::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(40% 60% at 15% 100%, color-mix(in srgb, var(--silver) 12%, transparent), transparent 70%),
-    radial-gradient(40% 60% at 85% 100%, color-mix(in srgb, var(--amber) 14%, transparent), transparent 70%);
+  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  opacity: 0.06;
 }
 .join-title {
   font-size: clamp(42px, 5.6vw, 84px);
@@ -1895,8 +1912,8 @@ p {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(5, 5, 6, 0.95) 0%, rgba(5, 5, 6, 0.7) 45%, rgba(5, 5, 6, 0.35) 100%),
-    linear-gradient(0deg, rgba(5, 5, 6, 0.9) 0%, transparent 50%);
+    linear-gradient(90deg, rgba(10, 12, 9, 0.95) 0%, rgba(10, 12, 9, 0.7) 45%, rgba(10, 12, 9, 0.35) 100%),
+    linear-gradient(0deg, rgba(10, 12, 9, 0.9) 0%, transparent 50%);
 }
 .page-hero-grid {
   position: absolute;
@@ -1912,7 +1929,7 @@ p {
   font-size: clamp(42px, 5.8vw, 88px);
 }
 .page-hero-body .lead {
-  color: #c4c4cc;
+  color: rgba(238, 240, 233, 0.82);
 }
 
 /* ---------- product openings ---------- */
@@ -1926,7 +1943,7 @@ p {
   display: flex;
   align-items: center;
   padding: calc(var(--header-h) + 40px) 0 clamp(110px, 12vw, 170px);
-  background: #050506;
+  background: #070906;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5vw), 0 100%);
 }
 .p-hero-bg {
@@ -1977,13 +1994,13 @@ p {
 }
 .p-title-sub {
   font-size: 0.3em;
-  font-weight: 300;
+  font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--muted);
   margin-top: 0.4em;
 }
 .p-hero .lead {
-  color: #c4c4cc;
+  color: rgba(238, 240, 233, 0.8);
 }
 .p-hero-visual {
   position: relative;
@@ -2006,7 +2023,7 @@ p {
   font: 500 12px/1 var(--mono);
   padding: 10px 14px;
   border-radius: var(--r-ctl);
-  color: #e4e4e7;
+  color: #eef0e9;
   background: rgba(22, 24, 28, 0.78);
   border: 1px solid rgba(255, 255, 255, 0.15);
   -webkit-backdrop-filter: blur(12px);
@@ -2050,27 +2067,27 @@ p {
   align-items: flex-start;
   padding: 14px 16px;
   border-radius: 18px 18px 18px 5px;
-  background: rgba(30, 32, 37, 0.85);
+  background: rgba(18, 22, 15, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.16);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-  color: #f4f4f5;
+  color: #eef0e9;
   font-size: 14.5px;
   line-height: 1.45;
 }
 .cipher-loop-lock {
   flex: none;
   margin-top: 2px;
-  color: #22c55e;
+  color: var(--signal);
 }
 .cipher-loop[data-plain="false"] .cipher-loop-lock {
-  color: #a1a1aa;
+  color: var(--muted);
 }
 .cipher-loop[data-plain="false"] .cipher-loop-text {
   font-family: var(--mono);
   font-size: 13px;
-  color: #a1a1aa;
+  color: var(--muted);
   word-break: break-all;
 }
 .hero-stats {
@@ -2080,10 +2097,6 @@ p {
   margin: 44px 0 0;
   padding-top: 28px;
   border-top: 1px solid var(--line);
-}
-.hero-stats dt {
-  font-size: 13px;
-  color: var(--muted);
 }
 .hero-stats dd {
   margin: 4px 0 0;
@@ -2105,15 +2118,10 @@ p {
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: linear-gradient(180deg, var(--surface), var(--bg));
-  transition:
-    border-color 0.4s,
-    transform 0.6s var(--ease-out),
-    box-shadow 0.6s;
+  transition: border-color 0.3s;
 }
 .pillar:hover {
   border-color: var(--line-2);
-  transform: translateY(-4px);
-  box-shadow: 0 30px 60px -30px var(--glow);
 }
 .pillar-num {
   position: absolute;
@@ -2233,7 +2241,6 @@ p {
   width: 3px;
   background: var(--accent);
   transform: skewX(-12deg);
-  box-shadow: 0 0 24px var(--glow);
 }
 
 .demo-grid {
@@ -2243,31 +2250,37 @@ p {
   align-items: center;
 }
 .terminal {
+  position: relative;
   border-radius: var(--radius);
   border: 1px solid var(--line-2);
-  background: #08080a;
+  background: var(--bg);
   color: var(--text);
   overflow: hidden;
-  box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.8);
 }
+/* A status line, not a window: a square signal mark, the channel, and its state. */
 .terminal-bar {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   padding: 14px 18px;
   border-bottom: 1px solid var(--line);
-  background: #0e0e11;
+  background: var(--surface);
 }
-.terminal-bar i {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #2a2a30;
-}
-.terminal-bar span {
-  margin-left: 10px;
-  font-size: 12px;
+.terminal-bar > span,
+.terminal-title {
+  font: 500 11px/1.35 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--muted);
+}
+.terminal-bar .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 0;
+}
+.terminal-bar .terminal-state {
+  margin-left: auto;
+  color: var(--signal);
 }
 .terminal-body {
   padding: 22px;
@@ -2279,7 +2292,7 @@ p {
   padding: 0 16px;
   border-radius: var(--r-ctl);
   border: 1px solid var(--line-2);
-  background: #0e0e11;
+  background: var(--surface);
 }
 .terminal-input:focus-within {
   border-color: var(--silver);
@@ -2313,10 +2326,10 @@ p {
 }
 .terminal-out dd {
   margin: 4px 0 16px;
-  color: #d4d4d8;
+  color: var(--text);
 }
-.terminal-cipher {
-  color: #e8b15c !important;
+.terminal-out .terminal-cipher {
+  color: var(--signal);
 }
 .terminal-ok {
   margin: 0;
@@ -2332,29 +2345,6 @@ p {
   border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--muted);
-}
-
-.screens {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(16px, 3vw, 48px);
-  align-items: start;
-}
-.screen {
-  margin: 0;
-  text-align: center;
-}
-.screen img {
-  width: min(100%, 270px);
-  margin: 0 auto 24px;
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
-}
-.screen:nth-child(2) {
-  margin-top: -40px;
-}
-.screen figcaption p {
-  max-width: 30ch;
-  margin: 0 auto;
 }
 
 .ledger {
@@ -2431,28 +2421,26 @@ p {
   transform: rotate(40deg);
 }
 
+/* The words on the left, a code to scan on the right (hidden where there is nothing to scan
+   it with, further down). */
 .download-panel {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  text-align: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
   padding: clamp(56px, 8vw, 112px) clamp(24px, 4vw, 64px);
   border-radius: var(--radius);
-  background: #050506;
+  background: #070906;
   border: 1px solid var(--line-2);
-}
-.download-panel .label {
-  justify-content: center;
 }
 .download-panel h2 {
   font-size: clamp(42px, 5vw, 72px);
 }
 .download-panel .lead {
-  margin-inline: auto;
-  color: #c4c4cc;
-}
-.download-panel .btn-row {
-  justify-content: center;
+  color: rgba(238, 240, 233, 0.8);
 }
 .download-aura {
   position: absolute;
@@ -2474,14 +2462,14 @@ p {
   overflow: hidden;
   text-decoration: none;
   color: var(--text);
-  background: #050506;
+  background: #070906;
   clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
 }
 .next-helix {
   background: #050403 radial-gradient(80% 90% at 75% 50%, #1b1307, #050403 70%);
 }
 .next-messenger {
-  background: #050506 radial-gradient(80% 90% at 75% 50%, #15171b, #050506 70%);
+  background: #070906 radial-gradient(80% 90% at 75% 50%, #15171b, #070906 70%);
 }
 .next-world-bg {
   position: absolute;
@@ -2504,23 +2492,13 @@ p {
   text-transform: uppercase;
 }
 .next-helix .next-world-title {
-  background: var(--gold);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--gold);
 }
 .next-messenger .next-world-title {
-  background: var(--metal);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--metal);
 }
 .next-world-text {
-  color: #c4c4cc;
+  color: rgba(238, 240, 233, 0.8);
   font-size: 18px;
   max-width: 34rem;
 }
@@ -2533,8 +2511,8 @@ p {
   margin-top: 12px;
   border-radius: var(--r-ctl);
   font-weight: 600;
-  background: #f4f4f5;
-  color: #050506;
+  background: #eef0e9;
+  color: #0a0c09;
   transition: gap 0.5s var(--ease-out);
 }
 .next-helix .next-world-cta {
@@ -2582,17 +2560,11 @@ p {
   padding: 26px 28px 30px;
   border-radius: var(--radius);
   border: 1px solid color-mix(in srgb, var(--amber) 28%, var(--line));
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--amber) 7%, var(--surface)), var(--surface));
-  transition:
-    transform 0.6s var(--ease-out),
-    border-color 0.4s,
-    box-shadow 0.6s;
+  background: var(--surface);
+  transition: border-color 0.3s;
 }
 .block:hover {
-  transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--amber) 60%, transparent);
-  box-shadow: 0 30px 60px -30px rgba(224, 164, 74, 0.45);
 }
 /* Each block links to the next: the connector bridges the gap to its right. */
 .block::after {
@@ -2664,7 +2636,7 @@ p {
 .honesty-highlight {
   margin: 24px 0 0;
   font-family: var(--display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(21px, 1.9vw, 26px);
   letter-spacing: 0.005em;
   line-height: 1.35;
@@ -2687,9 +2659,7 @@ p {
   background: var(--surface);
   text-decoration: none;
   color: var(--text);
-  transition:
-    border-color 0.3s,
-    transform 0.5s var(--ease-out);
+  transition: border-color 0.3s;
 }
 .link-card > .icon:first-child {
   color: var(--accent-text);
@@ -2697,11 +2667,6 @@ p {
 }
 .link-card:hover {
   border-color: var(--accent);
-  transform: translateY(-3px);
-}
-.link-card-title {
-  font-weight: 600;
-  font-size: 17px;
 }
 .link-card .muted {
   font-size: 14.5px;
@@ -2743,12 +2708,9 @@ p {
   top: -12px;
   bottom: -12px;
   left: 50%;
-  width: 3px;
-  background: var(--text);
+  width: 2px;
+  background: var(--accent-text);
   transform: translateX(-50%) skewX(-9deg);
-  box-shadow:
-    -14px 0 40px color-mix(in srgb, var(--silver) 25%, transparent),
-    14px 0 40px color-mix(in srgb, var(--amber) 30%, transparent);
 }
 .versus-col h3 {
   font-family: var(--display);
@@ -2788,25 +2750,18 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
+/* A flat 2px band in the world's colour along the top: the developers' card in the page
+   accent, the validators' in Helix amber. */
 .contact-card {
   position: relative;
   padding: clamp(28px, 4vw, 44px);
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: linear-gradient(var(--accent), var(--accent)) top / 100% 2px no-repeat, var(--surface);
   overflow: hidden;
 }
-.contact-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 3px;
-  background: var(--metal);
-}
-.contact-validator::before {
-  background: var(--gold);
+.contact-validator {
+  background: linear-gradient(#e0a44a, #e0a44a) top / 100% 2px no-repeat, var(--surface);
 }
 .contact-icon {
   display: grid;
@@ -2981,7 +2936,6 @@ p {
 
 @media (max-width: 900px) {
   .section-head,
-  .about-grid,
   .craft-grid,
   .europe-grid,
   .live-grid,
@@ -3057,14 +3011,6 @@ p {
   .float-bubble {
     left: -30%;
   }
-  .screens {
-    grid-template-columns: minmax(0, 1fr);
-    max-width: 22rem;
-    margin: 0 auto;
-  }
-  .screen:nth-child(2) {
-    margin-top: 0;
-  }
   .stack-algos {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -3074,12 +3020,6 @@ p {
 }
 
 @media (max-width: 640px) {
-  .facts {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .fact {
-    padding: 22px;
-  }
   .stack-products {
     --skew: 0%;
     --split: 50%;
@@ -3175,41 +3115,6 @@ p {
   }
 }
 
-/* ---------- reduced motion ----------
-   Everything here is complete without motion: the canvases draw one still frame, the scroll-
-   linked text is fully lit, and nothing loops. */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-  .marquee-track {
-    animation: none;
-    width: auto;
-  }
-  .marquee-run {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 10px;
-  }
-  .marquee-run + .marquee-run {
-    display: none;
-  }
-  .gate-glow b::after {
-    display: none;
-  }
-}
-
 /* =====================================================================================
    v2 — live chain, tokenomics, message route, features, motion
    ===================================================================================== */
@@ -3248,15 +3153,12 @@ p {
   padding: 16px 16px 14px;
   border-radius: var(--r-ctl);
   border: 1px solid color-mix(in srgb, var(--amber) 26%, var(--line));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--amber) 9%, var(--surface)), var(--surface));
+  background: var(--surface);
   color: var(--text);
   text-decoration: none;
-  transition:
-    transform 0.4s var(--ease-out),
-    border-color 0.3s;
+  transition: border-color 0.3s;
 }
 .stream-link:hover {
-  transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--amber) 60%, transparent);
 }
 /* The top face of the block: a slanted lid, the explorer's cube in two dimensions. */
@@ -3266,7 +3168,7 @@ p {
   right: -1px;
   top: -22px;
   height: 22px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--amber) 22%, var(--surface-2)), color-mix(in srgb, var(--amber) 10%, var(--surface)));
+  background: color-mix(in srgb, var(--amber) 30%, var(--surface));
   clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
   border-radius: var(--r-ctl) var(--r-ctl) 0 0;
 }
@@ -3294,11 +3196,11 @@ p {
 }
 .stream-block.newest .stream-link {
   animation: block-in 0.9s var(--ease-out);
-  border-color: color-mix(in srgb, var(--amber) 70%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--amber) 30%, transparent), 0 18px 50px -18px rgba(224, 164, 74, 0.6);
+  border-color: var(--amber);
+  box-shadow: inset 0 3px 0 var(--amber);
 }
 .stream-block.newest .stream-top {
-  background: linear-gradient(180deg, #f6c56f, #c78a30);
+  background: var(--amber);
 }
 @keyframes block-in {
   from {
@@ -3379,13 +3281,11 @@ p {
   background: var(--surface);
 }
 .chart-title {
-  font-size: 15px;
-  font-weight: 600;
   margin: 0 0 16px;
 }
 .chart {
   margin: 0;
-  --series: #bd832b;
+  --series: var(--amber);
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) .chart {
@@ -3423,8 +3323,10 @@ p {
 }
 .chart-label,
 .chart-end {
-  font: 600 12px var(--font);
-  fill: var(--text);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--muted);
 }
 .chart-line {
   fill: none;
@@ -3467,6 +3369,7 @@ p {
   color: var(--muted);
 }
 .chart-tip strong {
+  font-family: var(--mono);
   font-size: 16px;
   color: var(--text);
 }
@@ -3617,6 +3520,13 @@ p {
 .code-block .terminal-bar {
   padding: 10px 14px;
 }
+.code-block .terminal-bar::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--signal);
+}
 .code-copy {
   margin-left: auto;
   min-height: 28px;
@@ -3625,7 +3535,9 @@ p {
   border: 1px solid var(--line-2);
   background: transparent;
   color: var(--text);
-  font: 500 12px var(--mono);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 .code-copy:hover {
@@ -3636,7 +3548,7 @@ p {
   padding: 16px;
   overflow-x: auto;
   font: 12.5px/1.65 var(--mono);
-  color: #e4e4e7;
+  color: var(--text);
 }
 /* A command wider than the card wraps under itself instead of hiding behind a scrollbar;
    copying still takes the lines as written. */
@@ -3649,7 +3561,7 @@ p {
   text-indent: -2ch;
 }
 .code-comment {
-  color: #8b8b94;
+  color: var(--faint);
 }
 .code-line {
   color: #f0c27a;
@@ -3703,9 +3615,9 @@ p {
   border-radius: var(--r-ctl);
   display: grid;
   place-items: center;
-  color: #050506;
-  background: #f4f4f5;
-  box-shadow: 0 0 0 6px color-mix(in srgb, #f4f4f5 18%, transparent), 0 0 30px rgba(220, 230, 245, 0.6);
+  color: #0a0c09;
+  background: #eef0e9;
+  box-shadow: 0 0 0 6px color-mix(in srgb, #eef0e9 18%, transparent);
   animation: packet 5.2s var(--ease) infinite;
 }
 @keyframes packet {
@@ -3798,9 +3710,6 @@ p {
   background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--text) 3%, transparent) 6px 7px), var(--surface);
   border: 1px dashed var(--line-2);
 }
-.journey-stop h3 {
-  font-size: 17px;
-}
 .journey-stop p.muted {
   max-width: 34ch;
   font-size: 15px;
@@ -3836,7 +3745,6 @@ p {
   color: var(--text);
 }
 .feature h3 {
-  font-size: 16.5px;
   margin-bottom: 6px;
 }
 .feature p {
@@ -3890,23 +3798,16 @@ p {
   top: -20vh;
   bottom: -20vh;
   left: 0;
-  width: 10px;
-  background: #fff;
+  width: 4px;
+  background: #d4b86a;
   transform: translateX(-12vw) skewX(-12deg);
-  box-shadow:
-    -40px 0 80px 20px rgba(210, 222, 240, 0.35),
-    40px 0 80px 20px rgba(224, 164, 74, 0.35);
   animation: wipe 0.7s cubic-bezier(0.5, 0.05, 0.25, 1) forwards;
 }
 .wipe-helix i {
-  box-shadow:
-    -40px 0 80px 20px rgba(224, 164, 74, 0.45),
-    40px 0 80px 20px rgba(224, 164, 74, 0.3);
+  background: #e0a44a;
 }
 .wipe-messenger i {
-  box-shadow:
-    -40px 0 80px 20px rgba(210, 222, 240, 0.45),
-    40px 0 80px 20px rgba(210, 222, 240, 0.3);
+  background: #d9ddd3;
 }
 @keyframes wipe {
   to {
@@ -3929,8 +3830,15 @@ p {
   opacity: 0.85;
   pointer-events: none;
 }
-:root[data-world="silvra"] .scroll-progress {
-  background: linear-gradient(90deg, var(--silver), var(--amber));
+/* On Silvra's own pages the line is sand, and the light theme's darker sand rather than its
+   navy accent: the progress of reading is not an action. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-world="silvra"] .scroll-progress {
+    background: #7a5c12;
+  }
+}
+:root[data-theme="light"][data-world="silvra"] .scroll-progress {
+  background: #7a5c12;
 }
 
 /* ---------- the gate's entrance ---------- */
@@ -3986,36 +3894,34 @@ p {
 
 /* ---------- scroll-driven depth, where the browser has it ---------- */
 
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    :root:not([data-motion="still"]) :is(.section-head h2,
-    .section > .container > h2,
-    .craft-body h2,
-    .europe-grid h2,
-    .live-grid h2,
-    .photo-split-grid h2,
-    .demo-grid h2) {
-      animation: headline-in linear both;
-      animation-timeline: view();
-      animation-range: entry 5% cover 28%;
-    }
-    :root:not([data-motion="still"]) .photo img {
-      animation: photo-drift linear both;
-      animation-timeline: view();
-      animation-range: cover;
-    }
+/* A heading finishes arriving as it fully enters the viewport, so one at rest anywhere on the
+   screen is whole and fully opaque. */
+@supports (animation-timeline: view()) {
+  :root[data-motion="moving"] :is(.section-head h2,
+  .section > .container > h2,
+  .craft-body h2,
+  .europe-grid h2,
+  .live-grid h2,
+  .photo-split-grid h2,
+  .demo-grid h2) {
+    animation: headline-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+  :root[data-motion="moving"] .photo img {
+    animation: photo-drift linear both;
+    animation-timeline: view();
+    animation-range: cover;
   }
 }
 @keyframes headline-in {
   from {
     opacity: 0;
     transform: translateY(38px);
-    clip-path: inset(0 0 100% 0);
   }
   to {
     opacity: 1;
     transform: none;
-    clip-path: inset(0 0 -20% 0);
   }
 }
 @keyframes photo-drift {
@@ -4083,15 +3989,6 @@ p {
     gap: 2px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .route-wipe {
-    display: none;
-  }
-  .journey-packet {
-    animation: none;
-    left: 50%;
-  }
-}
 
 /* Links that stand on their own line get a thumb-sized target, not just their text height. */
 .credits a {
@@ -4105,7 +4002,7 @@ p {
 }
 
 /* =====================================================================================
-   v3 — rhythm, light that follows the cursor, bento, tour, FAQ, navigation aids
+   v3 — rhythm, bento, tour, FAQ, navigation aids
    ===================================================================================== */
 
 /* ---------- reading ---------- */
@@ -4131,57 +4028,6 @@ dd {
 }
 .section.band + .section.band {
   border-top: 0;
-}
-
-/* ---------- the light under the cursor ---------- */
-
-.spot {
-  isolation: isolate;
-}
-.feature,
-.ledger-col,
-.not,
-.faq-item,
-.figure {
-  position: relative;
-}
-.spot::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  width: auto;
-  height: auto;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--text) 7%, transparent), transparent 55%);
-  opacity: 0;
-  transition: opacity 0.35s;
-}
-.spot:hover::before {
-  opacity: 1;
-}
-.tile-helix.spot::before,
-.block.spot::before,
-.path.spot::before,
-.stack-helix.spot::before {
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(224, 164, 74, 0.14), transparent 55%);
-}
-/* The contact cards' top rule moves from a pseudo-element into the background, freeing the
-   pseudo-element for the light. */
-.contact-card {
-  background: var(--metal) top / 100% 3px no-repeat, var(--surface);
-}
-.contact-validator {
-  background: var(--gold) top / 100% 3px no-repeat, var(--surface);
-}
-
-.magnetic {
-  transition:
-    transform 0.35s var(--ease-out),
-    box-shadow 0.4s,
-    background 0.3s;
-  will-change: transform;
 }
 
 /* ---------- back to top ---------- */
@@ -4294,12 +4140,10 @@ dd {
   .sticky-cta-note.live > span::before {
     content: "";
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     margin: 0 7px 1px 0;
-    border-radius: 50%;
     background: var(--ok);
-    box-shadow: 0 0 8px var(--ok);
   }
   body:has(.sticky-cta.shown) .to-top {
     bottom: 84px;
@@ -4415,15 +4259,20 @@ dd {
   border-radius: var(--r-ctl);
   border: 1px solid var(--line-2);
   transition:
-    transform 0.4s var(--ease-out),
     background 0.3s,
     color 0.3s;
 }
+/* The box stays square; only the plus inside it turns into a cross. */
+.faq-icon svg {
+  transition: transform 0.4s var(--ease-out);
+}
 .faq-item[open] .faq-icon {
-  transform: rotate(45deg);
   background: var(--accent);
   color: var(--accent-ink);
   border-color: transparent;
+}
+.faq-item[open] .faq-icon svg {
+  transform: rotate(45deg);
 }
 .faq-answer {
   padding: 0 22px 20px;
@@ -4465,28 +4314,21 @@ dd {
   color: var(--text);
   text-decoration: none;
   overflow: hidden;
-  transition:
-    border-color 0.3s,
-    transform 0.5s var(--ease-out);
+  transition: border-color 0.3s;
 }
 a.tile:hover {
-  border-color: var(--line-2);
-  transform: translateY(-3px);
+  border-color: var(--accent);
 }
+/* The two product tiles are dark in both themes, each in its own world's black, with the
+   gate's scan lines over it. */
 .tile-messenger {
   grid-column: span 7;
   grid-row: span 2;
-  background:
-    radial-gradient(70% 80% at 85% 100%, rgba(210, 222, 240, 0.16), transparent 70%),
-    linear-gradient(160deg, #18191d, #08090a);
-  background-color: #08090a;
+  background: #0e0f11 repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
 }
 .tile-helix {
   grid-column: span 5;
-  background:
-    radial-gradient(80% 90% at 100% 0%, rgba(224, 164, 74, 0.26), transparent 70%),
-    linear-gradient(200deg, #1f1607, #080603);
-  background-color: #080603;
+  background: #120d05 repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
 }
 .tile-open {
   grid-column: span 5;
@@ -4590,18 +4432,20 @@ a.tile:hover .tile-go {
 .tile-bubble-loop {
   align-self: flex-end;
   border-radius: 18px 18px 5px 18px;
-  background: #f4f4f5;
-  color: #050506;
+  background: #eef0e9;
+  color: #0a0c09;
   border: 0;
   box-shadow: none;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
+/* A light bubble: the light theme's signal and muted ink, which read on it. */
 .tile-bubble-loop .cipher-loop-lock {
-  color: #15803d;
+  color: #0a6e53;
 }
+.tile-bubble-loop[data-plain="false"] .cipher-loop-lock,
 .tile-bubble-loop[data-plain="false"] .cipher-loop-text {
-  color: #52525b;
+  color: #44525c;
 }
 .tile-big {
   margin: 4px 0 0;
@@ -4665,11 +4509,7 @@ a.tile:hover .tile-go {
   font-size: clamp(70px, 7.4vw, 108px);
   line-height: 0.9;
   letter-spacing: 0.005em;
-  background: var(--metal);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--text);
   font-weight: 600;
 }
 .tile-zero-list {
@@ -4740,8 +4580,7 @@ a.tile:hover .tile-go {
 }
 .tour-dots span {
   width: 8px;
-  height: 8px;
-  border-radius: 99px;
+  height: 4px;
   background: var(--line-2);
   transition:
     width 0.4s var(--ease-out),
@@ -4804,22 +4643,6 @@ a.tile:hover .tile-go {
 
 /* ---------- download with a code to scan ---------- */
 
-.download-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: center;
-  text-align: left;
-}
-.download-panel .label {
-  justify-content: flex-start;
-}
-.download-panel .lead {
-  margin-inline: 0;
-}
-.download-panel .btn-row {
-  justify-content: flex-start;
-}
 .download-note {
   margin: 18px 0 0;
   font: 500 12px/1.4 var(--mono);
@@ -4925,12 +4748,6 @@ a.tile:hover .tile-go {
     min-height: 260px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .magnetic {
-    transform: none !important;
-  }
-}
-
 /* The messenger tile shows the product: the app's welcome screen rising from the tile's
    lower edge, with a conversation in front of it. */
 .tile-phone {
@@ -5001,7 +4818,6 @@ a.tile-messenger:hover .tile-phone {
 }
 .inventory-bar .seg {
   min-width: 6px;
-  border-radius: 3px;
   background: var(--st);
 }
 .inventory-legend {
@@ -5045,10 +4861,6 @@ a.tile-messenger:hover .tile-phone {
 .inventory-group th {
   padding: 12px 24px;
   text-align: left;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--text);
   background: color-mix(in srgb, var(--text) 3.5%, transparent);
   border-top: 1px solid var(--line);
 }
@@ -5166,9 +4978,10 @@ a.tile-messenger:hover .tile-phone {
 }
 
 /* ---------- motion switch (WCAG 2.2.2) ----------
-   "Bewegung anhalten" in the header puts data-motion="still" on <html>; so does the OS setting
-   when no choice has been made (index.html). The rules mirror the reduced-motion queries above,
-   so the switch and the OS setting look the same. */
+   data-motion on <html> is the one source of truth: index.html sets it before first paint from
+   the page's own switch ("Bewegung anhalten") or, when no choice has been made, the OS setting.
+   Everything still is complete: the canvases draw one frame, the scroll-linked text is fully
+   lit, nothing loops and nothing waits on a delay. */
 
 :root[data-motion="still"] {
   scroll-behavior: auto;
@@ -5178,7 +4991,9 @@ a.tile-messenger:hover .tile-phone {
 :root[data-motion="still"] *::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
   transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
 }
 :root[data-motion="still"] .reveal {
   opacity: 1;
@@ -5196,7 +5011,7 @@ a.tile-messenger:hover .tile-phone {
 :root[data-motion="still"] .marquee-run + .marquee-run {
   display: none;
 }
-:root[data-motion="still"] .gate-glow b::after,
+:root[data-motion="still"] .gate-pulse,
 :root[data-motion="still"] .route-wipe {
   display: none;
 }
@@ -5204,8 +5019,35 @@ a.tile-messenger:hover .tile-phone {
   animation: none;
   left: 50%;
 }
-:root[data-motion="still"] .magnetic {
-  transform: none !important;
+/* Without a script nothing sets data-motion, so the OS setting is followed directly. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion]) {
+    scroll-behavior: auto;
+  }
+  :root:not([data-motion]) *,
+  :root:not([data-motion]) *::before,
+  :root:not([data-motion]) *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+  :root:not([data-motion]) .marquee-track {
+    animation: none;
+    width: auto;
+  }
+  :root:not([data-motion]) .marquee-run {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 10px;
+  }
+  :root:not([data-motion]) .marquee-run + .marquee-run {
+    display: none;
+  }
+  :root:not([data-motion]) .gate-pulse {
+    display: none;
+  }
 }
 
 .motion-toggle[aria-pressed="true"] {
@@ -5331,7 +5173,8 @@ a.tile-messenger:hover .tile-phone {
   pointer-events: none;
   transition: opacity 0.4s;
 }
-.gate-scan {
+.gate-scan,
+.hud-scan {
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
@@ -5601,12 +5444,6 @@ a.tile-messenger:hover .tile-phone {
   opacity: 0.4;
   mix-blend-mode: luminosity;
 }
-.hud-scan,
-.gate-scan {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
-}
 /* Page openings end in a diagonal 5vw higher on the right; the lower right mark follows it. */
 .hud-frame .hud-corner.bl {
   bottom: 18px;
@@ -5621,17 +5458,31 @@ a.tile-messenger:hover .tile-phone {
 }
 
 /* ---------- corner marks on the panels that report state ----------
-   The live chain panel, the cryptography inventory and the download panel carry the same four
-   corner marks as the page openings: the site's way of saying "this is a reading". */
+   The live chain panel, the cryptography inventory, the download panel, the terminals, the
+   hybrid diagram, the contact cards, the legal panels, the photo beside the craft list and the
+   Helix readout carry the same four corner marks as the page openings: the site's way of saying
+   "this is a reading". */
 
 .testnet,
 .inventory,
-.download-panel {
+.download-panel,
+.terminal,
+.hybrid,
+.contact-card,
+.legal,
+.craft-media,
+.helix-readout {
   position: relative;
 }
 .testnet::after,
 .inventory::after,
-.download-panel::after {
+.download-panel::after,
+.terminal::after,
+.hybrid::after,
+.contact-card::after,
+.legal::after,
+.craft-media::after,
+.helix-readout::after {
   --hc: color-mix(in srgb, var(--accent) 75%, transparent);
   content: "";
   position: absolute;
@@ -5648,4 +5499,8 @@ a.tile-messenger:hover .tile-phone {
     linear-gradient(var(--hc), var(--hc)) right bottom / 16px 2px,
     linear-gradient(var(--hc), var(--hc)) right bottom / 2px 16px;
   background-repeat: no-repeat;
+}
+/* The photo has no border to sit on and clips what overhangs it, so its marks sit inside. */
+.craft-media::after {
+  inset: 0;
 }

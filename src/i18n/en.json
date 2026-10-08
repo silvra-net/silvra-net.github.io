@@ -675,6 +675,9 @@
       "keyLabel": "Key · AES-256",
       "nonceLabel": "Nonce",
       "ctLabel": "Ciphertext",
+      "channel": "Channel",
+      "stateReady": "Ready",
+      "stateVerified": "Verified",
       "verified": "Decryption verified — output matches input",
       "caption": "A demo using AES-GCM in your browser. Silvra Messenger itself uses MLS with X-Wing (X25519 + ML-KEM-768).",
       "waiting": "Type something — it is encrypted instantly."

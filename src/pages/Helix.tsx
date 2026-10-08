@@ -91,7 +91,7 @@ export default function Helix() {
             </h1>
             <p className="lead">{t("helix.subtitle")}</p>
             <div className="btn-row">
-              <a className="btn primary magnetic" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
+              <a className="btn primary" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                 <Icon name="arrowDown" size={16} />
                 {walletLabel}
               </a>
@@ -204,7 +204,7 @@ export default function Helix() {
           </div>
           <ol className="chain">
             {features.map((f, i) => (
-              <Reveal as="li" key={f.title} delay={(i % 4) * 80} className="block spot">
+              <Reveal as="li" key={f.title} delay={(i % 4) * 80} className="block">
                 <div className="block-head mono" aria-hidden="true">
                   <span>#{String(i + 1).padStart(6, "0")}</span>
                   <span>0x{fakeHash(f.title)}</span>
@@ -264,7 +264,7 @@ export default function Helix() {
             <p className="lead">{t("helix.start.lead")}</p>
           </div>
           <div className="paths">
-            <Reveal className="path spot">
+            <Reveal className="path">
               <span className="path-num mono">A</span>
               <h3>{t("helix.start.wallet.title")}</h3>
               <p className="muted">{t("helix.start.wallet.body")}</p>
@@ -276,13 +276,13 @@ export default function Helix() {
                   </li>
                 ))}
               </ul>
-              <a className="btn primary magnetic" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
+              <a className="btn primary" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                 <Icon name="arrowDown" size={16} />
                 {walletLabel}
               </a>
               {os === "mobile" && <p className="path-note">{t("helix.download.mobileNote")}</p>}
             </Reveal>
-            <Reveal className="path spot" delay={90}>
+            <Reveal className="path" delay={90}>
               <span className="path-num mono">B</span>
               <h3>{t("helix.start.cli.title")}</h3>
               <p className="muted">{t("helix.start.cli.body")}</p>
@@ -292,7 +292,7 @@ export default function Helix() {
                 <Icon name="arrowUpRight" size={16} />
               </a>
             </Reveal>
-            <Reveal className="path spot" delay={180}>
+            <Reveal className="path" delay={180}>
               <span className="path-num mono">C</span>
               <h3>{t("helix.start.validate.title")}</h3>
               <p className="muted">{t("helix.start.validate.body")}</p>
@@ -365,25 +365,25 @@ export default function Helix() {
             <p className="lead">{t("helix.cta.body")}</p>
           </div>
           <div className="link-grid">
-            <a className="link-card spot" href={HELIX_REPO} rel="noreferrer noopener" target="_blank">
+            <a className="link-card" href={HELIX_REPO} rel="noreferrer noopener" target="_blank">
               <Icon name="code" size={22} />
               <span className="link-card-title">silvra-net/helix</span>
               <span className="muted">{t("helix.cta.githubBody")}</span>
               <Icon name="arrowUpRight" size={18} className="link-card-go" />
             </a>
-            <a className="link-card spot" href={EXPLORER}>
+            <a className="link-card" href={EXPLORER}>
               <Icon name="cube" size={22} />
               <span className="link-card-title">Helix {t("nav.explorer")}</span>
               <span className="muted">{t("helix.cta.explorerBody")}</span>
               <Icon name="arrowUpRight" size={18} className="link-card-go" />
             </a>
-            <a className="link-card spot" href={`https://${NODE_HOST}`} rel="noreferrer noopener" target="_blank">
+            <a className="link-card" href={`https://${NODE_HOST}`} rel="noreferrer noopener" target="_blank">
               <Icon name="server" size={22} />
               <span className="link-card-title">{NODE_HOST}</span>
               <span className="muted">{t("helix.cta.nodeBody")}</span>
               <Icon name="arrowUpRight" size={18} className="link-card-go" />
             </a>
-            <a className="link-card spot" href={DISCORD} rel="noreferrer noopener" target="_blank">
+            <a className="link-card" href={DISCORD} rel="noreferrer noopener" target="_blank">
               <Icon name="people" size={22} />
               <span className="link-card-title">Discord</span>
               <span className="muted">{t("helix.cta.discordBody")}</span>

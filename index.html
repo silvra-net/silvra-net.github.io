@@ -11,6 +11,9 @@
     />
     <title>Silvra — Digitale Infrastruktur aus Europa</title>
     <script>
+      // Marks the page as scripted before first paint. Reveals and dimmed words are hidden only
+      // under this class, so a visitor without JavaScript reads every word at once.
+      document.documentElement.classList.add("js");
       // Applied before first paint so the page never flashes the wrong theme. Mirrors
       // src/theme.ts — an explicit choice wins over the OS preference in both directions.
       try {
@@ -20,14 +23,27 @@
         /* private mode: fall through to the OS preference */
       }
       // The same for motion (src/lib/motion.ts): the page's own switch, or else the OS setting.
+      // data-motion is what the stylesheet follows, so it is set even when storage is blocked.
+      var m = null;
       try {
-        var m = localStorage.getItem("silvra-motion");
-        var still = m ? m === "still" : window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        document.documentElement.setAttribute("data-motion", still ? "still" : "moving");
+        m = localStorage.getItem("silvra-motion");
       } catch (e) {
-        /* private mode: CSS still follows the OS setting through its media queries */
+        /* private mode: no stored choice, so the OS setting decides */
       }
+      var still = m ? m === "still" : window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.documentElement.setAttribute("data-motion", still ? "still" : "moving");
     </script>
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .scroll-words span {
+          opacity: 1 !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

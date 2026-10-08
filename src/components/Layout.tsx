@@ -5,7 +5,6 @@ import type { Lang } from "../i18n";
 import { getTheme, resolvedTheme, setTheme } from "../theme";
 import Icon from "./Icon";
 import BackToTop from "./BackToTop";
-import { useCursorEffects } from "../lib/cursor";
 import { setMotionStill, useReducedMotion } from "../lib/motion";
 import { DISCORD, EXPLORER, GITHUB } from "../lib/links";
 import icon from "../assets/silvra-icon.png";
@@ -123,7 +122,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   const toggle = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const progress = useRef<HTMLDivElement>(null);
-  useCursorEffects();
 
   // A menu left open across a navigation covers the page it just moved to.
   useEffect(() => setOpen(false), [pathname]);

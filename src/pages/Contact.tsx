@@ -40,7 +40,7 @@ export default function Contact() {
           </div>
           <div className="contact-grid">
             {list<Card>("contact.cards").map((c, i) => (
-              <Reveal key={c.title} delay={i * 90} as="article" className={`contact-card contact-${i === 0 ? "dev" : "validator"} spot`}>
+              <Reveal key={c.title} delay={i * 90} as="article" className={`contact-card contact-${i === 0 ? "dev" : "validator"}`}>
                 <span className="contact-icon">
                   <Icon name={c.icon} size={24} />
                 </span>

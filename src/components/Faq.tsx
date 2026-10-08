@@ -14,7 +14,7 @@ export default function Faq({ items }: { items: QA[] }) {
   return (
     <div className="faq">
       {items.map((it) => (
-        <details key={it.q} className="faq-item spot">
+        <details key={it.q} className="faq-item">
           <summary>
             <span>{it.q}</span>
             <span className="faq-icon" aria-hidden="true">

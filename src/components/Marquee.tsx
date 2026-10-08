@@ -5,10 +5,10 @@
  * what makes the loop seamless without measuring anything. The duplicate is hidden from
  * assistive technology so the phrases are announced once, as a list, not twice.
  */
-export default function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolean }) {
+export default function Marquee({ items }: { items: string[] }) {
   if (items.length === 0) return null;
   return (
-    <div className={reverse ? "marquee reverse" : "marquee"}>
+    <div className="marquee">
       <ul className="sr-only">
         {items.map((i) => (
           <li key={i}>{i}</li>

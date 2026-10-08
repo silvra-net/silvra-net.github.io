@@ -35,3 +35,6 @@ const app = (
 
 if (prerendered) ReactDOM.hydrateRoot(root, app);
 else ReactDOM.createRoot(root).render(app);
+// The bundle is running: from here the reveals are driven by their own observers, so the
+// stylesheet's timed fallback (for a bundle that never arrives) stands down.
+document.documentElement.classList.add("app");
