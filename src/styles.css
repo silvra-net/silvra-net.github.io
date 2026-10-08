@@ -1810,6 +1810,22 @@ p {
   font-size: 18px;
   font-weight: 500;
 }
+/* Without the large height (the Helix page shows it in its opening and the stream), the six
+   readings form one row on a wide screen, two rows of three on a narrower one. */
+.testnet-head + .testnet-stats {
+  margin-top: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+@media (max-width: 1100px) {
+  .testnet-head + .testnet-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .testnet-head + .testnet-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .testnet-link {
   display: inline-flex;
   align-items: center;
@@ -1876,22 +1892,6 @@ p {
     radial-gradient(70% 55% at 30% 20%, rgba(255, 255, 255, 0.1), transparent 65%),
     radial-gradient(60% 50% at 80% 90%, rgba(224, 164, 74, 0.12), transparent 70%),
     linear-gradient(160deg, #17181c, #060607);
-}
-.photo-frame {
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius);
-  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-}
-.photo-frame.amber .photo-fallback {
-  background:
-    radial-gradient(70% 55% at 70% 25%, rgba(224, 164, 74, 0.3), transparent 65%),
-    linear-gradient(160deg, #20160a, #060403);
-}
-.photo-split-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(40px, 7vw, 112px);
-  align-items: center;
 }
 
 /* ---------- page openings ---------- */
@@ -1993,6 +1993,36 @@ p {
 }
 .p-hero-helix .p-hero-aura {
   background: radial-gradient(35% 60% at 74% 50%, rgba(224, 164, 74, 0.24), transparent 70%);
+}
+/* The strand fades out under the header, as on the home page's gate, so the navigation never
+   sits on a bright node, and it stays right of the text column (42rem from the content edge; the
+   lead ends near 40rem), so it never runs under the words between 900 and 1180px. */
+.p-hero-helix .fx-canvas {
+  --text-end: calc(max(var(--gutter), (100% - var(--measure)) / 2) + 40rem);
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    linear-gradient(90deg, transparent var(--text-end), #000 calc(var(--text-end) + 160px));
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    linear-gradient(90deg, transparent var(--text-end), #000 calc(var(--text-end) + 160px));
+  mask-composite: intersect;
+}
+/* Once the text spans the width (up to 900px) the strand would run under the lead and the
+   readings. There it shows only in the last third, towards the right edge, and dimmed, so that
+   even its brightest node keeps the words at 4.5:1. */
+@media (max-width: 900px) {
+  .p-hero-helix .fx-canvas {
+    opacity: 0.45;
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+      linear-gradient(90deg, transparent 0 70%, #000 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+      linear-gradient(90deg, transparent 0 70%, #000 100%);
+    mask-composite: intersect;
+  }
 }
 .p-hero-grid {
   display: grid;
@@ -2126,6 +2156,14 @@ p {
   font-size: 20px;
   color: var(--amber-text);
   font-variant-numeric: tabular-nums;
+}
+/* Four readings in two even rows on a phone, instead of three and a straggler. */
+@media (max-width: 640px) {
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
+  }
 }
 
 /* ---------- messenger ---------- */
@@ -2593,20 +2631,59 @@ p {
 
 /* ---------- helix ---------- */
 
-.helix-mark-wrap {
-  position: relative;
+.split-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(40px, 7vw, 112px);
+  align-items: center;
 }
-.helix-mark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 120px;
-  height: 120px;
-  transform: translate(-50%, -50%);
-  border-radius: 28px;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.2),
-    0 30px 80px rgba(224, 164, 74, 0.45);
+/* The foundation as a reading: the primitives the chain is built on, on a situation display
+   that stays dark in both themes like the terminals, so the readout keeps its instrument colours. */
+.helix-readout {
+  isolation: isolate;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.helix-readout .hud-camo {
+  opacity: 0.35;
+}
+.helix-readout .gate-readout {
+  position: static;
+  display: grid;
+  gap: 0;
+  font-size: 12px;
+}
+.helix-readout .gate-readout div {
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px dashed var(--line-2);
+}
+.helix-readout .gate-readout div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.helix-readout .gate-readout div:last-child {
+  padding-bottom: 0;
+}
+.helix-readout .gate-readout dt {
+  flex: none;
+  min-width: 8.5em;
+}
+/* Values as the standards write them: "192s" is the small variant, not "192S". */
+.helix-readout .gate-readout dd {
+  min-width: 0;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--amber-text);
+}
+@media (max-width: 480px) {
+  .helix-readout .gate-readout div {
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 
 .chain {
@@ -3023,7 +3100,7 @@ p {
   .craft-grid,
   .europe-grid,
   .live-grid,
-  .photo-split-grid,
+  .split-grid,
   .adversary-grid,
   .demo-grid,
   .p-hero-grid,
@@ -3070,8 +3147,7 @@ p {
     margin-left: -40px;
     padding-left: 40px;
   }
-  .craft-media,
-  .photo-frame {
+  .craft-media {
     aspect-ratio: 16 / 11;
   }
   .europe-photo {
@@ -3345,8 +3421,9 @@ p {
   vertical-align: -3px;
   margin-right: 10px;
 }
+/* A plain dash, not a red alarm: the left column states a common trade-off, not an attack. */
 .compare td:first-child .icon {
-  color: var(--bad);
+  color: var(--muted);
 }
 .compare td:last-child .icon {
   color: var(--ok);
@@ -3364,7 +3441,7 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 .supply-chart {
   padding: clamp(20px, 3vw, 32px);
@@ -3512,6 +3589,7 @@ p {
 .figures {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: stretch;
   gap: 1px;
   margin: 0;
   border-radius: var(--radius);
@@ -4012,7 +4090,7 @@ p {
   .craft-body h2,
   .europe-grid h2,
   .live-grid h2,
-  .photo-split-grid h2,
+  .split-grid h2,
   .demo-grid h2) {
     animation: headline-in linear both;
     animation-timeline: view();
@@ -4075,12 +4153,18 @@ p {
   .features {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Stacked into problem/answer pairs: the column headers stay for screen readers, and each
+     cell carries its column's name on screen. */
   .compare thead {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
   }
   .compare tr {
     display: block;
-    border-top: 1px solid var(--line);
+    border-top: 10px solid var(--bg-2);
   }
   .compare tr:first-child {
     border-top: 0;
@@ -4089,6 +4173,18 @@ p {
     display: block;
     width: auto;
     border-top: 0;
+  }
+  .compare td:last-child {
+    border-top: 1px dashed var(--line);
+  }
+  .compare td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    font: 500 10.5px/1.4 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
   }
   .spec > div {
     grid-template-columns: minmax(0, 1fr);

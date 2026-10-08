@@ -7,8 +7,11 @@ import { EXPLORER } from "../lib/links";
 /**
  * The live state of the network, as a panel. Every number is fetched from node.silvra.net;
  * nothing here is cached or invented on our side, and an unreachable node says so.
+ *
+ * `height={false}` leaves out the large block height, for a page whose opening and block stream
+ * already show it; the panel then leads with the validators.
  */
-export default function Testnet({ explorer = true }: { explorer?: boolean }) {
+export default function Testnet({ explorer = true, height = true }: { explorer?: boolean; height?: boolean }) {
   const { t, lang } = useI18n();
   const { status, failed, validators } = useNodeStatus();
   const locale = lang === "de" ? "de-DE" : "en-GB";
@@ -35,12 +38,14 @@ export default function Testnet({ explorer = true }: { explorer?: boolean }) {
           {status ? t("home.testnet.live") : failed ? t("home.testnet.offline") : t("home.testnet.connecting")}
         </span>
       </div>
-      <div className="testnet-height">
-        <span className="testnet-label">{t("home.testnet.stats.height")}</span>
-        <span className="testnet-big mono">
-          {status ? <CountUp value={status.height} locale={locale} /> : failed ? "—" : "…"}
-        </span>
-      </div>
+      {height && (
+        <div className="testnet-height">
+          <span className="testnet-label">{t("home.testnet.stats.height")}</span>
+          <span className="testnet-big mono">
+            {status ? <CountUp value={status.height} locale={locale} /> : failed ? "—" : "…"}
+          </span>
+        </div>
+      )}
       <dl className="testnet-stats">
         {stats.map((s) => (
           <div key={s.label}>

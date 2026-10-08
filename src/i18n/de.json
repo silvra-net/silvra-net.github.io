@@ -838,7 +838,29 @@
     "intro": {
       "eyebrow": "Post-Quanten von Grund auf",
       "title": "Nicht nachgerüstet. Von Grund auf gebaut.",
-      "body": "Statt eine bestehende Kette später auf Post-Quanten umzustellen, ist Helix von der ersten Zeile an darauf ausgelegt: ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme — kein Übergang, keine klassischen Kurven, die später ausgetauscht werden müssten."
+      "body": "Statt eine bestehende Kette später auf Post-Quanten umzustellen, ist Helix von der ersten Zeile an darauf ausgelegt: ML-DSA-65 auf jeder Transaktion, jedem Block und jeder Validator-Stimme — kein Übergang, keine klassischen Kurven, die später ausgetauscht werden müssten.",
+      "readout": [
+        [
+          "Signatur",
+          "ML-DSA-65 · FIPS 204"
+        ],
+        [
+          "Reserve",
+          "SLH-DSA-SHA2-192s · FIPS 205"
+        ],
+        [
+          "Hash",
+          "BLAKE3"
+        ],
+        [
+          "Beweise",
+          "ZK-STARK"
+        ],
+        [
+          "Transport",
+          "Noise · X25519 · klassisch"
+        ]
+      ]
     },
     "why": {
       "eyebrow": "Warum Helix",
@@ -880,41 +902,49 @@
     "features": [
       {
         "icon": "shield",
+        "tag": "FIPS 204",
         "title": "ML-DSA-65 überall",
         "body": "Jede Transaktion, jeder Block, jede Validator-Stimme. Kein klassisches Verfahren mit späterem Umstiegsplan."
       },
       {
         "icon": "layers",
+        "tag": "FIPS 205",
         "title": "Krypto-Agilität eingebaut",
         "body": "Das Signaturverfahren ist in jeder Transaktion versioniert; SLH-DSA (FIPS 205) steht als hashbasierte Reserve bereit."
       },
       {
         "icon": "scale",
+        "tag": "BFT · ≈ 2 S",
         "title": "Final in rund zwei Sekunden",
         "body": "Tendermint-artiger BFT-Konsens: Ein Block gilt, sobald zwei Drittel der Stimmen dahinterstehen — und wird nie zurückgenommen."
       },
       {
         "icon": "people",
+        "tag": "1 % DES STAKES",
         "title": "1 % Stimmrechts-Obergrenze",
         "body": "Kein Validator hält mehr als ein Prozent der Stimmen. Kapital bedeutet nicht automatisch Kontrolle."
       },
       {
         "icon": "at",
+        "tag": ".HLX",
         "title": "Namen und Wiederherstellung",
         "body": "alice.hlx statt Hex-Adresse — und soziale Wiederherstellung über Guardians, wenn ein Schlüssel verloren geht."
       },
       {
         "icon": "code",
+        "tag": "WASM · FUEL",
         "title": "WASM-Verträge ohne Reentrancy",
         "body": "Fuel-gemessen, ohne Gleitkomma, ohne Aufrufe zwischen Verträgen: Die bekannteste Angriffsfläche existiert schlicht nicht."
       },
       {
         "icon": "spark",
+        "tag": "STARK",
         "title": "ZK-STARKs",
         "body": "Zero-Knowledge-Beweise nur auf Hash-Basis — keine elliptischen Kurven, die ein Quantenrechner brechen könnte."
       },
       {
         "icon": "landmark",
+        "tag": "ON-CHAIN",
         "title": "Upgrades per Governance",
         "body": "Protokolländerungen werden on-chain beschlossen und greifen ab einer angekündigten Höhe. Keine Resets mehr seit 1.0.0."
       }
@@ -967,8 +997,8 @@
           "label": "Unbonding-Frist"
         },
         {
-          "value": "1 %",
-          "label": "Stimmrechts-Obergrenze"
+          "value": "10 %",
+          "label": "Provision standardmäßig, höchstens 50 %"
         }
       ],
       "note": "HLX ist keine Geldanlage, und nichts hier verspricht einen Wert. Alle Parameter — und die offene Frage, was die Sicherheit nach dem Ende der Ausgabe bezahlt — stehen in"
@@ -1057,10 +1087,12 @@
     },
     "nav": {
       "live": "Live",
+      "base": "Fundament",
       "why": "Warum",
       "chain": "Architektur",
       "supply": "Tokenomics",
       "start": "Loslegen",
+      "limits": "Grenzen",
       "faq": "Fragen",
       "open": "Offen"
     },

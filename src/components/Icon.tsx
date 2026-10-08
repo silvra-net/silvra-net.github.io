@@ -10,6 +10,7 @@ const PATHS: Record<string, string> = {
   arrowDown: "M12 5v14M6 13l6 6 6-6",
   arrowUp: "M12 19V5M6 11l6-6 6 6",
   plus: "M12 5v14M5 12h14",
+  minus: "M5 12h14",
   qr: "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM16 16h2v2h-2z",
   chat: "M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5Z",
   feed: "M5 4.5a14.5 14.5 0 0 1 14.5 14.5M5 10.5a8.5 8.5 0 0 1 8.5 8.5M6 18.5h.01",

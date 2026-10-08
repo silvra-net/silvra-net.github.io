@@ -7,7 +7,6 @@ Each file here fills one slot on the site, by name. `work.webp` fills the slot `
 | ----------- | ----------------------------------------- | ------------------------------------------------------------- |
 | `work`      | Home, "Principles" (portrait, 4:5)        | Dark server racks or hardware; no logos, crests or legible text |
 | `europe`    | Home, "Europe" (circle)                   | Europe at night seen from space — the continent's lights      |
-| `helix`     | Helix page, intro (4:5, icon on top)      | Abstract light structure or fibre optics in amber/gold        |
 | `mission`   | Mission page opening (full width, dimmed) | Light trails or fibre optics in the dark                      |
 | `contact`   | Contact page opening (full width, dimmed) | Dark architecture with a single line of light                 |
 

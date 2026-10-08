@@ -145,229 +145,231 @@ export default function Messenger() {
       </section>
 
       <Marquee items={list<string>("messenger.marquee")} />
-      <SectionNav items={nav} label={t("nav.sections")} />
+      <div className="section-span">
+        <SectionNav items={nav} label={t("nav.sections")} />
 
-      {/* ---- 01 · The route of a message ---- */}
-      <section className="section" id="weg">
-        <div className="container">
-          <Label index="01" text={t("messenger.journey.eyebrow")} />
-          <div className="section-head">
-            <h2>{t("messenger.journey.title")}</h2>
-            <p className="lead">{t("messenger.journey.lead")}</p>
-          </div>
-          <Reveal>
-            <MessageJourney />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---- 02 · Three pillars ---- */}
-      <section className="section" id="funktionen">
-        <div className="container">
-          <Label index="02" text={t("messenger.pillars.eyebrow")} />
-          <div className="section-head">
-            <h2>{t("messenger.pillars.title")}</h2>
-          </div>
-          <div className="pillars">
-            {list<Item>("messenger.pillars.items").map((p, i) => (
-              <Reveal key={p.title} delay={i * 90} className="pillar">
-                <span className="pillar-num mono">0{i + 1}</span>
-                <span className="pillar-icon">
-                  <Icon name={p.icon ?? "chat"} size={26} />
-                </span>
-                <h3>{p.title}</h3>
-                <p className="muted">{p.body}</p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---- 03 · Everything else ---- */}
-      <section className="section band">
-        <div className="container">
-          <Label index="03" text={t("messenger.features.eyebrow")} />
-          <div className="section-head">
-            <h2>{t("messenger.features.title")}</h2>
-            <p className="lead">{t("messenger.features.lead")}</p>
-          </div>
-          <ul className="features">
-            {list<Item>("messenger.features.items").map((f, i) => (
-              <Reveal as="li" key={f.title} delay={(i % 4) * 60} className="feature">
-                <Icon name={f.icon ?? "check"} size={20} />
-                <div>
-                  <h3>{f.title}</h3>
-                  <p className="muted">{f.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ---- 04 · Against what ---- */}
-      <section className="section" id="schutz">
-        <div className="container">
-          <Label index="04" text={t("messenger.intro.eyebrow")} />
-          <div className="section-head wide">
-            <h2>{t("messenger.intro.title")}</h2>
-            <p className="lead">{t("messenger.adversary.title")}</p>
-          </div>
-          <div className="adversary-grid">
-            <div>
-              {list<string>("messenger.adversary.paragraphs").map((p) => (
-                <p className="muted" key={p.slice(0, 40)}>
-                  {p}
-                </p>
-              ))}
-              <dl className="spec">
-                {list<Spec>("messenger.adversary.spec").map((s) => (
-                  <div key={s.label}>
-                    <dt>{s.label}</dt>
-                    <dd className="mono">{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
+        {/* ---- 01 · The route of a message ---- */}
+        <section className="section" id="weg">
+          <div className="container">
+            <Label index="01" text={t("messenger.journey.eyebrow")} />
+            <div className="section-head">
+              <h2>{t("messenger.journey.title")}</h2>
+              <p className="lead">{t("messenger.journey.lead")}</p>
             </div>
             <Reveal>
-              <div className="hybrid" role="img" aria-label={t("messenger.adversary.diagramAlt")}>
-                <div className="hybrid-in">
-                  <span className="hybrid-box">
-                    <span className="mono">X25519</span>
-                    <small>{t("messenger.adversary.classicNote")}</small>
-                  </span>
-                  <span className="hybrid-plus" aria-hidden="true">
-                    +
-                  </span>
-                  <span className="hybrid-box pq">
-                    <span className="mono">ML-KEM-768</span>
-                    <small>{t("messenger.adversary.pqNote")}</small>
-                  </span>
-                </div>
-                <span className="hybrid-line" aria-hidden="true" />
-                <span className="hybrid-out">
-                  <Icon name="key" size={18} />
-                  {t("messenger.adversary.result")}
-                </span>
-                <span className="hybrid-line short" aria-hidden="true" />
-                <span className="hybrid-mls mono">MLS · RFC 9420</span>
-                <p className="hybrid-note mono">{t("messenger.adversary.resultNote")}</p>
-              </div>
+              <MessageJourney />
             </Reveal>
           </div>
-          <Reveal>
-            <blockquote className="quote">{t("messenger.adversary.highlight")}</blockquote>
-          </Reveal>
-        </div>
-      </section>
+        </section>
 
-      <section className="section demo">
-        <div className="container demo-grid">
-          <div>
-            <Label index="05" text={t("messenger.crypto.eyebrow")} />
-            <h2>{t("messenger.crypto.title")}</h2>
-            <p className="lead">{t("messenger.crypto.body")}</p>
-          </div>
-          <CryptoDemo />
-        </div>
-      </section>
-
-      <section className="section band" id="app">
-        <div className="container">
-          <Label index="06" text={t("messenger.tour.eyebrow")} />
-          <div className="section-head">
-            <h2>{t("messenger.tour.title")}</h2>
-            <p className="lead">{t("messenger.tour.lead")}</p>
-          </div>
-          <AppTour steps={list<TourStep>("messenger.tour.steps")} shots={shots} alts={screens.map((sc) => sc.title)} />
-        </div>
-      </section>
-
-      {/* Ledger and boundaries are one subject, what is protected and what is not, so the section
-          nav keeps "Transparenz" lit across both. */}
-      <div className="section-group" id="transparenz">
-        <section className="section">
+        {/* ---- 02 · Three pillars ---- */}
+        <section className="section" id="funktionen">
           <div className="container">
-            <Label index="07" text={t("messenger.transparency.eyebrow")} />
+            <Label index="02" text={t("messenger.pillars.eyebrow")} />
             <div className="section-head">
-              <h2>{t("messenger.transparency.title")}</h2>
-              <p className="lead">{t("messenger.transparency.subtitle")}</p>
+              <h2>{t("messenger.pillars.title")}</h2>
             </div>
-            <div className="ledger">
-              {[
-                { g: encrypted, kind: "yes", icon: "lock" },
-                { g: notEncrypted, kind: "no", icon: "alert" },
-              ].map(({ g, kind, icon }) => (
-                <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
-                  <h3>
-                    <Icon name={icon} size={18} />
-                    {g.heading}
-                  </h3>
-                  <ul>
-                    {g.items.map((it) => (
-                      <li key={it.title}>
-                        <strong>{it.title}</strong>
-                        <span className="muted">{it.body}</span>
-                      </li>
-                    ))}
-                  </ul>
+            <div className="pillars">
+              {list<Item>("messenger.pillars.items").map((p, i) => (
+                <Reveal key={p.title} delay={i * 90} className="pillar">
+                  <span className="pillar-num mono">0{i + 1}</span>
+                  <span className="pillar-icon">
+                    <Icon name={p.icon ?? "chat"} size={26} />
+                  </span>
+                  <h3>{p.title}</h3>
+                  <p className="muted">{p.body}</p>
                 </Reveal>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="section">
+        {/* ---- 03 · Everything else ---- */}
+        <section className="section band">
           <div className="container">
-            <Label index="08" text={t("messenger.boundaries.eyebrow")} />
+            <Label index="03" text={t("messenger.features.eyebrow")} />
             <div className="section-head">
-              <h2>{t("messenger.boundaries.title")}</h2>
+              <h2>{t("messenger.features.title")}</h2>
+              <p className="lead">{t("messenger.features.lead")}</p>
             </div>
-            <div className="nots">
-              {list<Item>("messenger.boundaries.items").map((b, i) => (
-                <Reveal key={b.title} delay={i * 70} className="not">
-                  <span className="not-icon">
-                    <Icon name={b.icon ?? "ban"} size={22} />
-                  </span>
-                  <h3>{b.title}</h3>
-                  <p className="muted">{b.body}</p>
+            <ul className="features">
+              {list<Item>("messenger.features.items").map((f, i) => (
+                <Reveal as="li" key={f.title} delay={(i % 4) * 60} className="feature">
+                  <Icon name={f.icon ?? "check"} size={20} />
+                  <div>
+                    <h3>{f.title}</h3>
+                    <p className="muted">{f.body}</p>
+                  </div>
                 </Reveal>
               ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ---- 04 · Against what ---- */}
+        <section className="section" id="schutz">
+          <div className="container">
+            <Label index="04" text={t("messenger.intro.eyebrow")} />
+            <div className="section-head wide">
+              <h2>{t("messenger.intro.title")}</h2>
+              <p className="lead">{t("messenger.adversary.title")}</p>
+            </div>
+            <div className="adversary-grid">
+              <div>
+                {list<string>("messenger.adversary.paragraphs").map((p) => (
+                  <p className="muted" key={p.slice(0, 40)}>
+                    {p}
+                  </p>
+                ))}
+                <dl className="spec">
+                  {list<Spec>("messenger.adversary.spec").map((s) => (
+                    <div key={s.label}>
+                      <dt>{s.label}</dt>
+                      <dd className="mono">{s.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <Reveal>
+                <div className="hybrid" role="img" aria-label={t("messenger.adversary.diagramAlt")}>
+                  <div className="hybrid-in">
+                    <span className="hybrid-box">
+                      <span className="mono">X25519</span>
+                      <small>{t("messenger.adversary.classicNote")}</small>
+                    </span>
+                    <span className="hybrid-plus" aria-hidden="true">
+                      +
+                    </span>
+                    <span className="hybrid-box pq">
+                      <span className="mono">ML-KEM-768</span>
+                      <small>{t("messenger.adversary.pqNote")}</small>
+                    </span>
+                  </div>
+                  <span className="hybrid-line" aria-hidden="true" />
+                  <span className="hybrid-out">
+                    <Icon name="key" size={18} />
+                    {t("messenger.adversary.result")}
+                  </span>
+                  <span className="hybrid-line short" aria-hidden="true" />
+                  <span className="hybrid-mls mono">MLS · RFC 9420</span>
+                  <p className="hybrid-note mono">{t("messenger.adversary.resultNote")}</p>
+                </div>
+              </Reveal>
+            </div>
+            <Reveal>
+              <blockquote className="quote">{t("messenger.adversary.highlight")}</blockquote>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className="section demo">
+          <div className="container demo-grid">
+            <div>
+              <Label index="05" text={t("messenger.crypto.eyebrow")} />
+              <h2>{t("messenger.crypto.title")}</h2>
+              <p className="lead">{t("messenger.crypto.body")}</p>
+            </div>
+            <CryptoDemo />
+          </div>
+        </section>
+
+        <section className="section band" id="app">
+          <div className="container">
+            <Label index="06" text={t("messenger.tour.eyebrow")} />
+            <div className="section-head">
+              <h2>{t("messenger.tour.title")}</h2>
+              <p className="lead">{t("messenger.tour.lead")}</p>
+            </div>
+            <AppTour steps={list<TourStep>("messenger.tour.steps")} shots={shots} alts={screens.map((sc) => sc.title)} />
+          </div>
+        </section>
+
+        {/* Ledger and boundaries are one subject, what is protected and what is not, so the section
+            nav keeps "Transparenz" lit across both. */}
+        <div className="section-group" id="transparenz">
+          <section className="section">
+            <div className="container">
+              <Label index="07" text={t("messenger.transparency.eyebrow")} />
+              <div className="section-head">
+                <h2>{t("messenger.transparency.title")}</h2>
+                <p className="lead">{t("messenger.transparency.subtitle")}</p>
+              </div>
+              <div className="ledger">
+                {[
+                  { g: encrypted, kind: "yes", icon: "lock" },
+                  { g: notEncrypted, kind: "no", icon: "alert" },
+                ].map(({ g, kind, icon }) => (
+                  <Reveal key={kind} className={`ledger-col ledger-${kind}`}>
+                    <h3>
+                      <Icon name={icon} size={18} />
+                      {g.heading}
+                    </h3>
+                    <ul>
+                      {g.items.map((it) => (
+                        <li key={it.title}>
+                          <strong>{it.title}</strong>
+                          <span className="muted">{it.body}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="container">
+              <Label index="08" text={t("messenger.boundaries.eyebrow")} />
+              <div className="section-head">
+                <h2>{t("messenger.boundaries.title")}</h2>
+              </div>
+              <div className="nots">
+                {list<Item>("messenger.boundaries.items").map((b, i) => (
+                  <Reveal key={b.title} delay={i * 70} className="not">
+                    <span className="not-icon">
+                      <Icon name={b.icon ?? "ban"} size={22} />
+                    </span>
+                    <h3>{b.title}</h3>
+                    <p className="muted">{b.body}</p>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section className="section band" id="fragen">
+          <div className="container faq-grid">
+            <div>
+              <Label index="09" text={t("messenger.faq.label")} />
+              <h2>{t("messenger.faq.title")}</h2>
+            </div>
+            <Faq items={list<QA>("messenger.faq.items")} />
+          </div>
+        </section>
+
+        <section className="section download" id="download">
+          <div className="container">
+            <div className="download-panel dark-zone">
+              <div className="download-aura" aria-hidden="true" />
+              <div className="download-text">
+                <Label index="10" text={t("messenger.download.label")} />
+                <h2>{t("messenger.download.title")}</h2>
+                <p className="lead">{t("messenger.download.body")}</p>
+                <div className="btn-row">
+                  <PlayButton label={t("messenger.playStore")} short={t("messenger.sticky.cta")} />
+                </div>
+                <p className="download-note">{t("messenger.download.platforms")}</p>
+              </div>
+              <figure className="download-qr">
+                <img src={playQr} alt={t("messenger.download.qrAlt")} width={168} height={168} />
+                <figcaption>{t("messenger.download.qr")}</figcaption>
+              </figure>
             </div>
           </div>
         </section>
       </div>
-
-      <section className="section band" id="fragen">
-        <div className="container faq-grid">
-          <div>
-            <Label index="09" text={t("messenger.faq.label")} />
-            <h2>{t("messenger.faq.title")}</h2>
-          </div>
-          <Faq items={list<QA>("messenger.faq.items")} />
-        </div>
-      </section>
-
-      <section className="section download" id="download">
-        <div className="container">
-          <div className="download-panel dark-zone">
-            <div className="download-aura" aria-hidden="true" />
-            <div className="download-text">
-              <Label index="10" text={t("messenger.download.label")} />
-              <h2>{t("messenger.download.title")}</h2>
-              <p className="lead">{t("messenger.download.body")}</p>
-              <div className="btn-row">
-                <PlayButton label={t("messenger.playStore")} short={t("messenger.sticky.cta")} />
-              </div>
-              <p className="download-note">{t("messenger.download.platforms")}</p>
-            </div>
-            <figure className="download-qr">
-              <img src={playQr} alt={t("messenger.download.qrAlt")} width={168} height={168} />
-              <figcaption>{t("messenger.download.qr")}</figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
 
       <StickyCta note={t("messenger.sticky.note")}>
         <a className="btn primary" href={PLAY_STORE} rel="noreferrer noopener" target="_blank">

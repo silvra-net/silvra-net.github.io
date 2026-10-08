@@ -9,6 +9,11 @@ export interface NavItem {
  * A long page's table of contents, pinned under the header once the opening has scrolled past:
  * where you are, and one tap to anywhere else. The current section is the last one whose top
  * has passed the upper third of the screen.
+ *
+ * Pages render it as the first child of a `.section-span` wrapper around their numbered
+ * sections. A sticky element stays inside its parent, so the bar scrolls away with the last
+ * section instead of floating over the door to the other world and the footer, with or without
+ * JavaScript.
  */
 export default function SectionNav({ items, label }: { items: NavItem[]; label: string }) {
   const [active, setActive] = useState(items[0]?.id ?? "");
