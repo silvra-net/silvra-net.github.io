@@ -76,7 +76,7 @@ export default function BlockStream() {
               <span className="stream-hash mono">{short(b.hash)}</span>
               <span className="stream-age mono">{age(b.timestamp)}</span>
               {/* Named by what it shows (WCAG 2.5.3), then where it leads. */}
-              <span className="sr-only"> — {t("blocks.openSuffix")}</span>
+              <span className="sr-only">{t("common.sep")}{t("blocks.openSuffix")}</span>
             </a>
           </li>
         ))}

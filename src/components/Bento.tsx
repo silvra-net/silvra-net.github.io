@@ -90,9 +90,11 @@ export default function Bento() {
         </span>
         <h3 className="tile-title">{t("home.bento.open.title")}</h3>
         <p className="tile-body">{t("home.bento.open.body")}</p>
-        {/* The README's own build steps, so the tile shows what "open" means in practice. */}
+        {/* The README's own build steps, so the tile shows what "open" means in practice. The
+            release tag matters: master may be ahead of what the mainnet runs. */}
         <pre className="tile-term" aria-hidden="true">
-          <span className="tile-term-p">$</span> git clone github.com/silvra-net/helix{"\n"}
+          <span className="tile-term-p">$</span> git clone https://github.com/silvra-net/helix.git{"\n"}
+          <span className="tile-term-p">$</span> cd helix && git checkout v1.0.0{"\n"}
           <span className="tile-term-p">$</span> cargo build --release{"\n"}
           <span className="tile-term-ok">✓</span> target/release/helix
         </pre>

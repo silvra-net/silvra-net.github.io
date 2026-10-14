@@ -346,7 +346,7 @@ export default function Helix() {
                     {list<{ title: string; body: string }>("helix.honesty.items").map((it) => (
                       <li key={it.title}>
                         <strong>{it.title}</strong>
-                        <span className="muted">{it.body}</span>
+                        <span className="muted">{it.body.replace("{{validators}}", String(validators ?? "—"))}</span>
                       </li>
                     ))}
                   </ul>

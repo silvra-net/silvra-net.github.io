@@ -110,7 +110,7 @@ export default function Gate() {
           <span className="gate-claim-sep" aria-hidden="true">
             //
           </span>
-          <span className="sr-only"> — </span>
+          <span className="sr-only">{t("common.sep")}</span>
           {t("home.gate.claim")}
         </h1>
         <p className="gate-choose" aria-hidden="true">
@@ -207,7 +207,7 @@ export default function Gate() {
 
       {/* The name starts with the words written on the ring, so someone who reads them aloud to
           a voice control finds the link (WCAG 2.5.3). */}
-      <a className="gate-seal" href="#about" aria-label={`${t("home.gate.seal").replace(/ · $/, "")} — ${t("home.gate.scroll")}`}>
+      <a className="gate-seal" href="#about" aria-label={`${t("home.gate.seal").replace(/ · $/, "")}${t("common.sep")}${t("home.gate.scroll")}`}>
         {/* The ring turns on an HTML wrapper: an <svg> turned by itself is laid out again on
             every frame, a span is turned by the compositor. */}
         <span className="gate-seal-ring" aria-hidden="true">

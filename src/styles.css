@@ -4622,9 +4622,9 @@ a.tile:hover {
   background: color-mix(in srgb, var(--bg) 70%, transparent);
   font: 500 12.5px/1.75 var(--mono);
   color: var(--muted);
-  white-space: pre;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* A narrow tile wraps the clone URL the way a terminal would, instead of cutting it off. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .tile-term-p {
   color: var(--faint);

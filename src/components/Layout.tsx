@@ -305,7 +305,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {t(`nav.${world}`)}
               </span>
             )}
-            <span className="sr-only"> — {t("nav.home")}</span>
+            <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>
           </Link>
 
           <nav className="site-nav" aria-label={t("nav.main")}>
@@ -397,7 +397,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               <Link to="/" className="brand">
                 <img src={icon} alt="" width={30} height={30} />
                 <span className="brand-name">Silvra</span>
-                <span className="sr-only"> — {t("nav.home")}</span>
+                <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>
               </Link>
               <p>{t("footer.description")}</p>
               <p className="footer-eu">

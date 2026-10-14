@@ -7,9 +7,9 @@
     <meta name="theme-color" content="#0a0c09" />
     <meta
       name="description"
-      content="Silvra entwickelt in der EU post-quanten-sichere Technologie: den Silvra Messenger mit Ende-zu-Ende-Verschlüsselung und Helix, eine Layer-1-Blockchain mit ML-DSA-65."
+      content="Silvra entwickelt in der EU Technologie mit Post-Quanten-Kryptographie: den Silvra Messenger mit Ende-zu-Ende-Verschlüsselung und Helix, eine Layer-1-Blockchain mit ML-DSA-65."
     />
-    <title>Silvra — Digitale Infrastruktur aus Europa</title>
+    <title>Silvra – Digitale Infrastruktur aus Europa</title>
     <script>
       // Marks the page as scripted before first paint. Reveals and dimmed words are hidden only
       // under this class, so a visitor without JavaScript reads every word at once.
@@ -41,6 +41,13 @@
         }
         .scroll-words span {
           opacity: 1 !important;
+        }
+        /* Without the script nothing marks the bars solid once the page scrolls, and transparent
+           bars would sit on top of the text. */
+        .site-header,
+        .section-nav {
+          background: var(--bg);
+          border-bottom-color: var(--line);
         }
       </style>
     </noscript>

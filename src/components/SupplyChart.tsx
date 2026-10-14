@@ -77,14 +77,14 @@ export default function SupplyChart() {
   const x = (year: number) => pad.left + (year / YEARS) * iw;
   const y = (v: number) => pad.top + ih - (v / 35_000_000) * ih;
   const mio = (v: number, digits = 1) =>
-    `${(v / 1e6).toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })} ${t("helix.supply.million")}`;
+    t("helix.supply.million", { n: (v / 1e6).toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) });
 
   const line = data.map((p, i) => `${i ? "L" : "M"}${x(p.year).toFixed(1)},${y(p.supply).toFixed(1)}`).join("");
   const area = `${line}L${x(YEARS)},${y(0)}L${x(0)},${y(0)}Z`;
   const last = data[data.length - 1];
   const point = active === null ? null : data[active];
   // Genesis is too small a share to read in millions.
-  const amount = (v: number) => (v < 1e6 ? `${v.toLocaleString(locale)} HLX` : mio(v, 2));
+  const amount = (v: number) => (v < 1e6 ? `${v.toLocaleString(locale)}\u00a0HLX` : mio(v, 2));
   const yearLabel = (year: number) => (year === 0 ? t("helix.supply.genesis") : t("helix.supply.yearLong", { n: year }));
   // Below 100 HLX a year, whole numbers would read "0"; three significant digits keep the halving visible.
   const minted = (v: number) =>
@@ -137,13 +137,13 @@ export default function SupplyChart() {
             <g key={v}>
               <line className="chart-grid" x1={pad.left} x2={pad.left + iw} y1={y(v)} y2={y(v)} />
               <text className="chart-tick" x={pad.left - 10} y={y(v) + 4} textAnchor="end">
-                {v === 0 || narrow ? `${v / 1e6}` : `${v / 1e6} ${t("helix.supply.millionShort")}`}
+                {v === 0 || narrow ? `${v / 1e6}` : t("helix.supply.million", { n: v / 1e6 })}
               </text>
             </g>
           ))}
           {narrow && (
             <text className="chart-tick" x={0} y={12}>
-              {t("helix.supply.millionShort")}
+              {t("helix.supply.millionUnit")}
             </text>
           )}
           {(narrow ? [0, 10, 20, 30] : [0, 5, 10, 15, 20, 25, 30]).map((yr) => (
