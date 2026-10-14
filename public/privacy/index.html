@@ -6,7 +6,9 @@
 <title>Datenschutz – Silvra · Privacy</title>
 <meta name="description" content="Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.">
 <link rel="canonical" href="https://silvra.net/privacy/">
-<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="/icons/icon-96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/icons/icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0c09">
@@ -18,7 +20,12 @@
   // Without script, or with storage blocked, the OS preference decides.
   try {
     var t = localStorage.getItem("silvra-theme");
-    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    if (t === "light" || t === "dark") {
+      document.documentElement.setAttribute("data-theme", t);
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function (el) {
+        el.setAttribute("content", t === "light" ? "#f7f7f3" : "#0a0c09");
+      });
+    }
   } catch (e) {}
 </script>
 <style>
@@ -69,6 +76,16 @@ body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--
   font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+/* As on the rest of the site (src/styles.css .skip-link): out of sight until focused. */
+.skip {
+  position: absolute; left: 12px; top: -80px; z-index: 10;
+  padding: 12px 18px; border-radius: 2px;
+  background: #d4b86a; color: #14110a; border: 1.5px solid #d4b86a;
+  font: 600 16px/1 var(--display); letter-spacing: 0.05em; text-transform: uppercase;
+  text-decoration: none;
+}
+.skip:focus { top: 12px; }
+.skip:focus-visible { outline-color: #d4b86a; }
 .dark { background: #0a0c09; color: var(--text); }
 .wrap { max-width: calc(52rem + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
 
@@ -154,6 +171,9 @@ body:has(#en:target) #de { display: none; }
 </style>
 </head>
 <body>
+<!-- One per language: each lands on its own half of the page, which is also what shows it. -->
+<a class="skip" href="#de" lang="de">Zum Inhalt springen</a>
+<a class="skip" href="#en" lang="en">Skip to content</a>
 <header class="site-header dark">
   <div class="wrap">
     <a class="brand" href="/">

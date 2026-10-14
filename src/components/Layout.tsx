@@ -34,10 +34,13 @@ const PAGES = [
 export const pagePath = (pathname: string) => pathname.replace(/\/+$/, "") || "/";
 
 /** Which world a path belongs to (with or without the trailing slash). The two product pages
- *  carry their own colour; the rest is Silvra. */
+ *  carry their own colour; the rest is Silvra. Only the pages themselves, not every path below
+ *  them: Pages answers /helix/xyz with 404.html, which is rendered as Silvra and must hydrate
+ *  as Silvra. */
 export function worldOf(pathname: string): "messenger" | "helix" | "silvra" {
-  if (pathname.startsWith("/messenger")) return "messenger";
-  if (pathname.startsWith("/helix")) return "helix";
+  const page = pagePath(pathname);
+  if (page === "/messenger") return "messenger";
+  if (page === "/helix") return "helix";
   return "silvra";
 }
 
@@ -281,6 +284,11 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   const privacy = lang === "en" ? "/privacy/#en" : "/privacy/";
 
+  // The year the page is read in, not only the year it was built: the prerendered markup carries
+  // the build year (so hydration matches), and the visitor's clock takes over right after.
+  const [year, setYear] = useState(__BUILD_YEAR__);
+  useEffect(() => setYear(new Date().getFullYear()), []);
+
   return (
     <>
       {/* Visible only when focused: there for the people who need it, invisible to everyone else. */}
@@ -310,9 +318,12 @@ export default function Layout({ children }: { children: ReactNode }) {
 
           <nav className="site-nav" aria-label={t("nav.main")}>
             {PAGES.map((p) => (
+              // `end`: the pages have no pages below them, and /helix/xyz is the not-found page,
+              // which marks no link as current.
               <NavLink
                 key={p.to}
                 to={p.to}
+                end
                 className={({ isActive }) =>
                   `nav-link${p.world ? ` nav-${p.world}` : ""}${isActive ? " active" : ""}`
                 }
@@ -348,22 +359,26 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <div id="mobile-menu" ref={menu} className={open ? "mobile-menu open" : "mobile-menu"} hidden={!open}>
         <nav className="mobile-nav" aria-label={t("nav.main")}>
-          <NavLink to="/messenger/" className="mobile-world mobile-messenger">
+          <NavLink to="/messenger/" end className="mobile-world mobile-messenger">
             <span className="mobile-index">01</span>
             <span className="mobile-title">Silvra Messenger</span>
             <span className="mobile-tag">{t("nav.messengerTag")}</span>
           </NavLink>
-          <NavLink to="/helix/" className="mobile-world mobile-helix">
+          <NavLink to="/helix/" end className="mobile-world mobile-helix">
             <span className="mobile-index">02</span>
-            <span className="mobile-title">Helix Blockchain</span>
+            <span className="mobile-title">{t("nav.helixFull")}</span>
             <span className="mobile-tag">{t("nav.helixTag")}</span>
           </NavLink>
           <div className="mobile-links">
             <NavLink to="/" end>
               {t("nav.home")}
             </NavLink>
-            <NavLink to="/mission/">{t("nav.mission")}</NavLink>
-            <NavLink to="/contact/">{t("nav.contact")}</NavLink>
+            <NavLink to="/mission/" end>
+              {t("nav.mission")}
+            </NavLink>
+            <NavLink to="/contact/" end>
+              {t("nav.contact")}
+            </NavLink>
             <a href={EXPLORER}>
               {t("nav.explorer")} <Icon name="arrowUpRight" size={14} />
             </a>
@@ -404,12 +419,15 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <EuMark />
                 {t("footer.eu")}
               </p>
+              {/* The look borrows from military and cyber units; the line says plainly that the
+                  project is not one, where people look for who is behind a site. */}
+              <p className="footer-independent mono">{t("footer.independent")}</p>
             </div>
             <div className="footer-cols">
               <div className="footer-col">
                 <h2>{t("footer.products")}</h2>
                 <Link to="/messenger/">Silvra Messenger</Link>
-                <Link to="/helix/">Helix Blockchain</Link>
+                <Link to="/helix/">{t("nav.helixFull")}</Link>
                 <a href={EXPLORER}>
                   Helix {t("nav.explorer")}
                   <Icon name="arrowUpRight" size={12} />
@@ -447,7 +465,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             SILVRA
           </div>
           <div className="footer-bottom">
-            <span>{t("footer.copyright", { year: __BUILD_YEAR__ })}</span>
+            <span>{t("footer.copyright", { year })}</span>
             <span className="mono">{t("footer.stack")}</span>
           </div>
         </div>

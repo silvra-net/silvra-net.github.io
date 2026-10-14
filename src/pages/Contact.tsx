@@ -47,7 +47,14 @@ export default function Contact() {
           </div>
           <div className="contact-grid">
             {list<Card>("contact.cards").map((c, i) => (
-              <Reveal key={c.title} delay={i * 90} as="article" className={`contact-card contact-${c.kind}`}>
+              <Reveal
+                key={c.title}
+                delay={i * 90}
+                as="article"
+                className={`contact-card contact-${c.kind}`}
+                // security.txt points researchers here (Policy:), so the card has an address.
+                id={c.kind === "security" ? "sicherheit" : undefined}
+              >
                 <span className="contact-icon">
                   <Icon name={c.icon} size={24} />
                 </span>

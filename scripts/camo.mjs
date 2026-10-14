@@ -1,4 +1,5 @@
-// Generate the site's digital camouflage: one seamless tile per theme, as a small SVG.
+// Generate the site's digital camouflage: one seamless tile per theme, as an indexed PNG (and the
+// dark one also as an SVG, for scripts/og.mjs).
 //
 // Digital camo because it is the one pattern that is military and made of pixels at the same
 // time — the army reference and the cyber one in a single texture. The pattern is ours rather
@@ -8,10 +9,10 @@
 // site's own night-olive greys. A few cells in the base colour carry the signal colour, like
 // noise on a line — the only place the pattern admits it is digital.
 //
-// Each tile is written twice. The site draws the PNG: 96 × 96 cells, one pixel each, indexed
-// colour, small enough for Vite to inline into the stylesheet, so the pattern behind the first
-// screen costs no request and no SVG rasterising; CSS scales it up 4× with crisp edges. The SVG
-// is the same tile for tools that want vectors (scripts/og.mjs).
+// The site draws the PNG: 96 × 96 cells, one pixel each, indexed colour, small enough for Vite to
+// inline into the stylesheet, so the pattern behind the first screen costs no request and no SVG
+// rasterising; CSS scales it up 4× with crisp edges. The dark tile is also written as an SVG, the
+// same tile for the preview images (scripts/og.mjs), which are always dark.
 //
 // Run by hand when the palette changes; the files are committed. Same seed, same tile.
 //
@@ -193,10 +194,12 @@ function png({ bands: palette, signal: signalColour, signalOpacity }, { bands, s
 
 const pattern = field(20261007);
 for (const [name, theme] of Object.entries(THEMES)) {
-  const out = `src/assets/camo-${name}.svg`;
-  const text = svg(theme, pattern);
-  writeFileSync(out, text);
-  console.log(`camo: ${out} (${(text.length / 1024).toFixed(1)} kB)`);
+  if (name === "dark") {
+    const out = `src/assets/camo-${name}.svg`;
+    const text = svg(theme, pattern);
+    writeFileSync(out, text);
+    console.log(`camo: ${out} (${(text.length / 1024).toFixed(1)} kB)`);
+  }
   const image = png(theme, pattern);
   // The JS-free privacy page carries its own copy of the dark tile.
   for (const file of [`src/assets/camo-${name}.png`, ...(name === "dark" ? ["public/privacy/camo-dark.png"] : [])]) {

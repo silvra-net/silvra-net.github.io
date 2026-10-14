@@ -18,12 +18,14 @@ export default function Reveal({
   delay = 0,
   as: Tag = "div",
   className,
+  id,
 }: {
   children: ReactNode;
   delay?: number;
   /** The element to render, so a revealed list item can still be the list item. */
   as?: ElementType;
   className?: string;
+  id?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(false);
@@ -56,6 +58,7 @@ export default function Reveal({
   return (
     <Tag
       ref={ref}
+      id={id}
       className={`reveal${shown ? " shown" : ""}${className ? ` ${className}` : ""}`}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >

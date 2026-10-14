@@ -1,3 +1,5 @@
+import Units from "./Units";
+
 /**
  * A slow mono band of claims, separated by the blade's slash.
  *
@@ -19,7 +21,7 @@ export default function Marquee({ items }: { items: string[] }) {
           <div className="marquee-run" key={copy}>
             {items.map((item) => (
               <span className="marquee-item" key={item}>
-                {item}
+                <Units text={item} />
                 <span className="marquee-slash">/</span>
               </span>
             ))}

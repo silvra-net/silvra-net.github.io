@@ -231,7 +231,7 @@ export default function Messenger() {
                 </dl>
               </div>
               <Reveal>
-                <div className="hybrid" role="img" aria-label={t("messenger.adversary.diagramAlt")}>
+                <div className="hybrid" role="img" aria-label={t("messenger.adversary.diagramAlt").replace(/\u2060/g, "")}>
                   <div className="hybrid-in">
                     <span className="hybrid-box">
                       <span className="mono">X25519</span>

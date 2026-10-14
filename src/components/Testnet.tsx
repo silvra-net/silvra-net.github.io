@@ -1,5 +1,6 @@
 import { useI18n } from "../i18n";
 import { useNodeStatus } from "../lib/node";
+import { useReducedMotion } from "../lib/motion";
 import CountUp from "./CountUp";
 import Icon from "./Icon";
 import { EXPLORER } from "../lib/links";
@@ -13,7 +14,8 @@ import { EXPLORER } from "../lib/links";
  */
 export default function Testnet({ explorer = true, height = true }: { explorer?: boolean; height?: boolean }) {
   const { t, lang } = useI18n();
-  const { status, failed, validators } = useNodeStatus();
+  const { status, failed, validators, at } = useNodeStatus();
+  const paused = useReducedMotion();
   const locale = lang === "de" ? "de-DE" : "en-GB";
   const hlx = (v?: number, digits = 0) =>
     v === undefined ? "—" : `${v.toLocaleString(locale, { maximumFractionDigits: digits })}`;
@@ -33,9 +35,18 @@ export default function Testnet({ explorer = true, height = true }: { explorer?:
         <span className={status && !failed ? "dot ok pulse" : "dot off"} />
         <span className="testnet-title">{t("home.testnet.title")}</span>
         {/* "live" only once the node has answered: the prerendered page, and a visitor without
-            JavaScript, never get further than "connecting". */}
+            JavaScript, never get further than "connecting". A page that stands still holds its
+            first reading, and says from when it is rather than calling it live. */}
         <span className="testnet-source mono">
-          {status ? t("home.testnet.live") : failed ? t("home.testnet.offline") : t("home.testnet.connecting")}
+          {status && paused && at
+            ? t("home.testnet.paused", {
+                time: new Date(at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+              })
+            : status
+              ? t("home.testnet.live")
+              : failed
+                ? t("home.testnet.offline")
+                : t("home.testnet.connecting")}
         </span>
       </div>
       {height && (

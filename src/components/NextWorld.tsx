@@ -27,11 +27,11 @@ export default function NextWorld({ to }: { to: "messenger" | "helix" }) {
       <div className="container next-world-body">
         <p className="label">{t("next.label")}</p>
         <p className="next-world-title" id={`next-${to}-title`}>
-          {to === "helix" ? "Helix Blockchain" : "Silvra Messenger"}
+          {to === "helix" ? t("nav.helixFull") : "Silvra Messenger"}
         </p>
         <p className="next-world-text">{t(`next.${to}`)}</p>
         <span className="next-world-cta">
-          {t("next.cta")}
+          {t(`next.cta.${to}`)}
           <Icon name="arrowRight" size={20} />
         </span>
       </div>

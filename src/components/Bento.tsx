@@ -3,9 +3,10 @@ import CipherLoop from "./CipherLoop";
 import CountUp from "./CountUp";
 import EuMark from "./EuMark";
 import Icon from "./Icon";
+import Units from "./Units";
 import { useI18n } from "../i18n";
 import { useNodeStatus } from "../lib/node";
-import { HELIX_REPO } from "../lib/links";
+import { HELIX_REPO, HELIX_TAG } from "../lib/links";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
 
@@ -41,10 +42,11 @@ export default function Bento() {
           <span className={status ? "dot ok pulse" : "dot off"} />{" "}
           {failed ? `Helix · ${t("home.testnet.offline")}` : t("home.bento.helix.kicker")}
         </span>
-        <h3 className="tile-title">{t("home.bento.helix.title")}</h3>
+        {/* "just now" only while there is a height to show. */}
+        <h3 className="tile-title">{t(failed ? "home.bento.helix.titleOffline" : "home.bento.helix.title")}</h3>
         <p className="tile-big mono">{status ? <CountUp value={status.height} locale={locale} /> : "—"}</p>
         <p className="tile-body">
-          {t("home.bento.helix.body", { validators: validators ?? "—" })}
+          <Units text={t("home.bento.helix.body", { validators: validators ?? "—" })} />
         </p>
         <span className="tile-go" aria-hidden="true">
           <Icon name="arrowRight" size={18} />
@@ -91,10 +93,11 @@ export default function Bento() {
         <h3 className="tile-title">{t("home.bento.open.title")}</h3>
         <p className="tile-body">{t("home.bento.open.body")}</p>
         {/* The README's own build steps, so the tile shows what "open" means in practice. The
-            release tag matters: master may be ahead of what the mainnet runs. */}
+            release tag matters: master may be ahead of what the mainnet runs; the documentation
+            links on the Helix page point at the same tag. */}
         <pre className="tile-term" aria-hidden="true">
           <span className="tile-term-p">$</span> git clone https://github.com/silvra-net/helix.git{"\n"}
-          <span className="tile-term-p">$</span> cd helix && git checkout v1.0.0{"\n"}
+          <span className="tile-term-p">$</span> cd helix && git checkout {HELIX_TAG}{"\n"}
           <span className="tile-term-p">$</span> cargo build --release{"\n"}
           <span className="tile-term-ok">✓</span> target/release/helix
         </pre>

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useI18n } from "../i18n";
 import Icon from "./Icon";
 import { HELIX_DOCS } from "../lib/links";
@@ -99,7 +98,11 @@ export default function CryptoInventory() {
           {t("home.inventory.sourceHelix")}
         </a>
         <span aria-hidden="true">·</span>
-        <Link to="/messenger/#transparenz">{t("home.inventory.sourceMessenger")}</Link>
+        {/* The messenger's source is not public, so there is nothing to link to but our own word,
+            and the table says that is what it is. */}
+        <span>{t("home.inventory.sourceMessenger")}</span>
+        <span aria-hidden="true">·</span>
+        <span>{t("home.inventory.asOf")}</span>
       </p>
     </div>
   );

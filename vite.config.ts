@@ -7,8 +7,8 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: { port: 5273, strictPort: true },
-  // The footer's copyright year, fixed at build time for the client and the prerender alike, so
-  // hydration never compares two different years. The deploy workflow rebuilds every 1 January.
+  // The footer's copyright year as of the build, for the prerender and the first client render
+  // alike, so hydration never compares two different years; the footer then reads the clock.
   define: { __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()) },
   // The manifest tells scripts/prerender.mjs which hashed font files to preload.
   build: { target: "es2021", outDir: "dist", manifest: true },

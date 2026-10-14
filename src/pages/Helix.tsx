@@ -19,7 +19,16 @@ import { useOs } from "../lib/os";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { useNodeStatus } from "../lib/node";
-import { DISCORD, EXPLORER, HELIX_DOCS, HELIX_RELEASES, HELIX_REPO, HELIX_TOKENOMICS, NODE_HOST } from "../lib/links";
+import {
+  DISCORD,
+  EXPLORER,
+  HELIX_DOCS,
+  HELIX_GENESIS,
+  HELIX_RELEASES,
+  HELIX_REPO,
+  HELIX_TOKENOMICS,
+  NODE_HOST,
+} from "../lib/links";
 
 interface Feature {
   icon: string;
@@ -36,10 +45,13 @@ interface Figure {
   label: string;
 }
 
+/** The hash of block 0 of the 1.0.0 mainnet, which every node since has built on. */
+const GENESIS_HASH = "f318dcdeffe93a45e8f7233b2048bedf1d544410028dafaec46a5461d4ef8540";
+
 export default function Helix() {
   const { t, list, lang } = useI18n();
   useSeo(t("meta.helix.title"), t("meta.helix.description"));
-  const { status, validators, blockTime } = useNodeStatus();
+  const { status, failed, validators, blockTime } = useNodeStatus();
   const locale = lang === "de" ? "de-DE" : "en-GB";
   const features = list<Feature>("helix.features");
   const os = useOs();
@@ -110,9 +122,15 @@ export default function Helix() {
                 <dd className="mono">{status ? <CountUp value={status.height} locale={locale} /> : "—"}</dd>
               </div>
               <div>
-                <dt>{t("helix.hero.blockTime")}</dt>
+                <dt>{t(blockTime ? "helix.hero.blockTimeAvg" : "helix.hero.blockTime")}</dt>
+                {/* The target until the first measurement; nothing once the node is unreachable,
+                    since a figure from before would look current. */}
                 <dd className="mono">
-                  {blockTime ? `${blockTime.toLocaleString(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })} s` : "≈ 2 s"}
+                  {blockTime
+                    ? `${blockTime.toLocaleString(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })} s`
+                    : failed
+                      ? "—"
+                      : "≈ 2 s"}
                 </dd>
               </div>
               <div>
@@ -254,6 +272,27 @@ export default function Helix() {
                 ))}
               </dl>
             </div>
+            {/* The headline promises a disclosed allocation; this is it, with the hash to check
+                it against and the node's own answer one click away. */}
+            <Reveal className="genesis">
+              <h3 className="chart-title">{t("helix.supply.alloc.title")}</h3>
+              <dl className="genesis-alloc">
+                {list<[string, string]>("helix.supply.alloc.items").map(([value, label]) => (
+                  <div key={value}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="genesis-hash">
+                <span className="genesis-hash-label">{t("helix.supply.alloc.hash")}</span>
+                <code>{GENESIS_HASH}</code>
+                <a href={HELIX_GENESIS} rel="noreferrer noopener" target="_blank">
+                  {t("helix.supply.alloc.source")}
+                  <Icon name="arrowUpRight" size={14} />
+                </a>
+              </p>
+            </Reveal>
             <p className="supply-note">
               <Icon name="alert" size={16} />
               <span>

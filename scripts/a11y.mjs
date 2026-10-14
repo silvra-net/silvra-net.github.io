@@ -24,8 +24,10 @@ const require = createRequire(import.meta.url);
 const AXE = readFileSync(require.resolve("axe-core/axe.min.js"), "utf-8");
 const BASE = process.env.BASE ?? "http://127.0.0.1:4173";
 const routes = JSON.parse(readFileSync(new URL("./routes.json", import.meta.url), "utf-8"));
-// /privacy/ is a static page outside the app (public/privacy/), so it is listed by hand.
-const PAGES = ["/", ...routes.map((r) => `${r}/`), "/404.html", "/privacy/"];
+// /privacy/ is a static page outside the app (public/privacy/), so it is listed by hand. Its
+// English half is shown only as the #en target, so it is checked at that address too; without
+// it no pass would ever see the English text.
+const PAGES = ["/", ...routes.map((r) => `${r}/`), "/404.html", "/privacy/", "/privacy/#en"];
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "phone", width: 390, height: 844, isMobile: true, hasTouch: true },

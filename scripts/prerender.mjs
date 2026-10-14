@@ -13,7 +13,8 @@
 // router can read it without importing — and running — this script.
 //
 // It also writes what a static host cannot send as headers: a Content Security Policy and a
-// referrer policy on every page (the JS-free /privacy page included), and the sitemap.
+// referrer policy on every page (the JS-free /privacy page and the three redirect pages
+// included); and the files that must not go stale: the sitemap and security.txt.
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -46,7 +47,7 @@ function csp(html, { connect = `'self' ${NODE}` } = {}) {
     `script-src 'self' ${hashes.join(" ")}`.trim(),
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data:",
-    "font-src 'self' data:",
+    "font-src 'self'",
     `connect-src ${connect}`,
     "manifest-src 'self'",
     "object-src 'none'",
@@ -89,11 +90,19 @@ const PAGES = {
   "/barrierefreiheit": { meta: "accessibility", og: "home" },
 };
 
-const get = (path) => path.split(".").reduce((o, k) => (o ? o[k] : undefined), de);
+// The dictionaries bind "ML-KEM" and "X-Wing" with an invisible word joiner so a line never
+// breaks at the hyphen. Machines read these strings, not lines: a search for "ML-KEM" must find
+// them, so the joiner is dropped from everything written into the head.
+const plain = (s) => String(s).replace(/\u2060/g, "");
+const get = (path) => {
+  const v = path.split(".").reduce((o, k) => (o ? o[k] : undefined), de);
+  return typeof v === "string" ? plain(v) : v;
+};
 const esc = (s) =>
-  String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  plain(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 // JSON inside a script element must not be able to close it.
-const ld = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, "\\u003c")}</script>`;
+const ld = (obj) =>
+  `<script type="application/ld+json">${plain(JSON.stringify(obj)).replace(/</g, "\\u003c")}</script>`;
 
 const organization = {
   "@context": "https://schema.org",
@@ -151,6 +160,11 @@ function structured(route, page) {
   return out;
 }
 
+/** The colour world a page is painted in, as Layout's worldOf() decides it on the client. On the
+ *  root element from the first byte, so the product pages do not paint in sand until the bundle
+ *  runs, and stay in their colour without JavaScript. */
+const worldFor = (route) => (route === "/messenger" ? "messenger" : route === "/helix" ? "helix" : "silvra");
+
 function documentFor(route, { title, description, og, ogAlt, canonical, noindex, live, structuredData }) {
   const head = [
     ...PRELOAD,
@@ -183,11 +197,17 @@ function documentFor(route, { title, description, og, ogAlt, canonical, noindex,
     .join("\n    ");
 
   return csp(template)
-    .replace('<html lang="de">', '<html lang="de" data-prerendered="de">')
+    .replace('<html lang="de">', `<html lang="de" data-prerendered="de" data-world="${worldFor(route)}">`)
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
     .replace(/<meta\s+name="description"[\s\S]*?\/>/, `<meta name="description" content="${esc(description)}" />`)
     .replace("</head>", `    ${head}\n  </head>`)
-    .replace('<div id="root"></div>', `<div id="root" data-route="${route === "/404" ? "*" : route}">${render(route)}</div>`);
+    // Rendered at the address the page is served from (/messenger/, not /messenger), so that the
+    // header marks the same link as current as the client will: hydration does not correct an
+    // attribute the server got wrong, and the page would never show where the visitor is.
+    .replace(
+      '<div id="root"></div>',
+      `<div id="root" data-route="${route === "/404" ? "*" : route}">${render(route === "/" || route === "/404" ? route : `${route}/`)}</div>`,
+    );
 }
 
 let count = 0;
@@ -222,21 +242,61 @@ writeFileSync(
   }),
 );
 
-// The static privacy page carries an inline script of its own (the theme), so it gets its own
-// policy with that script's hash. It talks to nothing but its own origin.
-const privacy = join(dist, "privacy", "index.html");
-if (existsSync(privacy)) writeFileSync(privacy, csp(readFileSync(privacy, "utf-8"), { connect: "'self'" }));
+// The static pages from public/ carry inline scripts of their own (the privacy page its theme,
+// the redirect pages their location.replace), so each gets a policy with its own hashes. The
+// privacy page talks to nothing but its own origin, the redirects to nothing at all.
+for (const [page, connect] of [
+  ["privacy", "'self'"],
+  ["explorer", "'none'"],
+  ["datenschutz", "'none'"],
+  ["kontakt", "'none'"],
+]) {
+  const file = join(dist, page, "index.html");
+  if (!existsSync(file)) throw new Error(`prerender: ${file} is missing`);
+  writeFileSync(file, csp(readFileSync(file, "utf-8"), { connect }));
+}
 
-// Every indexable page, with the address it is served at and the day this build was made.
-const today = new Date().toISOString().slice(0, 10);
+// The privacy page names the site's fonts by their unhashed copies in public/privacy/fonts, which
+// keep it readable on the dev server. On the built site it uses the app's own hashed files, so a
+// visitor going between the two downloads each font once; the copies are not deployed.
+{
+  const file = join(dist, "privacy", "index.html");
+  const html = readFileSync(file, "utf-8").replace(/\/privacy\/fonts\/([\w.-]+\.woff2)/g, (_, name) => {
+    const key = Object.keys(manifest).find((k) => k.endsWith(`/files/${name}`));
+    if (!key) throw new Error(`prerender: the privacy page's font ${name} is not in the build manifest`);
+    return `/${manifest[key].file}`;
+  });
+  writeFileSync(file, html);
+  rmSync(join(dist, "privacy", "fonts"), { recursive: true, force: true });
+}
+
+// Every indexable page, with the address it is served at. No <lastmod>: the only date a build
+// knows is its own, and a sitemap that calls every page changed on every deploy teaches search
+// engines to ignore the field.
 const urls = ["/", ...routes.map((r) => `${r}/`), "/privacy/"];
 writeFileSync(
   join(dist, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${SITE}${u}</loc><lastmod>${today}</lastmod></url>`).join("\n")}
+${urls.map((u) => `  <url><loc>${SITE}${u}</loc></url>`).join("\n")}
 </urlset>
 `,
+);
+
+// security.txt (RFC 9116) must carry an expiry no more than a year ahead; written at build time,
+// every deploy renews it instead of someone having to remember the date.
+const expires = new Date(Date.now() + 364 * 24 * 60 * 60 * 1000).toISOString();
+mkdirSync(join(dist, ".well-known"), { recursive: true });
+writeFileSync(
+  join(dist, ".well-known", "security.txt"),
+  [
+    "Contact: mailto:info@silvra.net",
+    `Expires: ${expires}`,
+    "Preferred-Languages: de, en",
+    `Policy: ${SITE}/contact/#sicherheit`,
+    `Canonical: ${SITE}/.well-known/security.txt`,
+    "",
+  ].join("\n"),
 );
 
 // The server bundle was only needed to render the pages above, the manifest only to find the

@@ -20,7 +20,7 @@ export default function NotFound() {
           Silvra Messenger
         </Link>
         <Link className="btn" to="/helix/">
-          Helix Blockchain
+          {t("nav.helixFull")}
         </Link>
       </div>
     </PageHero>
