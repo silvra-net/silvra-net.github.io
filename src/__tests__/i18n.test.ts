@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import de from "../i18n/de.json";
 import en from "../i18n/en.json";
+import { ICON_NAMES } from "../components/Icon";
 
 /** Every leaf path in a nested object, as dotted keys. Arrays keep their index. */
 function paths(value: unknown, prefix = ""): string[] {
@@ -87,5 +88,26 @@ describe("keys in the dictionary", () => {
       DYNAMIC.some((p) => leaf.startsWith(p)) ||
       [...named].some((k) => leaf === k || leaf.startsWith(`${k}.`) || leaf.startsWith(`${k}[`));
     expect([...dePaths].filter((leaf) => !used(leaf))).toEqual([]);
+  });
+});
+
+describe("icons named in the dictionary", () => {
+  /** Every value stored under an "icon" key, at any depth. */
+  const icons = (value: unknown): string[] => {
+    if (Array.isArray(value)) return value.flatMap(icons);
+    if (value && typeof value === "object") {
+      return Object.entries(value as Record<string, unknown>).flatMap(([k, v]) =>
+        k === "icon" && typeof v === "string" ? [v] : icons(v),
+      );
+    }
+    return [];
+  };
+
+  it("all exist in the icon set", () => {
+    // Icon draws nothing for a name it does not know, so a typo or a missing path leaves a gap
+    // that only shows as one card without its symbol (the messenger's "file" was one).
+    const named = [...icons(de), ...icons(en)];
+    expect(named.length).toBeGreaterThan(10);
+    expect([...new Set(named)].filter((n) => !ICON_NAMES.includes(n))).toEqual([]);
   });
 });

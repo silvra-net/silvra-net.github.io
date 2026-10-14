@@ -1,6 +1,7 @@
 import PageHero from "../components/PageHero";
 import Photo from "../components/Photo";
 import Reveal from "../components/Reveal";
+import SectionLabel from "../components/SectionLabel";
 import Icon from "../components/Icon";
 import MailText from "../components/MailText";
 import { useI18n } from "../i18n";
@@ -39,6 +40,7 @@ export default function Contact() {
 
       <section className="section">
         <div className="container">
+          <SectionLabel index="01" text={t("contact.card.label")} />
           <div className="section-head">
             <h2>{t("contact.card.title")}</h2>
             <p className="lead">{t("contact.card.body")}</p>

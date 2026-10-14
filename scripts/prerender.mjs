@@ -34,7 +34,8 @@ const NODE = "https://node.silvra.net";
  * from the built file, and cannot drift from it. JSON-LD blocks are data, not scripts, and need
  * no entry. Styles may be inline: React sets style attributes, and the privacy page is one file.
  * Besides its own origin (robots.txt, which audit tools read from inside the page), the only
- * place the site fetches from is the Helix node.
+ * place the site fetches from is the Helix node. The web app manifest is named on its own,
+ * although default-src already covers it, so the policy says plainly where it may come from.
  */
 function csp(html, { connect = `'self' ${NODE}` } = {}) {
   const hashes = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(
@@ -47,6 +48,7 @@ function csp(html, { connect = `'self' ${NODE}` } = {}) {
     "img-src 'self' data:",
     "font-src 'self' data:",
     `connect-src ${connect}`,
+    "manifest-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'none'",

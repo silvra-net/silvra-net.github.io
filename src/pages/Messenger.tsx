@@ -352,7 +352,6 @@ export default function Messenger() {
         <section className="section download" id="download">
           <div className="container">
             <div className="download-panel dark-zone">
-              <div className="download-aura" aria-hidden="true" />
               <div className="download-text">
                 <SectionLabel index="10" text={t("messenger.download.label")} />
                 <h2>{t("messenger.download.title")}</h2>

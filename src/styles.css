@@ -2123,26 +2123,24 @@ p {
     transform: translateY(-12px);
   }
 }
+/* Two lines tall in both states, so it does not jump as the sentence turns into hex; a short
+   sentence sits in the middle of that height instead of leaving the bottom half empty. */
 .cipher-loop {
   width: 250px;
   min-height: 74px;
   display: flex;
   gap: 10px;
-  align-items: flex-start;
+  align-items: center;
   padding: 14px 16px;
   border-radius: 18px 18px 18px 5px;
-  background: rgba(18, 22, 15, 0.88);
+  background: rgba(18, 22, 15, 0.96);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
   color: #eef0e9;
   font-size: 14.5px;
   line-height: 1.45;
 }
 .cipher-loop-lock {
   flex: none;
-  margin-top: 2px;
   color: var(--signal);
 }
 .cipher-loop[data-plain="false"] .cipher-loop-lock {
@@ -2265,7 +2263,6 @@ p {
 }
 .hybrid-box.pq {
   border-color: color-mix(in srgb, var(--ok) 55%, transparent);
-  box-shadow: inset 0 0 30px color-mix(in srgb, var(--ok) 10%, transparent);
 }
 .hybrid-plus {
   align-self: center;
@@ -2528,14 +2525,6 @@ p {
 }
 .download-panel .lead {
   color: rgba(238, 240, 233, 0.8);
-}
-.download-aura {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(50% 70% at 50% 110%, rgba(210, 222, 240, 0.22), transparent 70%),
-    radial-gradient(30% 50% at 50% -10%, rgba(255, 255, 255, 0.08), transparent 70%);
 }
 
 /* The door to the other world. */
@@ -3157,6 +3146,11 @@ p {
   .prose-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Stacked, the cards no longer share a height, so the deep gap that lines their titles up in
+     a row is only empty space. */
+  .pillar-icon {
+    margin-bottom: 28px;
+  }
   .timeline {
     grid-template-columns: minmax(0, 1fr);
     gap: 36px;
@@ -3575,7 +3569,6 @@ p {
   border-radius: var(--r-ctl);
   background: var(--surface-2);
   border: 1px solid var(--line-2);
-  box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.5);
   font-size: 13px;
   color: var(--muted);
 }
@@ -3784,7 +3777,7 @@ p {
   color: var(--faint);
 }
 .code-line {
-  color: #f0c27a;
+  color: var(--amber-text);
 }
 .code-tok {
   white-space: nowrap;
@@ -3910,7 +3903,11 @@ p {
   color: var(--muted);
   margin: 0 0 16px;
 }
+/* As tall as the two-line cipher in the middle, so the three stops line up; a one-line message
+   sits in the middle of that height rather than leaving its lower half empty. */
 .journey-bubble {
+  display: flex;
+  align-items: center;
   width: min(100%, 280px);
   min-height: 74px;
   margin: 0 0 22px;
@@ -4720,14 +4717,10 @@ a.tile-helix:hover .tile-go {
   align-self: flex-end;
   width: min(100%, 300px);
   min-height: 0;
-  align-items: center;
   border-radius: 18px 18px 5px 18px;
   background: #eef0e9;
   color: #0a0c09;
   border: 0;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
 }
 .tile-bubble-loop .cipher-loop-text {
   min-width: 0;
@@ -4738,7 +4731,6 @@ a.tile-helix:hover .tile-go {
 }
 /* A light bubble: the light theme's signal and muted ink, which read on it. */
 .tile-bubble-loop .cipher-loop-lock {
-  margin-top: 0;
   color: #0a6e53;
 }
 .tile-bubble-loop[data-plain="false"] .cipher-loop-lock,
@@ -4751,7 +4743,7 @@ a.tile-helix:hover .tile-go {
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: #f0bb68;
+  color: var(--amber-text);
   font-variant-numeric: tabular-nums;
 }
 .tile-seals {
@@ -4819,8 +4811,10 @@ a.tile-helix:hover .tile-go {
   align-items: center;
   gap: 8px;
 }
+/* Muted, not red: red is kept for the threat on the timeline, and these are things that are
+   absent, not alarms. */
 .tile-zero-list .icon {
-  color: var(--bad);
+  color: var(--muted);
   flex: none;
 }
 
@@ -4844,14 +4838,6 @@ a.tile-helix:hover .tile-go {
   position: relative;
   width: min(100%, 300px);
   aspect-ratio: 600 / 1182;
-  filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.45));
-}
-.tour-phone::before {
-  content: "";
-  position: absolute;
-  inset: 12% -30% 10%;
-  z-index: -1;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--silver) 22%, transparent), transparent);
 }
 .tour-phone img {
   position: absolute;
@@ -4953,8 +4939,7 @@ a.tile-helix:hover .tile-go {
   padding: 18px 18px 14px;
   border-radius: var(--radius);
   background: #ffffff;
-  color: #0b0b0d;
-  box-shadow: 0 30px 80px -30px rgba(210, 222, 240, 0.45);
+  color: #0a0c09;
 }
 .download-qr img {
   width: 168px;

@@ -17,6 +17,7 @@ const PATHS: Record<string, string> = {
   wallet: "M3.5 7.5v10a2 2 0 0 0 2 2h14v-12h-14a2 2 0 0 1 0-4h12v4M16.5 13.5h.01",
   ban: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM5.6 5.6l12.8 12.8",
   coins: "M9 4a5 5 0 1 0 0 10A5 5 0 0 0 9 4ZM14.2 8.6a5 5 0 1 1-5.6 6.9",
+  file: "M7 2.5h7l4.5 4.5v13a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V4A1.5 1.5 0 0 1 7 2.5ZM13.5 2.5v5h5",
   mail: "M4.5 5.5h15a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17V7a1.5 1.5 0 0 1 1.5-1.5ZM3.5 7l8.5 6 8.5-6",
   landmark: "M3 20.5h18M5 20.5v-9M9.5 20.5v-9M14.5 20.5v-9M19 20.5v-9M2.5 9.5 12 4l9.5 5.5Z",
   lock: "M6.5 10.5h11a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19v-7a1.5 1.5 0 0 1 1.5-1.5ZM8 10.5V7.5a4 4 0 0 1 8 0v3",
@@ -55,6 +56,9 @@ const PATHS: Record<string, string> = {
 };
 
 export type IconName = keyof typeof PATHS;
+
+/** Every name the set can draw. The dictionaries name icons by string, and a test holds them to it. */
+export const ICON_NAMES: readonly string[] = Object.keys(PATHS);
 
 export default function Icon({ name, size = 20, className }: { name: IconName | string; size?: number; className?: string }) {
   const d = PATHS[name];
