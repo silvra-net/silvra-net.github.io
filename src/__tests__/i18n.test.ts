@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import de from "../i18n/de.json";
 import en from "../i18n/en.json";
+import { ICON_NAMES } from "../components/Icon";
 
 /** Every leaf path in a nested object, as dotted keys. Arrays keep their index. */
 function paths(value: unknown, prefix = ""): string[] {
@@ -63,5 +64,50 @@ describe("keys the components ask for", () => {
       (key) => !dePaths.has(key) && ![...dePaths].some((p) => p.startsWith(`${key}.`) || p.startsWith(`${key}[`)),
     );
     expect(missing).toEqual([]);
+  });
+});
+
+describe("keys in the dictionary", () => {
+  // Paths built at run time from a prefix and a value: `nav.${world}`, `next.${to}`, the download
+  // labels per OS, the inventory's status names, and every page's meta, read by the prerender.
+  const DYNAMIC = ["nav.", "next.", "helix.download.", "home.inventory.status.", "meta."];
+
+  // Any quoted dotted path counts as asked for: a t("…") call, a key kept in a table
+  // ({ key: "nav.mission" }), or a path the build scripts read for the prerendered head.
+  const named = new Set<string>();
+  const scripts = ["prerender.mjs", "og.mjs"].map((f) => readFileSync(join(__dirname, "..", "..", "scripts", f), "utf-8"));
+  for (const src of [...sources(join(__dirname, "..")), ...scripts]) {
+    for (const m of src.matchAll(/["'`]([a-zA-Z]\w*(?:\.\w+)+)["'`]/g)) named.add(m[1]);
+  }
+
+  it("are all used somewhere", () => {
+    // A string nobody reads still gets translated, reviewed and kept in step, and sooner or later
+    // someone edits it expecting the page to change. A leaf counts as used when its own path is
+    // named, when a parent is (list() and raw() read whole subtrees), or under a dynamic prefix.
+    const used = (leaf: string) =>
+      DYNAMIC.some((p) => leaf.startsWith(p)) ||
+      [...named].some((k) => leaf === k || leaf.startsWith(`${k}.`) || leaf.startsWith(`${k}[`));
+    expect([...dePaths].filter((leaf) => !used(leaf))).toEqual([]);
+  });
+});
+
+describe("icons named in the dictionary", () => {
+  /** Every value stored under an "icon" key, at any depth. */
+  const icons = (value: unknown): string[] => {
+    if (Array.isArray(value)) return value.flatMap(icons);
+    if (value && typeof value === "object") {
+      return Object.entries(value as Record<string, unknown>).flatMap(([k, v]) =>
+        k === "icon" && typeof v === "string" ? [v] : icons(v),
+      );
+    }
+    return [];
+  };
+
+  it("all exist in the icon set", () => {
+    // Icon draws nothing for a name it does not know, so a typo or a missing path leaves a gap
+    // that only shows as one card without its symbol (the messenger's "file" was one).
+    const named = [...icons(de), ...icons(en)];
+    expect(named.length).toBeGreaterThan(10);
+    expect([...new Set(named)].filter((n) => !ICON_NAMES.includes(n))).toEqual([]);
   });
 });

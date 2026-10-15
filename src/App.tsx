@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Layout, { worldOf } from "./components/Layout";
+import Layout, { pagePath, worldOf } from "./components/Layout";
 import { prefersReducedMotion } from "./lib/motion";
 import Home from "./pages/Home";
 import Messenger from "./pages/Messenger";
@@ -14,17 +14,28 @@ import NotFound from "./pages/NotFound";
 /** A client router leaves the scroll position where the last page left it; a new page should
  *  start at the top, the way a real navigation does. */
 function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const { pathname: raw, hash } = useLocation();
+  const pathname = pagePath(raw);
   const last = useRef<string | null>(null);
   useEffect(() => {
     // A jump within the same page scrolls itself; only a new page is placed here.
     if (last.current === pathname) return;
+    const first = last.current === null;
     last.current = pathname;
     // A link to a section of another page lands on that section, anything else at the top.
     // Instant, not smooth: the page has changed, there is nothing to travel past.
     const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
     if (target) target.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" });
     else window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    // After a navigation inside the site, focus starts on the new page's heading, as it would
+    // after a real page load, instead of staying on a link that no longer exists. Not on the
+    // first load: there the browser's own focus handling is already right.
+    if (first || target) return;
+    const h1 = document.querySelector<HTMLElement>("main h1");
+    if (h1) {
+      h1.setAttribute("tabindex", "-1");
+      h1.focus({ preventScroll: true });
+    }
   }, [pathname, hash]);
   return null;
 }
@@ -34,7 +45,7 @@ function ScrollToTop() {
  * the site's page transition. Not from the gate into a product: the gate sweeps on its own.
  */
 function RouteWipe() {
-  const { pathname } = useLocation();
+  const pathname = pagePath(useLocation().pathname);
   const prev = useRef(pathname);
   const [run, setRun] = useState(0);
   useEffect(() => {

@@ -3,9 +3,8 @@ import { useEffect } from "react";
 /**
  * Set the document title and meta description for a page.
  *
- * The site is a client-rendered SPA, so crawlers that do not execute JavaScript see only
- * index.html. This keeps the title correct for everything that does — browsers, tabs,
- * bookmarks, link previews that render — without pretending to be server-side rendering.
+ * Keeps title and description in step with the language after hydration; the prerendered head
+ * (scripts/prerender.mjs) is what crawlers read.
  */
 export function useSeo(title: string, description: string): void {
   useEffect(() => {

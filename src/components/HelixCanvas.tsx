@@ -59,6 +59,7 @@ export default function HelixCanvas({
     let R = radius;
     let seen = pulseRef.current;
     let pulseAt = -1e9;
+    let last = -1e9;
     const glow = sprite(AMBER);
     const hot = sprite(HOT);
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -82,17 +83,23 @@ export default function HelixCanvas({
         W = w;
         H = h;
         R = Math.max(54, Math.min(radius * 1.25, (radius * w) / 1440));
+        // A resize has just cleared the canvas, so the draw that follows must not be skipped.
+        last = -1e9;
       },
       dispose() {
         window.removeEventListener("pointermove", onMove);
       },
       draw(now) {
+        // Thirty frames a second keeps a slow turn smooth and halves the cost on a phone.
+        if (now - last < 32) return;
+        last = now;
         if (pulseRef.current !== seen) {
           if (seen !== undefined) pulseAt = now;
           seen = pulseRef.current;
         }
-        pointer.x += (pointer.tx - pointer.x) * 0.04;
-        pointer.y += (pointer.ty - pointer.y) * 0.04;
+        // The easing is per frame and was tuned at sixty; doubled, it follows the pointer as fast.
+        pointer.x += (pointer.tx - pointer.x) * 0.08;
+        pointer.y += (pointer.ty - pointer.y) * 0.08;
 
         ctx.clearRect(0, 0, W, H);
         const up = { x: Math.sin(tilt), y: -Math.cos(tilt) };
@@ -124,6 +131,10 @@ export default function HelixCanvas({
           }
         }
 
+        // The strand runs well past the canvas when it lies along a phone's blade. Whatever falls
+        // outside (with room for a glow) is not drawn at all; the canvas would only clip it.
+        const off = (p: Node) => p.x < -40 || p.x > W + 40 || p.y < -40 || p.y > H + 40;
+
         const heat = (i: number) => {
           if (front < 0 || front > 1.3) return 0;
           const k = 1 - Math.abs(front * n - i) / 3;
@@ -132,7 +143,7 @@ export default function HelixCanvas({
 
         // Dust first: it is the farthest thing in the scene.
         for (const d of dust) {
-          d.y -= d.v * 16;
+          d.y -= d.v * 32;
           if (d.y < -0.02) d.y = 1.02;
           const tw = 0.35 + 0.65 * Math.abs(Math.sin(now * 0.001 + d.p));
           ctx.globalAlpha = 0.28 * tw;
@@ -145,7 +156,7 @@ export default function HelixCanvas({
             const p = list[i - 1];
             const q = list[i];
             const z = (p.z + q.z) / 2;
-            if (back !== z < 0) continue;
+            if (back !== z < 0 || (off(p) && off(q))) continue;
             ctx.globalAlpha = 0.12 + 0.5 * ((z + 1) / 2);
             ctx.strokeStyle = `rgb(${AMBER.join(",")})`;
             ctx.lineWidth = 1 + (z + 1) * 0.6;
@@ -157,7 +168,7 @@ export default function HelixCanvas({
         };
         const nodes = (list: Node[], back: boolean) => {
           for (const p of list) {
-            if (back !== p.z < 0) continue;
+            if (back !== p.z < 0 || off(p)) continue;
             const h = heat(p.i);
             const size = 10 + (p.z + 1) * 9 + h * 18;
             ctx.globalAlpha = 0.25 + 0.6 * ((p.z + 1) / 2) + h * 0.3;
@@ -181,6 +192,7 @@ export default function HelixCanvas({
         for (let i = 0; i < n; i++) {
           const p = a[i];
           const q = b[i];
+          if (off(p) && off(q)) continue;
           const h = heat(i);
           const facing = 1 - Math.abs(p.z);
           ctx.globalAlpha = 0.1 + 0.28 * facing + h * 0.6;
@@ -212,7 +224,7 @@ export default function HelixCanvas({
         ctx.globalAlpha = 1;
       },
     };
-  });
+  }, { maxDpr: 1.5 });
 
   return <canvas ref={ref} className={className ? `fx-canvas ${className}` : "fx-canvas"} aria-hidden="true" />;
 }

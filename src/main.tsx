@@ -3,13 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { I18nProvider } from "./i18n";
-// Self-hosted, bundled with the site: no request to a font service, so nothing about a visit
-// reaches a third party just to draw the letters.
-import "@fontsource-variable/unbounded";
-import "@fontsource/barlow-condensed/600.css";
-import "@fontsource/barlow-condensed/700.css";
-import "@fontsource-variable/inter";
-import "@fontsource-variable/jetbrains-mono";
+import "./styles/fonts.css";
 import "./styles.css";
 
 const root = document.getElementById("root")!;
@@ -35,3 +29,6 @@ const app = (
 
 if (prerendered) ReactDOM.hydrateRoot(root, app);
 else ReactDOM.createRoot(root).render(app);
+// The bundle is running: from here the reveals are driven by their own observers, so the
+// stylesheet's timed fallback (for a bundle that never arrives) stands down.
+document.documentElement.classList.add("app");

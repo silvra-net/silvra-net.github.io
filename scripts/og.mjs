@@ -124,7 +124,7 @@ const pages = {
     <div class="brand"><img src="${asset("silvra-icon.png")}"><span>SILVRA</span></div>
     <div style="position:absolute;left:64px;top:178px;z-index:5;width:640px">
       <p class="label" style="margin-bottom:22px">Silvra Messenger</p>
-      <h1 class="title metal" style="font-size:70px">Ende-zu-Ende<br>verschlüsselt.<br>Post-Quanten-sicher.</h1>
+      <h1 class="title metal" style="font-size:70px">Chats Ende-zu-Ende<br>verschlüsselt.<br>Hybrid mit ML-KEM.</h1>
     </div>
     <p class="foot">MLS · X-Wing (X25519 + ML-KEM-768) · ohne Telefonnummer</p>
     <img src="${asset("Welcome_DE-portrait.webp")}" style="position:absolute;right:70px;top:70px;width:300px;transform:rotate(-6deg);filter:drop-shadow(0 40px 80px rgba(0,0,0,.7)) drop-shadow(0 0 60px rgba(200,215,235,.15));z-index:4">

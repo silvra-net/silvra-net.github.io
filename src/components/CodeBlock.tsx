@@ -23,10 +23,7 @@ export default function CodeBlock({ title, lines }: { title: string; lines: stri
   return (
     <div className="terminal code-block">
       <div className="terminal-bar">
-        <i aria-hidden="true" />
-        <i aria-hidden="true" />
-        <i aria-hidden="true" />
-        <span className="mono">{title}</span>
+        <span className="terminal-title mono">{title}</span>
         <button type="button" className="code-copy" onClick={copy} aria-live="polite">
           {copied ? t("common.copied") : t("common.copy")}
         </button>

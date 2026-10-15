@@ -17,7 +17,7 @@ type Side = "messenger" | "helix";
  * CSS: it crosses the middle of the gate and leans 7vw either way between top and bottom.
  */
 function fitsMessenger(x: number, y: number, w: number, W: number, H: number): boolean {
-  if (W < 820) return false;
+  if (W <= 820) return false;
   const blade = W * 0.5 + W * 0.07 * (1 - (2 * y) / H);
   return y > H * 0.66 && y < H * 0.82 && x > W * 0.05 && x + w < blade - 48;
 }
@@ -57,7 +57,9 @@ export default function Gate() {
   const section = useRef<HTMLElement>(null);
   const messenger = useRef<HTMLAnchorElement>(null);
   const helix = useRef<HTMLAnchorElement>(null);
-  // On a phone the halves stack top and bottom, so the helix lies along the blade instead.
+  // On a phone the halves stack top and bottom, so the helix lies along the blade instead, in a
+  // band of its own above the chain's kicker (see the CSS). The band is far wider than it is
+  // tall, hence the long axis.
   const stacked = useMediaQuery("(max-width: 820px)");
 
   const go = useCallback(
@@ -66,7 +68,7 @@ export default function Gate() {
       if (reduced) return;
       e.preventDefault();
       setLeaving(side);
-      window.setTimeout(() => navigate(`/${side}`), 640);
+      window.setTimeout(() => navigate(`/${side}/`), 640);
     },
     [navigate, reduced],
   );
@@ -96,7 +98,7 @@ export default function Gate() {
         k,
         v
           .replace("{{height}}", height ?? (failed ? t("home.gate.hudOffline") : "…"))
-          .replace("{{version}}", status?.version ?? "1.0.0"),
+          .replace("{{version}}", status?.version ?? "—"),
       ] as [string, string],
   );
 
@@ -108,7 +110,7 @@ export default function Gate() {
           <span className="gate-claim-sep" aria-hidden="true">
             //
           </span>
-          <span className="sr-only"> — </span>
+          <span className="sr-only">{t("common.sep")}</span>
           {t("home.gate.claim")}
         </h1>
         <p className="gate-choose" aria-hidden="true">
@@ -120,7 +122,7 @@ export default function Gate() {
 
       <Link
         ref={messenger}
-        to="/messenger"
+        to="/messenger/"
         className="gate-side gate-messenger"
         onClick={go("messenger")}
       >
@@ -149,7 +151,7 @@ export default function Gate() {
 
       <Link
         ref={helix}
-        to="/helix"
+        to="/helix/"
         className="gate-side gate-helix"
         onClick={go("helix")}
       >
@@ -157,7 +159,7 @@ export default function Gate() {
           <div className="gate-camo" />
           <div className="gate-aura" />
           {stacked ? (
-            <HelixCanvas key="stacked" cx={0.5} cy={0.66} tilt={1.47} radius={70} length={0.9} pulse={status?.height} />
+            <HelixCanvas key="stacked" cx={0.5} cy={0.56} tilt={1.47} radius={70} length={6} pulse={status?.height} />
           ) : (
             <HelixCanvas key="side" cx={0.67} cy={0.44} tilt={0.22} radius={112} length={1.3} pulse={status?.height} />
           )}
@@ -200,19 +202,26 @@ export default function Gate() {
           <b />
         </i>
         <i className="gate-core" />
+        <i className="gate-pulse" />
       </div>
 
-      <a className="gate-seal" href="#about" aria-label={t("home.gate.scroll")}>
-        <svg className="gate-seal-ring" viewBox="0 0 200 200" aria-hidden="true">
-          <defs>
-            <path id="seal-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
-          </defs>
-          <text>
-            <textPath href="#seal-path" textLength="488">
-              {t("home.gate.seal")}
-            </textPath>
-          </text>
-        </svg>
+      {/* The name starts with the words written on the ring, so someone who reads them aloud to
+          a voice control finds the link (WCAG 2.5.3). */}
+      <a className="gate-seal" href="#about" aria-label={`${t("home.gate.seal").replace(/ · $/, "")}${t("common.sep")}${t("home.gate.scroll")}`}>
+        {/* The ring turns on an HTML wrapper: an <svg> turned by itself is laid out again on
+            every frame, a span is turned by the compositor. */}
+        <span className="gate-seal-ring" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <path id="seal-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
+            </defs>
+            <text>
+              <textPath href="#seal-path" textLength="488">
+                {t("home.gate.seal")}
+              </textPath>
+            </text>
+          </svg>
+        </span>
         {/* A bezel of ticks, still while the text ring turns: the emblem's fixed frame. */}
         <svg className="gate-seal-bezel" viewBox="0 0 200 200" aria-hidden="true">
           <circle cx="100" cy="100" r="95" pathLength="360" />

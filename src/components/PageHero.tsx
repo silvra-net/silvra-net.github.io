@@ -13,15 +13,22 @@ export default function PageHero({
   lead,
   children,
   media,
+  compact = false,
+  last = false,
 }: {
   label?: string;
   title: ReactNode;
   lead?: string;
   children?: ReactNode;
   media?: ReactNode;
+  /** A short opening for pages that are read rather than entered. */
+  compact?: boolean;
+  /** Nothing follows but the footer: a straight lower edge instead of the diagonal. */
+  last?: boolean;
 }) {
+  const cls = `page-hero${compact ? " page-hero--compact" : ""}${last ? " page-hero--last" : ""} dark-zone`;
   return (
-    <section className="page-hero dark-zone">
+    <section className={cls}>
       {media && (
         <div className="page-hero-media" aria-hidden="true">
           {media}

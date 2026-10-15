@@ -21,11 +21,6 @@
   inherits: true;
   initial-value: 50%;
 }
-@property --sy {
-  syntax: "<percentage>";
-  inherits: true;
-  initial-value: 52%;
-}
 
 :root,
 .dark-zone,
@@ -50,18 +45,25 @@
   --signal: #3fe0b0;
   --ok: #3fe0b0;
   --bad: #f26b5b;
-  --warn: #e0a44a;
+  /* Warnings have their own orange, so "classical" never reads as Helix. */
+  --warn: #f08a4b;
   --accent: var(--sand);
   --accent-ink: #14110a;
   --accent-text: var(--sand-text);
-  --glow: rgba(212, 184, 106, 0.2);
-  --camo: url("./assets/camo-dark.svg");
-  --metal: linear-gradient(100deg, #8d939b 0%, #ffffff 22%, #b4b9c1 42%, #f3f4f6 60%, #80868e 82%, #e9ebee 100%);
-  --gold: linear-gradient(100deg, #c08328 0%, #ffd892 26%, #e0a44a 52%, #fff0cf 70%, #c8903a 100%);
+  /* One pixel per camouflage cell (scripts/camo.mjs), drawn at 384px. Every rule that lays it
+     down also sets image-rendering: pixelated, so the cells stay hard-edged squares. Each tile is
+     named once, as a token, so the stylesheet carries each inlined image once. --camo follows
+     the theme; bands that are night olive in both themes take --camo-dark. */
+  --camo-dark: url("./assets/camo-dark.png");
+  --camo-light: url("./assets/camo-light.png");
+  --camo: var(--camo-dark);
+  /* The two world colours as flat type colours, for titles on the always-dark openings. */
+  --metal: #d9ddd3;
+  --gold: #e0a44a;
 }
 
 :root {
-  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --display: "Barlow Condensed", "Barlow Condensed Fallback", "Barlow Condensed Fallback Sans", sans-serif;
   --brand: "Unbounded Variable", "Unbounded", system-ui, sans-serif;
   --font: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -97,14 +99,11 @@
     --signal: #0a6e53;
     --ok: #0a6e53;
     --bad: #b42318;
-    --warn: #7a5c12;
+    --warn: #9a4a0b;
     --accent: #0f2535;
     --accent-ink: #ffffff;
     --accent-text: #7a5c12;
-    --glow: rgba(15, 37, 53, 0.12);
-    --camo: url("./assets/camo-light.svg");
-    --metal: linear-gradient(100deg, #1c2a35 0%, #4d5d69 25%, #0f2535 50%, #43535f 75%, #1c2a35 100%);
-    --gold: linear-gradient(100deg, #7a4d0a 0%, #b8791f 35%, #8a5a06 65%, #a8701c 100%);
+    --camo: var(--camo-light);
   }
 }
 :root[data-theme="light"] {
@@ -127,30 +126,28 @@
   --signal: #0a6e53;
   --ok: #0a6e53;
   --bad: #b42318;
-  --warn: #7a5c12;
+  --warn: #9a4a0b;
   --accent: #0f2535;
   --accent-ink: #ffffff;
   --accent-text: #7a5c12;
-  --glow: rgba(15, 37, 53, 0.12);
-  --camo: url("./assets/camo-light.svg");
-  --metal: linear-gradient(100deg, #1c2a35 0%, #4d5d69 25%, #0f2535 50%, #43535f 75%, #1c2a35 100%);
-  --gold: linear-gradient(100deg, #7a4d0a 0%, #b8791f 35%, #8a5a06 65%, #a8701c 100%);
+  --camo: var(--camo-light);
 }
 
-/* Worlds. Restated on zones for the same reason the palette is. */
+/* Worlds. Restated on zones (and terminals, which carry the dark palette) for the same reason
+   the palette is. */
 :root[data-world="messenger"],
-:root[data-world="messenger"] .dark-zone {
+:root[data-world="messenger"] .dark-zone,
+:root[data-world="messenger"] .terminal {
   --accent: var(--silver);
   --accent-ink: var(--inverse);
   --accent-text: var(--text);
-  --glow: rgba(200, 215, 235, 0.22);
 }
 :root[data-world="helix"],
-:root[data-world="helix"] .dark-zone {
+:root[data-world="helix"] .dark-zone,
+:root[data-world="helix"] .terminal {
   --accent: var(--amber);
   --accent-ink: #160f04;
   --accent-text: var(--amber-text);
-  --glow: rgba(224, 164, 74, 0.28);
 }
 /* Light amber is too pale for a button label to sit on; the light helix world uses the ink. */
 @media (prefers-color-scheme: light) {
@@ -223,16 +220,24 @@ a {
   background: var(--accent);
   color: var(--accent-ink);
 }
+/* The ring keeps the element's own corners: square things get a square ring. */
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: var(--r-ctl);
+  outline-offset: 2px;
 }
-main:focus {
+/* Focus is moved to these on purpose (skip link, back to top, a new page), never by Tab: a ring
+   round the whole page or its heading would only look like a fault. */
+body:focus,
+main:focus,
+main h1:focus {
   outline: none;
 }
-section[id] {
-  scroll-margin-top: calc(var(--header-h) + 56px);
+/* The html scroll padding already clears the header and the section bar, and a jump adds this
+   margin on top of it. Taking the section's own top padding back off leaves its numbered label
+   just under the bar, instead of a band's worth of the previous section above it. */
+section[id],
+.section-group[id] {
+  scroll-margin-top: calc(24px - var(--section-y));
 }
 
 .sr-only {
@@ -311,6 +316,61 @@ p {
   font-family: var(--mono);
 }
 
+/* Card titles: the display face in sentence case, one step below the section heads. Questions,
+   list entries and running text stay in Inter. */
+.craft-list h3,
+.europe-points h3,
+.journey-stop h3,
+.feature h3,
+.ledger-col h3,
+.not h3,
+.block h3,
+.link-card-title,
+.testnet-title,
+.chart-title,
+.honesty-list strong {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.12;
+}
+.journey-stop h3,
+.ledger-col h3 {
+  font-size: 23px;
+}
+.craft-list h3,
+.europe-points h3 {
+  font-size: clamp(20px, 1.6vw, 23px);
+}
+.feature h3,
+.not h3,
+.block h3,
+.link-card-title {
+  font-size: 21px;
+}
+.testnet-title,
+.chart-title,
+.honesty-list strong {
+  font-size: 20px;
+}
+
+/* Readout labels: what a value is, in the instrument voice of the section labels. */
+.hero-stats dt,
+.testnet-label,
+.testnet-stats dt,
+.testnet-source,
+.inventory-group th,
+.tile-helix .tile-body {
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* A unit symbol keeps its case inside a capitalised label (src/components/Units.tsx). */
+.unit {
+  text-transform: none;
+}
+
 /* A section's mono label: index, rule, name. */
 .label {
   display: flex;
@@ -336,11 +396,13 @@ p {
   opacity: 0.6;
 }
 
+/* Heading and lead end on one baseline, however many lines either takes; their boxes' lower
+   edges differ by the heading's tighter line height. */
 .section-head {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 24px 64px;
-  align-items: end;
+  align-items: last baseline;
   margin-bottom: clamp(40px, 5vw, 72px);
 }
 .section-head h2,
@@ -351,7 +413,7 @@ p {
   grid-template-columns: minmax(0, 1fr);
 }
 .section-head.wide h2 {
-  max-width: 22ch;
+  max-width: 32ch;
 }
 
 /* ---------- controls ---------- */
@@ -387,10 +449,16 @@ p {
   color: var(--accent-ink);
   border-color: var(--accent);
 }
+/* A hard inner edge rather than a halo: the button answers the pointer without glowing. */
 .btn.primary:hover {
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--accent) 24%, transparent),
-    0 14px 40px var(--glow);
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+/* An address is read and copied letter for letter, so it keeps its case and a mono face. */
+.btn[href^="mailto:"] {
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 .btn-row {
   display: flex;
@@ -415,8 +483,7 @@ p {
   border-color: var(--text);
 }
 
-.badge,
-.chip {
+.badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -429,8 +496,7 @@ p {
   color: var(--text);
   background: color-mix(in srgb, var(--text) 4%, transparent);
 }
-.badge-row,
-.chip-row {
+.badge-row {
   list-style: none;
   padding: 0;
   margin: 40px 0 0;
@@ -438,11 +504,9 @@ p {
   flex-wrap: wrap;
   gap: 8px;
 }
-.chip-row {
-  margin-top: 32px;
-}
 
 .dot {
+  position: relative;
   width: 8px;
   height: 8px;
   border-radius: var(--r-ctl);
@@ -455,27 +519,26 @@ p {
 .dot.off {
   background: var(--faint);
 }
-.dot.pulse {
+/* The ping is a copy of the dot that grows and fades: transform and opacity only, so it runs
+   on the compositor instead of repainting a shadow every frame. */
+.dot.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
   animation: ping 2.4s infinite;
 }
 @keyframes ping {
   0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent);
+    transform: scale(1);
+    opacity: 0.6;
   }
   70%,
   100% {
-    box-shadow: 0 0 0 9px transparent;
+    transform: scale(3.2);
+    opacity: 0;
   }
-}
-
-/* A dotted ring: Europe, abstractly, without borrowing the EU's emblem. */
-.eu-dots {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px dotted currentColor;
-  display: inline-block;
-  flex: none;
 }
 
 /* ---------- text effects ---------- */
@@ -504,40 +567,79 @@ p {
   max-width: 21em;
   margin: 0 0 clamp(48px, 7vw, 96px);
 }
-.scroll-words span {
-  opacity: clamp(0.14, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
+/* Words not yet reached are dimmed, never faded out: a statement read at rest is still a
+   statement. Only with a script running, which is what lights them. */
+.js .scroll-words span {
+  opacity: clamp(0.55, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
   transition: opacity 0.25s linear;
 }
 
 /* ---------- reveal ---------- */
 
+/* Hidden only on a scripted page (.js, set in index.html before paint). Should the bundle
+   never run, the content appears on its own after four seconds; once it runs (.app), each
+   block waits for its observer instead. */
 .reveal {
-  opacity: 0;
-  transform: translateY(28px);
   transition:
     opacity 0.9s var(--ease-out),
     transform 0.9s var(--ease-out);
+}
+.js .reveal:not(.shown) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.js:not(.app) .reveal:not(.shown) {
+  animation: reveal-failsafe 0s 4s forwards;
+}
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .reveal.shown {
   opacity: 1;
   transform: none;
 }
+/* Paper has no viewport to scroll into: a printed or saved page shows every block at once,
+   and every label as itself rather than mid-decryption. */
+@media print {
+  .js .reveal:not(.shown) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+  .scramble-fx {
+    display: none;
+  }
+  .scramble[data-busy] .scramble-text {
+    color: inherit;
+    -webkit-text-fill-color: currentColor;
+  }
+}
 
 /* ---------- skip link ---------- */
 
+/* Sand in both themes: every page opens on a dark block, and navy would vanish into it. */
 .skip-link {
   position: absolute;
   left: 12px;
   top: -80px;
   z-index: 100;
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: #d4b86a;
+  color: #14110a;
+  border: 1.5px solid #d4b86a;
   padding: 12px 18px;
   border-radius: var(--r-ctl);
-  font-weight: 600;
-  font-size: 14px;
+  font: 600 16px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   text-decoration: none;
   transition: top 0.15s;
+}
+.skip-link:focus-visible {
+  outline-color: #d4b86a;
 }
 .skip-link:focus {
   top: 12px;
@@ -554,15 +656,14 @@ p {
   height: var(--header-h);
   color: var(--text);
   border-bottom: 1px solid transparent;
-  transition:
-    background 0.4s,
-    border-color 0.4s,
-    backdrop-filter 0.4s;
 }
+/* Opaque, not frosted: a translucent paper strip over a dark opening turns into a muddy grey
+   band with the page's words ghosting through it. Over the dark bands the layout adds
+   .dark-zone, so var(--bg) and var(--line) are night olive there and paper everywhere else.
+   The switch is a cut, not a fade: the text colour flips at once with the zone, and a fading
+   background would pass through grey with navy words on it. */
 .site-header.is-solid {
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
+  background: var(--bg);
   border-bottom-color: var(--line);
 }
 .header-row {
@@ -596,9 +697,10 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--brand);
-  font-size: 14px;
-  letter-spacing: 0.06em;
+  /* The wordmark alone is Unbounded; the world beside it is a label, in the labels' type. */
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .brand-slash {
   color: var(--faint);
@@ -624,15 +726,16 @@ p {
   border-radius: var(--r-ctl);
   transition:
     color 0.25s,
-    background 0.25s;
+    box-shadow 0.25s;
 }
+/* No fills: the current page is marked the way a tab is, with a bar in the accent under it. */
 .nav-link:hover {
   color: var(--text);
-  background: color-mix(in srgb, var(--text) 7%, transparent);
+  box-shadow: inset 0 -1px 0 var(--line-2);
 }
 .nav-link.active {
   color: var(--text);
-  background: color-mix(in srgb, var(--text) 10%, transparent);
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
 .nav-helix.active {
   color: var(--amber-text);
@@ -647,20 +750,18 @@ p {
   align-items: center;
   gap: 6px;
   min-height: 38px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
+  font: 600 15px/1 var(--display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
   text-decoration: none;
   padding: 0 14px;
-  border: 1px solid var(--line-2);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 60%, transparent);
   border-radius: var(--r-ctl);
-  transition:
-    color 0.25s,
-    border-color 0.25s;
+  transition: border-color 0.25s;
 }
 .explorer-link:hover {
-  color: var(--text);
-  border-color: var(--text);
+  border-color: var(--accent);
 }
 .lang {
   display: flex;
@@ -686,6 +787,19 @@ p {
 .lang-btn.active {
   background: var(--text);
   color: var(--bg);
+}
+/* Forced colours drop fills and shadows, which is all that marks the current page and the
+   current language; a system-coloured underline and frame stand in for them. */
+@media (forced-colors: active) {
+  .nav-link.active,
+  .mobile-links a[aria-current="page"] {
+    text-decoration: underline 2px;
+    text-underline-offset: 6px;
+  }
+  .lang-btn.active {
+    outline: 2px solid CanvasText;
+    outline-offset: -2px;
+  }
 }
 .icon-btn {
   width: 38px;
@@ -729,55 +843,66 @@ p {
   flex-direction: column;
   gap: 12px;
 }
+/* The two worlds as HUD tiles: night olive in both themes, the world's colour as a bar on the
+   left, a strip of camouflage on the right where the text never reaches. The tile colours are
+   the dark palette's own values, written out: the menu around them is paper in the light theme,
+   and its tokens would turn them navy on night olive. */
 .mobile-world {
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 4px 16px;
-  padding: 24px 22px;
+  padding: 24px 44px 24px 22px;
   border-radius: var(--radius);
-  color: #fff;
+  background: #12160f;
+  border: 1px solid rgba(214, 222, 196, 0.14);
+  border-left: 3px solid #d9ddd3;
+  color: #eef0e9;
   text-decoration: none;
   overflow: hidden;
-  isolation: isolate;
 }
 .mobile-world::after {
   content: "";
   position: absolute;
-  top: -20%;
-  bottom: -20%;
-  right: 18%;
-  width: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  transform: skewX(-14deg);
-  z-index: -1;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-}
-.mobile-messenger {
-  background: linear-gradient(135deg, #272a30, #0b0c0e);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
+  opacity: 0.7;
 }
 .mobile-helix {
-  background: linear-gradient(135deg, #3d290a, #110b03);
+  border-left-color: #e0a44a;
+}
+/* Outside the tile, so it is drawn against the menu and takes the page's own accent. */
+.mobile-world[aria-current="page"] {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
 }
 .mobile-index {
   grid-row: span 2;
-  font: 500 12px var(--mono);
-  color: rgba(255, 255, 255, 0.7);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  color: #dcc27e;
   padding-top: 6px;
 }
+/* One line down to the narrowest phone; if larger text still wraps it, the two lines stay one
+   title rather than two labels. */
 .mobile-title {
   font-family: var(--display);
-  font-size: 27px;
+  font-size: clamp(22px, 7.2vw, 27px);
+  line-height: 1.05;
   letter-spacing: 0.005em;
   font-weight: 700;
   text-transform: uppercase;
 }
 .mobile-helix .mobile-title {
-  color: #f6c56f;
+  color: #e8b15c;
 }
 .mobile-tag {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.72);
+  color: #a8ae9c;
 }
 .mobile-links {
   margin-top: 16px;
@@ -792,8 +917,38 @@ p {
   border-bottom: 1px solid var(--line);
   font-family: var(--display);
   font-size: 19px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--text);
   text-decoration: none;
+}
+.mobile-links a[aria-current="page"] {
+  color: var(--accent-text);
+  box-shadow: inset 3px 0 0 var(--accent);
+  padding-left: 12px;
+}
+/* Spaced, not dotted: on a narrow phone the row wraps, and a separator would hang at a line end. */
+.mobile-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 24px;
+  margin: 8px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.mobile-legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.mobile-legal a:hover {
+  color: var(--text);
 }
 
 @media (max-width: 1020px) {
@@ -808,11 +963,29 @@ p {
     display: grid;
   }
 }
+/* On a phone the SILVRA wordmark stays and the world beside it goes, for sight only: the link
+   is still read as "Silvra / Messenger — Startseite". */
 @media (max-width: 560px) {
-  .brand:has(.brand-world) .brand-name {
-    display: none;
+  .brand-world {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
-  .brand-world .brand-slash {
+}
+/* Below 375 px the row has room for the wordmark, the language pair and the menu button, not
+   for the theme button as well; the open menu carries a labelled one. From 375 px up (most
+   phones) it fits and stays. */
+@media (max-width: 374px) {
+  .header-row {
+    gap: 8px;
+  }
+  .header-tools {
+    gap: 4px;
+  }
+  .header-tools > .theme-toggle {
     display: none;
   }
 }
@@ -823,6 +996,9 @@ p {
   --skew: 7vw;
   --a: calc(var(--split) + var(--skew));
   --b: calc(var(--split) - var(--skew));
+  /* The edges of the page's content column, so the halves line up with the header and every
+     section below; the corner marks alone stay out at the screen's edge. */
+  --edge: max(var(--gutter), calc((100% - var(--measure)) / 2));
   position: relative;
   height: 100vh;
   height: 100svh;
@@ -879,14 +1055,27 @@ p {
   width: 100%;
   height: 100%;
 }
-/* The noise thins out behind the title so the words never fight it. */
+/* The noise thins out behind the words, title and lead alike, so they never fight it, and fades
+   out under the header so the navigation never sits on a bright strand. */
 .gate-messenger .fx-canvas {
-  -webkit-mask-image: radial-gradient(60% 50% at 18% 34%, rgba(0, 0, 0, 0.18), #000 75%);
-  mask-image: radial-gradient(60% 50% at 18% 34%, rgba(0, 0, 0, 0.18), #000 75%);
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    radial-gradient(60% 62% at 18% 42%, rgba(0, 0, 0, 0.12), #000 78%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    radial-gradient(60% 62% at 18% 42%, rgba(0, 0, 0, 0.12), #000 78%);
+  mask-composite: intersect;
 }
 .gate-helix .fx-canvas {
-  -webkit-mask-image: radial-gradient(45% 42% at 86% 78%, rgba(0, 0, 0, 0.35), #000 80%);
-  mask-image: radial-gradient(45% 42% at 86% 78%, rgba(0, 0, 0, 0.35), #000 80%);
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    radial-gradient(50% 48% at 84% 80%, rgba(0, 0, 0, 0.18), #000 80%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    radial-gradient(50% 48% at 84% 80%, rgba(0, 0, 0, 0.18), #000 80%);
+  mask-composite: intersect;
 }
 
 .gate-content {
@@ -897,11 +1086,11 @@ p {
     transform 0.9s var(--ease);
 }
 .gate-messenger .gate-content {
-  left: var(--gutter);
+  left: var(--edge);
   top: calc(var(--header-h) + 14vh);
 }
 .gate-helix .gate-content {
-  right: var(--gutter);
+  right: var(--edge);
   bottom: 7vh;
   display: flex;
   flex-direction: column;
@@ -937,30 +1126,14 @@ p {
 .gate-title span {
   display: block;
 }
+/* Each world's name in its own flat colour: paint, not polished metal. */
 .gate-messenger .gate-title span:last-child,
 .metal {
-  background: var(--metal);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 9s linear infinite;
+  color: var(--metal);
 }
 .gate-helix .gate-title span:last-child,
 .gold {
-  background: var(--gold);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 9s linear infinite;
-}
-@keyframes shimmer {
-  to {
-    background-position: -220% 0;
-  }
+  color: var(--gold);
 }
 .gate-text {
   font-size: 17px;
@@ -968,6 +1141,14 @@ p {
   color: rgba(238, 240, 233, 0.8);
   max-width: 28rem;
   margin: 0 0 22px;
+}
+/* The messenger's lead sits at the seal's height. Pointing at the chain moves the seam to 41%,
+   so the line ends 24px short of where the 150px seal then lands (41vw less its 75px radius),
+   counted from the content column's left edge. */
+@media (min-width: 821px) {
+  .gate-messenger .gate-text {
+    max-width: min(28rem, calc(41vw - 99px - max(var(--gutter), (100vw - var(--measure)) / 2)));
+  }
 }
 .gate-cta {
   display: inline-flex;
@@ -989,18 +1170,19 @@ p {
   background: var(--amber);
   color: #160f04;
 }
+/* A second, offset edge in the button's own colour: a gold-edged plate, not a glow. */
 .gate-side:hover .gate-cta,
 .gate-side:focus-visible .gate-cta {
   gap: 22px;
   box-shadow:
-    0 0 0 4px rgba(238, 240, 233, 0.16),
-    0 0 50px rgba(220, 230, 245, 0.3);
+    0 0 0 2px #0a0c09,
+    0 0 0 4px #eef0e9;
 }
 .gate-helix:hover .gate-cta,
 .gate-helix:focus-visible .gate-cta {
   box-shadow:
-    0 0 0 4px rgba(224, 164, 74, 0.25),
-    0 0 50px rgba(224, 164, 74, 0.45);
+    0 0 0 2px #0a0c09,
+    0 0 0 4px var(--amber);
 }
 .gate-side:focus-visible .gate-cta {
   outline: 2px solid #fff;
@@ -1008,7 +1190,8 @@ p {
 }
 
 /* The blade itself: a white core, a silver glow on the messenger side, an amber one on the
-   helix side, and a pulse of light that runs down it. */
+   helix side, and a pulse of light that runs down the core. The pulse sits outside the blurred
+   glow and only moves by transform, so the blur is drawn once and never again. */
 .gate-blade {
   position: absolute;
   inset: 0;
@@ -1051,23 +1234,35 @@ p {
   clip-path: polygon(var(--a) 0, calc(var(--a) + 64px) 0, calc(var(--b) + 64px) 100%, var(--b) 100%);
   background: rgba(224, 164, 74, 0.5);
 }
-.gate-glow b::after {
+.gate-pulse {
+  --w: 7px;
+  overflow: hidden;
+  clip-path: polygon(
+    calc(var(--a) - var(--w)) 0,
+    calc(var(--a) + var(--w)) 0,
+    calc(var(--b) + var(--w)) 100%,
+    calc(var(--b) - var(--w)) 100%
+  );
+}
+.gate-pulse::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
+  top: 0;
   height: 34%;
-  top: -34%;
+  transform: translateY(-100%);
   background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.95), transparent);
   animation: blade-pulse 6s var(--ease) infinite;
 }
+/* From just above the gate to just below it: 110% of the gate is 3.24 times the pulse. */
 @keyframes blade-pulse {
   0% {
-    top: -34%;
+    transform: translateY(-100%);
   }
   60%,
   100% {
-    top: 110%;
+    transform: translateY(324%);
   }
 }
 
@@ -1085,9 +1280,7 @@ p {
   color: #fff;
   background: radial-gradient(circle, #0c0c0e 0 52%, rgba(6, 6, 7, 0.9) 53% 100%);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow:
-    0 0 0 10px rgba(0, 0, 0, 0.35),
-    0 0 70px rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.35);
   transition:
     transform 0.6s var(--ease-out),
     opacity 0.4s;
@@ -1102,9 +1295,12 @@ p {
 .gate-seal-ring {
   position: absolute;
   inset: 0;
+  animation: spin 40s linear infinite;
+}
+.gate-seal-ring svg {
+  display: block;
   width: 100%;
   height: 100%;
-  animation: spin 40s linear infinite;
 }
 .gate-seal-ring text {
   font: 500 10.5px var(--mono);
@@ -1156,11 +1352,12 @@ p {
     opacity: 0.35;
     filter: saturate(0.3);
   }
+  /* The words of the other half step back but stay readable: they are still a link. */
   .gate:has(.gate-messenger:hover) .gate-helix .gate-content,
   .gate:has(.gate-messenger:focus-visible) .gate-helix .gate-content,
   .gate:has(.gate-helix:hover) .gate-messenger .gate-content,
   .gate:has(.gate-helix:focus-visible) .gate-messenger .gate-content {
-    opacity: 0.35;
+    opacity: 0.75;
   }
   .gate:has(.gate-messenger:hover) .gate-messenger .gate-content,
   .gate:has(.gate-messenger:focus-visible) .gate-messenger .gate-content {
@@ -1190,23 +1387,83 @@ p {
   opacity: 0;
 }
 
+/* On a phone the halves stack: the claim plate, the messenger, the chain, in normal flow, so
+   larger text or wider spacing makes the opening taller instead of cutting words off. Each half
+   is a plain rectangle; only its background reaches across the seam and is cut along the
+   diagonal there, and the blade, the helix strand and the seal are placed on that seam. */
 @media (max-width: 820px) {
+  .gate {
+    /* Half the seam's rise from the left edge of the screen to the right one. */
+    --tilt: clamp(14px, 5vw, 32px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    /* Plate, messenger, chain. A tall screen shares its spare height out between the three. */
+    grid-template-rows: auto auto auto;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+  .gate-side {
+    position: relative;
+    inset: auto;
+    grid-column: 1;
+  }
+  /* The messenger half runs up behind the plate, so its ground and its noise reach the top of
+     the screen; its words sit in the row under the plate. */
+  .gate-messenger {
+    grid-row: 1 / 3;
+    display: grid;
+    grid-template-rows: subgrid;
+    clip-path: none;
+    background: none;
+  }
+  /* The chain's words sit at the foot of its row, as on a wide screen, clear of the strand. */
+  .gate-helix {
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    clip-path: none;
+    background: none;
+  }
+  .gate-messenger .gate-bg {
+    bottom: calc(-1 * var(--tilt));
+    background: #060607 radial-gradient(110% 90% at 25% 35%, #131519 0%, #060607 62%);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2 * var(--tilt)), 0 100%);
+  }
+  .gate-helix .gate-bg {
+    top: calc(-1 * var(--tilt));
+    background: #050403 radial-gradient(110% 90% at 75% 55%, #171006 0%, #050403 62%);
+    clip-path: polygon(0 calc(2 * var(--tilt)), 100% 0, 100% 100%, 0 100%);
+  }
+  .gate-messenger .gate-content,
+  .gate-helix .gate-content {
+    position: relative;
+    inset: auto;
+    max-width: none;
+  }
+  /* The seam sits close under the button: from 375px up, the seal at the right edge of the seam
+     has room beside the button. */
+  .gate-messenger .gate-content {
+    grid-row: 2;
+    padding: 16px var(--gutter) calc(var(--tilt) + 16px);
+  }
+  .gate-helix .gate-content {
+    padding: 100px var(--gutter) 28px;
+  }
+
+  /* The blade lies on the seam: a band around the top edge of the chain's row, with the line
+     from low on the left (--l) to high on the right (--r), 64px in from the band's edges. */
   .gate-blade {
+    grid-row: 3;
+    grid-column: 1;
+    inset: auto 0;
+    top: calc(-1 * var(--tilt) - 64px);
+    height: calc(2 * var(--tilt) + 128px);
+    --l: calc(100% - 64px);
+    --r: 64px;
     -webkit-mask-image: none;
     mask-image: none;
-  }
-  .gate {
-    --tilt: 4.5vh;
-    --l: calc(var(--sy) + var(--tilt));
-    --r: calc(var(--sy) - var(--tilt));
-    min-height: 660px;
-    transition: --sy 0.7s var(--ease);
-  }
-  .gate-messenger {
-    clip-path: polygon(0 0, 100% 0, 100% var(--r), 0 var(--l));
-  }
-  .gate-helix {
-    clip-path: polygon(0 var(--l), 100% var(--r), 100% 100%, 0 100%);
   }
   .gate-core {
     --w: 3px;
@@ -1223,27 +1480,25 @@ p {
   .gate-glow-amber b {
     clip-path: polygon(0 var(--l), 100% var(--r), 100% calc(var(--r) + 56px), 0 calc(var(--l) + 56px));
   }
-  .gate-glow b::after {
+  .gate-pulse {
+    clip-path: polygon(
+      0 calc(var(--l) - var(--w)),
+      100% calc(var(--r) - var(--w)),
+      100% calc(var(--r) + var(--w)),
+      0 calc(var(--l) + var(--w))
+    );
+  }
+  .gate-pulse::after {
     top: 0;
     bottom: 0;
     height: auto;
     width: 40%;
-    left: -40%;
+    left: 0;
+    transform: translateX(-100%);
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
     animation-name: blade-pulse-x;
   }
-  .gate-messenger .gate-content,
-  .gate-helix .gate-content {
-    left: var(--gutter);
-    right: var(--gutter);
-    max-width: none;
-  }
-  .gate-messenger .gate-content {
-    top: calc(var(--header-h) + 2.5vh);
-  }
-  .gate-helix .gate-content {
-    bottom: 4.5vh;
-  }
+
   .gate-title {
     font-size: clamp(42px, 11.5vw, 62px);
     margin-bottom: 14px;
@@ -1253,17 +1508,22 @@ p {
   }
   .gate-text {
     font-size: 15px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     max-width: 22rem;
   }
   .gate-cta {
     min-height: 46px;
     font-size: 14px;
   }
+
+  /* The seal sits on the seam near the right edge, where the seam is 0.62 of the tilt above the
+     row line. */
   .gate-seal {
+    grid-row: 3;
+    grid-column: 1;
     left: auto;
     right: var(--gutter);
-    top: calc(var(--sy) - var(--tilt) * 0.62);
+    top: calc(-0.62 * var(--tilt));
     width: 92px;
     height: 92px;
     margin: -46px -6px 0 0;
@@ -1279,28 +1539,44 @@ p {
   .gate-seal-arrow {
     display: none;
   }
+
   .gate-messenger .fx-canvas {
-    -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), #000 90%);
-    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), #000 90%);
+    -webkit-mask-image: linear-gradient(180deg, transparent calc(var(--header-h) - 8px), rgba(0, 0, 0, 0.25) calc(var(--header-h) + 40px), #000 90%);
+    mask-image: linear-gradient(180deg, transparent calc(var(--header-h) - 8px), rgba(0, 0, 0, 0.25) calc(var(--header-h) + 40px), #000 90%);
   }
+  /* The strand runs along the seam in a band of its own above the chain's kicker. */
   .gate-helix .fx-canvas {
-    -webkit-mask-image: linear-gradient(180deg, #000 40%, rgba(0, 0, 0, 0.3));
-    mask-image: linear-gradient(180deg, #000 40%, rgba(0, 0, 0, 0.3));
+    bottom: auto;
+    height: calc(var(--tilt) + 96px);
+    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+    mask-image: linear-gradient(180deg, #000 70%, transparent);
   }
-  .gate[data-leaving="messenger"] {
-    --sy: 160%;
+}
+/* The narrowest screens have no room for the seal beside the button, so the seam moves down. */
+@media (max-width: 374px) {
+  .gate-messenger .gate-content {
+    padding-bottom: calc(var(--tilt) + 42px);
   }
-  .gate[data-leaving="helix"] {
-    --sy: -60%;
+}
+@media (max-width: 420px) {
+  .gate-seal {
+    width: 72px;
+    height: 72px;
+    margin: -36px -4px 0 0;
+  }
+  .gate-seal-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
   }
 }
 @keyframes blade-pulse-x {
   0% {
-    left: -40%;
+    transform: translateX(-100%);
   }
   60%,
   100% {
-    left: 110%;
+    transform: translateX(275%);
   }
 }
 @media (max-width: 820px) and (max-height: 700px) {
@@ -1310,59 +1586,6 @@ p {
 }
 
 /* ---------- home ---------- */
-
-.about-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 48px 96px;
-  align-items: start;
-}
-.facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin: 0;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.fact {
-  background: var(--bg);
-  padding: 28px;
-}
-.fact dt {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-.fact-value {
-  font-family: var(--display);
-  font-size: clamp(40px, 4.2vw, 60px);
-  line-height: 1;
-  letter-spacing: 0.005em;
-  background: var(--metal);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  font-weight: 600;
-}
-.fact:nth-child(2) .fact-value,
-.fact:nth-child(4) .fact-value {
-  background-image: var(--gold);
-}
-.fact-label {
-  font-weight: 600;
-  font-size: 15px;
-}
-.fact dd {
-  margin: 0;
-  font-size: 14.5px;
-  color: var(--muted);
-}
 
 .marquee {
   overflow: hidden;
@@ -1375,9 +1598,6 @@ p {
   display: flex;
   width: max-content;
   animation: marquee 48s linear infinite;
-}
-.marquee.reverse .marquee-track {
-  animation-direction: reverse;
 }
 .marquee-run {
   display: flex;
@@ -1396,7 +1616,6 @@ p {
 }
 .marquee-slash {
   color: var(--faint);
-  -webkit-text-stroke: 0;
   margin: 0 1.4em;
   font-weight: 400;
 }
@@ -1406,123 +1625,24 @@ p {
 .marquee:hover .marquee-track {
   animation-play-state: paused;
 }
+/* On the home page the band continues the claim band: night olive in both themes, with the
+   claim band's lower edge as its only top line. */
+.marquee-band {
+  background: #0a0c09;
+}
+.marquee-band .marquee {
+  border-top: 0;
+}
 @keyframes marquee {
   to {
     transform: translateX(-50%);
   }
 }
-@supports not (-webkit-text-stroke: 1px black) {
-  .marquee-item {
-    color: var(--faint);
-  }
-}
 
-/* Two products and what they stand on: a miniature of the gate, then the shared layers. */
+/* What both products stand on: the two standards, then the shared layer. */
 .stack {
   display: grid;
   gap: 10px;
-}
-.stack-products {
-  --split: 50%;
-  --skew: 3.5%;
-  --a: calc(var(--split) + var(--skew));
-  --b: calc(var(--split) - var(--skew));
-  position: relative;
-  min-height: 300px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  isolation: isolate;
-  background: #000;
-  transition: --split 0.8s var(--ease);
-}
-.stack-product {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: clamp(24px, 3vw, 40px);
-  color: var(--text);
-  text-decoration: none;
-}
-.stack-messenger {
-  clip-path: polygon(0 0, var(--a) 0, var(--b) 100%, 0 100%);
-  padding-right: 56%;
-  background-color: #08090a;
-  background-image:
-    radial-gradient(70% 90% at 15% 0%, rgba(210, 222, 240, 0.16), transparent 70%),
-    linear-gradient(160deg, #1a1c20, #08090a);
-}
-.stack-helix {
-  clip-path: polygon(var(--a) 0, 100% 0, 100% 100%, var(--b) 100%);
-  padding-left: 56%;
-  background-color: #080603;
-  background-image:
-    radial-gradient(70% 90% at 85% 0%, rgba(224, 164, 74, 0.26), transparent 70%),
-    linear-gradient(200deg, #1f1607, #080603);
-}
-.stack-blade {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: #fff;
-  clip-path: polygon(calc(var(--a) - 2px) 0, calc(var(--a) + 2px) 0, calc(var(--b) + 2px) 100%, calc(var(--b) - 2px) 100%);
-}
-.stack-products:has(.stack-messenger:hover) {
-  --split: 54%;
-}
-.stack-products:has(.stack-helix:hover) {
-  --split: 46%;
-}
-.stack-kicker {
-  font: 500 11.5px/1 var(--mono);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.stack-name {
-  font-family: var(--display);
-  font-size: clamp(26px, 2.6vw, 36px);
-  letter-spacing: 0.005em;
-  line-height: 1.05;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.stack-helix .stack-name {
-  color: #f0bb68;
-}
-.stack-body {
-  color: #b9b9c2;
-  font-size: 15px;
-  max-width: 34ch;
-}
-.stack-go {
-  position: absolute;
-  top: clamp(24px, 3vw, 40px);
-  width: 42px;
-  height: 42px;
-  border-radius: var(--r-ctl);
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line-2);
-  transition:
-    background 0.3s,
-    color 0.3s;
-}
-.stack-messenger .stack-go {
-  left: clamp(24px, 3vw, 40px);
-}
-.stack-helix .stack-go {
-  right: clamp(24px, 3vw, 40px);
-}
-.stack-product:hover .stack-go {
-  background: #fff;
-  color: #000;
-}
-.stack-helix:hover .stack-go {
-  background: var(--amber);
 }
 .stack-algos {
   display: grid;
@@ -1560,9 +1680,6 @@ p {
 .stack-pq {
   background: var(--surface-2);
 }
-.stack-eu {
-  background: linear-gradient(90deg, var(--surface), var(--surface-2), var(--surface));
-}
 
 .timeline {
   --done: clamp(0, var(--p, 0), 1);
@@ -1590,11 +1707,11 @@ p {
   width: calc(var(--done) * 100%);
   background: linear-gradient(90deg, var(--warn), var(--bad) 50%, var(--ok));
 }
+/* Only the node lights up as the line reaches it; the words are at full strength from the start,
+   so they read wherever the line happens to be. */
 .timeline-step {
   --on: clamp(0, calc((var(--p, 0) * var(--n) - var(--i)) * 2.5), 1);
   --c: var(--warn);
-  opacity: calc(0.35 + 0.65 * var(--on));
-  transition: opacity 0.3s;
 }
 .timeline-step.step-1 {
   --c: var(--bad);
@@ -1613,6 +1730,8 @@ p {
   border: 2px solid var(--c);
   margin-bottom: 28px;
   box-shadow: 0 0 0 calc(var(--on) * 6px) color-mix(in srgb, var(--c) 22%, transparent);
+  opacity: calc(0.35 + 0.65 * var(--on));
+  transition: opacity 0.3s;
 }
 .timeline-when {
   font: 600 12px/1 var(--mono);
@@ -1634,10 +1753,10 @@ p {
   gap: clamp(40px, 7vw, 112px);
   align-items: center;
 }
+/* Square, so all four corner marks of a reading (further down) stay on the photo. */
 .craft-media {
   aspect-ratio: 4 / 5;
   border-radius: var(--radius);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 12% 100%);
 }
 .craft-list {
   list-style: none;
@@ -1687,35 +1806,10 @@ p {
 .europe-points p {
   margin: 0;
 }
-.europe-visual {
-  position: relative;
-}
 .europe-photo {
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  box-shadow:
-    0 0 0 1px var(--line-2),
-    0 0 0 18px color-mix(in srgb, var(--text) 3%, transparent),
-    0 0 0 19px var(--line);
-}
-.europe-caption {
-  position: absolute;
-  left: 50%;
-  bottom: -14px;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  /* One line where it fits; on the narrowest screens it wraps rather than pushing the page wide. */
-  width: max-content;
-  max-width: calc(100% - 16px);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 10px 16px;
-  border-radius: var(--r-ctl);
-  background: var(--surface);
-  border: 1px solid var(--line-2);
+  box-shadow: 0 0 0 1px var(--line-2);
 }
 
 .live-grid {
@@ -1729,9 +1823,7 @@ p {
   position: relative;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background:
-    radial-gradient(80% 70% at 100% 0%, color-mix(in srgb, var(--amber) 14%, transparent), transparent 70%),
-    var(--surface);
+  background: var(--surface);
   padding: clamp(24px, 3vw, 36px);
   overflow: hidden;
 }
@@ -1741,13 +1833,22 @@ p {
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
 }
 .testnet-title {
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .testnet-source {
   margin-left: auto;
+}
+.testnet-nojs {
+  margin: -12px 0 24px;
   font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 .testnet-height {
@@ -1756,10 +1857,6 @@ p {
   gap: 6px;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
-}
-.testnet-label {
-  font-size: 13px;
-  color: var(--muted);
 }
 .testnet-big {
   font-size: clamp(40px, 4.6vw, 62px);
@@ -1775,14 +1872,26 @@ p {
   gap: 16px;
   margin: 24px 0 0;
 }
-.testnet-stats dt {
-  font-size: 13px;
-  color: var(--muted);
-}
 .testnet-stats dd {
   margin: 4px 0 0;
   font-size: 18px;
   font-weight: 500;
+}
+/* Without the large height (the Helix page shows it in its opening and the stream), the six
+   readings form one row on a wide screen, two rows of three on a narrower one. */
+.testnet-head + .testnet-stats {
+  margin-top: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+@media (max-width: 1100px) {
+  .testnet-head + .testnet-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .testnet-head + .testnet-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .testnet-link {
   display: inline-flex;
@@ -1801,14 +1910,15 @@ p {
 .join {
   overflow: hidden;
 }
+/* A whisper of the camouflage under the closing call, instead of coloured light. */
 .join::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(40% 60% at 15% 100%, color-mix(in srgb, var(--silver) 12%, transparent), transparent 70%),
-    radial-gradient(40% 60% at 85% 100%, color-mix(in srgb, var(--amber) 14%, transparent), transparent 70%);
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
+  opacity: 0.06;
 }
 .join-title {
   font-size: clamp(42px, 5.6vw, 84px);
@@ -1851,22 +1961,6 @@ p {
     radial-gradient(60% 50% at 80% 90%, rgba(224, 164, 74, 0.12), transparent 70%),
     linear-gradient(160deg, #17181c, #060607);
 }
-.photo-frame {
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius);
-  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-}
-.photo-frame.amber .photo-fallback {
-  background:
-    radial-gradient(70% 55% at 70% 25%, rgba(224, 164, 74, 0.3), transparent 65%),
-    linear-gradient(160deg, #20160a, #060403);
-}
-.photo-split-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(40px, 7vw, 112px);
-  align-items: center;
-}
 
 /* ---------- page openings ---------- */
 
@@ -1881,10 +1975,28 @@ p {
   background: var(--bg);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5vw), 0 100%);
 }
+/* Pages that are read rather than entered (Impressum, Barrierefreiheit) open on a short band, so
+   the first lines of text are on the first screen. */
+.page-hero--compact {
+  min-height: 0;
+  padding: calc(var(--header-h) + 56px) 0 calc(5vw + 56px);
+}
+.page-hero--compact .page-hero-body h1 {
+  font-size: clamp(40px, 4.6vw, 68px);
+}
+/* A hero with nothing after it but the footer: no diagonal edge, which would only show a wedge
+   of paper between two dark bands. */
+.page-hero--last {
+  clip-path: none;
+}
+/* The picture fades out under the header, as the gate's noise does, so no bright line of it
+   ever runs through the navigation. */
 .page-hero-media {
   position: absolute;
   inset: 0;
   z-index: -2;
+  -webkit-mask-image: linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px));
+  mask-image: linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px));
 }
 .page-hero-media .photo {
   position: absolute;
@@ -1895,8 +2007,8 @@ p {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(5, 5, 6, 0.95) 0%, rgba(5, 5, 6, 0.7) 45%, rgba(5, 5, 6, 0.35) 100%),
-    linear-gradient(0deg, rgba(5, 5, 6, 0.9) 0%, transparent 50%);
+    linear-gradient(90deg, rgba(10, 12, 9, 0.95) 0%, rgba(10, 12, 9, 0.7) 45%, rgba(10, 12, 9, 0.35) 100%),
+    linear-gradient(0deg, rgba(10, 12, 9, 0.9) 0%, transparent 50%);
 }
 .page-hero-grid {
   position: absolute;
@@ -1912,7 +2024,7 @@ p {
   font-size: clamp(42px, 5.8vw, 88px);
 }
 .page-hero-body .lead {
-  color: #c4c4cc;
+  color: rgba(238, 240, 233, 0.82);
 }
 
 /* ---------- product openings ---------- */
@@ -1926,7 +2038,7 @@ p {
   display: flex;
   align-items: center;
   padding: calc(var(--header-h) + 40px) 0 clamp(110px, 12vw, 170px);
-  background: #050506;
+  background: #070906;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5vw), 0 100%);
 }
 .p-hero-bg {
@@ -1954,6 +2066,42 @@ p {
 .p-hero-helix .p-hero-aura {
   background: radial-gradient(35% 60% at 74% 50%, rgba(224, 164, 74, 0.24), transparent 70%);
 }
+/* The strand fades out under the header, as on the home page's gate, so the navigation never
+   sits on a bright node, and it stays right of the text column (42rem from the content edge; the
+   lead ends near 40rem), so it never runs under the words between 900 and 1180px. */
+.p-hero-helix .fx-canvas {
+  --text-end: calc(max(var(--gutter), (100% - var(--measure)) / 2) + 40rem);
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    linear-gradient(90deg, transparent var(--text-end), #000 calc(var(--text-end) + 160px));
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+    linear-gradient(90deg, transparent var(--text-end), #000 calc(var(--text-end) + 160px));
+  mask-composite: intersect;
+}
+/* Once the text spans the width (up to 900px) the strand would run under the lead and the
+   readings. There it shows only in the last third, towards the right edge, and dimmed, so that
+   even its brightest node keeps the words at 4.5:1. */
+@media (max-width: 900px) {
+  .p-hero-helix .fx-canvas {
+    opacity: 0.45;
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+      linear-gradient(90deg, transparent 0 70%, #000 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
+      linear-gradient(90deg, transparent 0 70%, #000 100%);
+    mask-composite: intersect;
+  }
+  /* With the strand pushed to the edge there is no picture to fill a full screen, as the
+     messenger's stacked phone does; the opening ends with its readings instead of half a
+     screen of empty gradient. */
+  .p-hero-helix {
+    min-height: 0;
+  }
+}
 .p-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
@@ -1977,13 +2125,13 @@ p {
 }
 .p-title-sub {
   font-size: 0.3em;
-  font-weight: 300;
+  font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--muted);
   margin-top: 0.4em;
 }
 .p-hero .lead {
-  color: #c4c4cc;
+  color: rgba(238, 240, 233, 0.8);
 }
 .p-hero-visual {
   position: relative;
@@ -1998,29 +2146,31 @@ p {
   position: absolute;
   animation: float 8s ease-in-out infinite;
 }
+/* Chips are labels on a display, not stickers: mono caps on night olive, like the readout. */
 .float-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
-  font: 500 12px/1 var(--mono);
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   padding: 10px 14px;
   border-radius: var(--r-ctl);
-  color: #e4e4e7;
-  background: rgba(22, 24, 28, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  color: #eef0e9;
+  background: rgba(10, 12, 9, 0.84);
+  border: 1px solid rgba(238, 240, 233, 0.18);
 }
+/* Each chip overlaps the frame only where the screen behind it is empty: above the logo, beside
+   the wordmark, below the button. Their outer edges stay inside the content column. */
 .chip-a {
-  right: -26%;
-  top: 9%;
+  right: -14%;
+  top: 2%;
   animation-delay: -2s;
 }
 .chip-b {
   left: -36%;
-  top: 30%;
+  top: 22%;
   animation-delay: -4s;
 }
 .chip-c {
@@ -2028,10 +2178,10 @@ p {
   bottom: 9%;
   animation-delay: -6s;
 }
-/* Over the empty lower half of the screenshot, never over its words. */
+/* Over the empty lower half of the screenshot, below its sign-in button, never over its words. */
 .float-bubble {
   left: -46%;
-  top: 64%;
+  top: 70%;
 }
 @keyframes float {
   0%,
@@ -2042,35 +2192,33 @@ p {
     transform: translateY(-12px);
   }
 }
+/* Two lines tall in both states, so it does not jump as the sentence turns into hex; a short
+   sentence sits in the middle of that height instead of leaving the bottom half empty. */
 .cipher-loop {
   width: 250px;
   min-height: 74px;
   display: flex;
   gap: 10px;
-  align-items: flex-start;
+  align-items: center;
   padding: 14px 16px;
   border-radius: 18px 18px 18px 5px;
-  background: rgba(30, 32, 37, 0.85);
+  background: rgba(18, 22, 15, 0.96);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-  color: #f4f4f5;
+  color: #eef0e9;
   font-size: 14.5px;
   line-height: 1.45;
 }
 .cipher-loop-lock {
   flex: none;
-  margin-top: 2px;
-  color: #22c55e;
+  color: var(--signal);
 }
 .cipher-loop[data-plain="false"] .cipher-loop-lock {
-  color: #a1a1aa;
+  color: var(--muted);
 }
 .cipher-loop[data-plain="false"] .cipher-loop-text {
   font-family: var(--mono);
   font-size: 13px;
-  color: #a1a1aa;
+  color: var(--muted);
   word-break: break-all;
 }
 .hero-stats {
@@ -2081,15 +2229,26 @@ p {
   padding-top: 28px;
   border-top: 1px solid var(--line);
 }
-.hero-stats dt {
-  font-size: 13px;
-  color: var(--muted);
-}
 .hero-stats dd {
   margin: 4px 0 0;
   font-size: 20px;
   color: var(--amber-text);
   font-variant-numeric: tabular-nums;
+}
+/* Four readings in two even rows on a phone, instead of three and a straggler. */
+@media (max-width: 640px) {
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
+  }
+  /* A label that wraps to two lines would push its value below its neighbour's; values sit at
+     the foot of the row instead, so each row reads on one line. */
+  .hero-stats > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
 
 /* ---------- messenger ---------- */
@@ -2104,16 +2263,11 @@ p {
   padding: 36px 32px 32px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, var(--surface), var(--bg));
-  transition:
-    border-color 0.4s,
-    transform 0.6s var(--ease-out),
-    box-shadow 0.6s;
+  background: var(--surface);
+  transition: border-color 0.3s;
 }
 .pillar:hover {
   border-color: var(--line-2);
-  transform: translateY(-4px);
-  box-shadow: 0 30px 60px -30px var(--glow);
 }
 .pillar-num {
   position: absolute;
@@ -2131,7 +2285,7 @@ p {
   margin-bottom: 64px;
   color: var(--text);
   border: 1px solid var(--line-2);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--text) 10%, transparent), transparent);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
 }
 .pillar h3 {
   font-family: var(--display);
@@ -2185,7 +2339,6 @@ p {
 }
 .hybrid-box.pq {
   border-color: color-mix(in srgb, var(--ok) 55%, transparent);
-  box-shadow: inset 0 0 30px color-mix(in srgb, var(--ok) 10%, transparent);
 }
 .hybrid-plus {
   align-self: center;
@@ -2197,15 +2350,20 @@ p {
   height: 40px;
   background: linear-gradient(var(--line-2), var(--accent));
 }
+/* The result of the combination, framed like a plate rather than filled like a button: it is
+   not something to press. */
 .hybrid-out {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 14px 22px;
   border-radius: var(--r-ctl);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--text);
+  font: 600 18px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 .hybrid-note {
   margin: 16px 0 0;
@@ -2224,16 +2382,18 @@ p {
   letter-spacing: 0.005em;
   max-width: 34em;
 }
+/* The slash leans by a fixed angle, so its sideways travel grows with its length: over a long
+   quote on a phone it would run into the first word and out of the gutter. Capped at five
+   lines, it stays within the padding at every width. */
 .quote::before {
   content: "";
   position: absolute;
   left: 0;
   top: 4px;
-  bottom: 4px;
+  height: min(calc(100% - 8px), 5em);
   width: 3px;
   background: var(--accent);
   transform: skewX(-12deg);
-  box-shadow: 0 0 24px var(--glow);
 }
 
 .demo-grid {
@@ -2243,31 +2403,37 @@ p {
   align-items: center;
 }
 .terminal {
+  position: relative;
   border-radius: var(--radius);
   border: 1px solid var(--line-2);
-  background: #08080a;
+  background: var(--bg);
   color: var(--text);
   overflow: hidden;
-  box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.8);
 }
+/* A status line, not a window: a square signal mark, the channel, and its state. */
 .terminal-bar {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   padding: 14px 18px;
   border-bottom: 1px solid var(--line);
-  background: #0e0e11;
+  background: var(--surface);
 }
-.terminal-bar i {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #2a2a30;
-}
-.terminal-bar span {
-  margin-left: 10px;
-  font-size: 12px;
+.terminal-bar > span,
+.terminal-title {
+  font: 500 11px/1.35 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--muted);
+}
+.terminal-bar .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 0;
+}
+.terminal-bar .terminal-state {
+  margin-left: auto;
+  color: var(--signal);
 }
 .terminal-body {
   padding: 22px;
@@ -2279,10 +2445,20 @@ p {
   padding: 0 16px;
   border-radius: var(--r-ctl);
   border: 1px solid var(--line-2);
-  background: #0e0e11;
+  background: var(--surface);
 }
+.terminal-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* The field's own outline is off, so the frame carries focus: 1px border plus 1px ring. */
 .terminal-input:focus-within {
   border-color: var(--silver);
+  box-shadow: 0 0 0 1px var(--silver);
 }
 .terminal-prompt {
   color: var(--ok);
@@ -2313,10 +2489,10 @@ p {
 }
 .terminal-out dd {
   margin: 4px 0 16px;
-  color: #d4d4d8;
+  color: var(--text);
 }
-.terminal-cipher {
-  color: #e8b15c !important;
+.terminal-out .terminal-cipher {
+  color: var(--signal);
 }
 .terminal-ok {
   margin: 0;
@@ -2332,29 +2508,6 @@ p {
   border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--muted);
-}
-
-.screens {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(16px, 3vw, 48px);
-  align-items: start;
-}
-.screen {
-  margin: 0;
-  text-align: center;
-}
-.screen img {
-  width: min(100%, 270px);
-  margin: 0 auto 24px;
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
-}
-.screen:nth-child(2) {
-  margin-top: -40px;
-}
-.screen figcaption p {
-  max-width: 30ch;
-  margin: 0 auto;
 }
 
 .ledger {
@@ -2431,36 +2584,26 @@ p {
   transform: rotate(40deg);
 }
 
+/* The words on the left, a code to scan on the right (hidden where there is nothing to scan
+   it with, further down). */
 .download-panel {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  text-align: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
   padding: clamp(56px, 8vw, 112px) clamp(24px, 4vw, 64px);
   border-radius: var(--radius);
-  background: #050506;
+  background: #070906;
   border: 1px solid var(--line-2);
-}
-.download-panel .label {
-  justify-content: center;
 }
 .download-panel h2 {
   font-size: clamp(42px, 5vw, 72px);
 }
 .download-panel .lead {
-  margin-inline: auto;
-  color: #c4c4cc;
-}
-.download-panel .btn-row {
-  justify-content: center;
-}
-.download-aura {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(50% 70% at 50% 110%, rgba(210, 222, 240, 0.22), transparent 70%),
-    radial-gradient(30% 50% at 50% -10%, rgba(255, 255, 255, 0.08), transparent 70%);
+  color: rgba(238, 240, 233, 0.8);
 }
 
 /* The door to the other world. */
@@ -2474,14 +2617,14 @@ p {
   overflow: hidden;
   text-decoration: none;
   color: var(--text);
-  background: #050506;
+  background: #070906;
   clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
 }
 .next-helix {
   background: #050403 radial-gradient(80% 90% at 75% 50%, #1b1307, #050403 70%);
 }
 .next-messenger {
-  background: #050506 radial-gradient(80% 90% at 75% 50%, #15171b, #050506 70%);
+  background: #070906 radial-gradient(80% 90% at 75% 50%, #15171b, #070906 70%);
 }
 .next-world-bg {
   position: absolute;
@@ -2489,9 +2632,26 @@ p {
   z-index: -1;
   transition: opacity 0.6s;
 }
-.next-messenger .fx-canvas {
-  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 75%);
-  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 75%);
+/* The words sit on the left, so the picture fades out there; on a phone the words take the
+   whole width, and the picture moves down into room of its own under the button. */
+.next-helix .next-world-bg {
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0 45%, #000 60%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0 45%, #000 60%);
+}
+.next-messenger .next-world-bg {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0 40%, #000 80%);
+  mask-image: linear-gradient(90deg, transparent 0 40%, #000 80%);
+}
+@media (max-width: 760px) {
+  .next-world {
+    padding-bottom: 260px;
+  }
+  .next-helix .next-world-bg,
+  .next-messenger .next-world-bg {
+    top: 40%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0 30%, #000 60%);
+    mask-image: linear-gradient(180deg, transparent 0 30%, #000 60%);
+  }
 }
 .next-world-title {
   font-family: var(--display);
@@ -2504,26 +2664,17 @@ p {
   text-transform: uppercase;
 }
 .next-helix .next-world-title {
-  background: var(--gold);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--gold);
 }
 .next-messenger .next-world-title {
-  background: var(--metal);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--metal);
 }
 .next-world-text {
-  color: #c4c4cc;
+  color: rgba(238, 240, 233, 0.8);
   font-size: 18px;
   max-width: 34rem;
 }
+/* Set like the site's primary buttons: condensed caps on a filled, square-cornered plate. */
 .next-world-cta {
   display: inline-flex;
   align-items: center;
@@ -2531,13 +2682,17 @@ p {
   min-height: 52px;
   padding: 0 26px;
   margin-top: 12px;
+  border: 1.5px solid var(--silver);
   border-radius: var(--r-ctl);
-  font-weight: 600;
-  background: #f4f4f5;
-  color: #050506;
+  font: 600 18px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--silver);
+  color: #0a0c09;
   transition: gap 0.5s var(--ease-out);
 }
 .next-helix .next-world-cta {
+  border-color: var(--amber);
   background: var(--amber);
   color: #160f04;
 }
@@ -2547,26 +2702,71 @@ p {
 .next-world:hover .next-world-title {
   transform: translateX(12px);
 }
+/* The door is the whole band, but a ring around the band would be clipped by its diagonal
+   edge; the ring goes round the button inside it instead. */
 .next-world:focus-visible {
-  outline-offset: -6px;
+  outline: none;
+}
+.next-world:focus-visible .next-world-cta {
+  outline: 2px solid #eef0e9;
+  outline-offset: 4px;
 }
 
 /* ---------- helix ---------- */
 
-.helix-mark-wrap {
-  position: relative;
+.split-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(40px, 7vw, 112px);
+  align-items: center;
 }
-.helix-mark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 120px;
-  height: 120px;
-  transform: translate(-50%, -50%);
-  border-radius: 28px;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.2),
-    0 30px 80px rgba(224, 164, 74, 0.45);
+/* The foundation as a reading: the primitives the chain is built on, on a situation display
+   that stays dark in both themes like the terminals, so the readout keeps its instrument colours. */
+.helix-readout {
+  isolation: isolate;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.helix-readout .hud-camo {
+  opacity: 0.35;
+}
+.helix-readout .gate-readout {
+  position: static;
+  display: grid;
+  gap: 0;
+  font-size: 12px;
+}
+.helix-readout .gate-readout div {
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px dashed var(--line-2);
+}
+.helix-readout .gate-readout div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.helix-readout .gate-readout div:last-child {
+  padding-bottom: 0;
+}
+.helix-readout .gate-readout dt {
+  flex: none;
+  min-width: 8.5em;
+}
+/* Values as the standards write them: "192s" is the small variant, not "192S". */
+.helix-readout .gate-readout dd {
+  min-width: 0;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--amber-text);
+}
+@media (max-width: 480px) {
+  .helix-readout .gate-readout div {
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 
 .chain {
@@ -2582,17 +2782,11 @@ p {
   padding: 26px 28px 30px;
   border-radius: var(--radius);
   border: 1px solid color-mix(in srgb, var(--amber) 28%, var(--line));
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--amber) 7%, var(--surface)), var(--surface));
-  transition:
-    transform 0.6s var(--ease-out),
-    border-color 0.4s,
-    box-shadow 0.6s;
+  background: var(--surface);
+  transition: border-color 0.3s;
 }
 .block:hover {
-  transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--amber) 60%, transparent);
-  box-shadow: 0 30px 60px -30px rgba(224, 164, 74, 0.45);
 }
 /* Each block links to the next: the connector bridges the gap to its right. */
 .block::after {
@@ -2664,7 +2858,7 @@ p {
 .honesty-highlight {
   margin: 24px 0 0;
   font-family: var(--display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(21px, 1.9vw, 26px);
   letter-spacing: 0.005em;
   line-height: 1.35;
@@ -2687,9 +2881,7 @@ p {
   background: var(--surface);
   text-decoration: none;
   color: var(--text);
-  transition:
-    border-color 0.3s,
-    transform 0.5s var(--ease-out);
+  transition: border-color 0.3s;
 }
 .link-card > .icon:first-child {
   color: var(--accent-text);
@@ -2697,11 +2889,6 @@ p {
 }
 .link-card:hover {
   border-color: var(--accent);
-  transform: translateY(-3px);
-}
-.link-card-title {
-  font-weight: 600;
-  font-size: 17px;
 }
 .link-card .muted {
   font-size: 14.5px;
@@ -2743,12 +2930,9 @@ p {
   top: -12px;
   bottom: -12px;
   left: 50%;
-  width: 3px;
-  background: var(--text);
+  width: 2px;
+  background: var(--accent-text);
   transform: translateX(-50%) skewX(-9deg);
-  box-shadow:
-    -14px 0 40px color-mix(in srgb, var(--silver) 25%, transparent),
-    14px 0 40px color-mix(in srgb, var(--amber) 30%, transparent);
 }
 .versus-col h3 {
   font-family: var(--display);
@@ -2772,41 +2956,56 @@ p {
 .versus-col li p {
   margin: 4px 0 0;
 }
+/* Both columns mark their items in the same square frame; what we refuse to claim is a plain
+   cross in the text colour, not an alarm. */
+.versus-col li .icon {
+  box-sizing: content-box;
+  padding: 3px;
+  border: 1px solid var(--line-2);
+  margin-top: 1px;
+}
 .versus-yes .icon {
   color: var(--ok);
-  margin-top: 3px;
 }
 .versus-no .icon {
-  color: var(--bad);
-  margin-top: 3px;
+  color: var(--muted);
 }
 
 /* ---------- contact & legal ---------- */
 
+/* Three cards side by side on a wide screen. Between that and a phone they pair up, and the
+   security card takes the full row below rather than standing alone in half of it. */
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
+.contact-security {
+  grid-column: 1 / -1;
+}
+.contact-security p {
+  max-width: 64ch;
+}
+@media (min-width: 1100px) {
+  .contact-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .contact-security {
+    grid-column: auto;
+  }
+}
+/* A flat 2px band in the world's colour along the top: the developers' card in the page
+   accent, the validators' in Helix amber, the security card in sand. */
 .contact-card {
   position: relative;
   padding: clamp(28px, 4vw, 44px);
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: linear-gradient(var(--accent), var(--accent)) top / 100% 2px no-repeat, var(--surface);
   overflow: hidden;
 }
-.contact-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 3px;
-  background: var(--metal);
-}
-.contact-validator::before {
-  background: var(--gold);
+.contact-validator {
+  background: linear-gradient(#e0a44a, #e0a44a) top / 100% 2px no-repeat, var(--surface);
 }
 .contact-icon {
   display: grid;
@@ -2819,6 +3018,12 @@ p {
 }
 .contact-validator .contact-icon {
   color: var(--amber-text);
+}
+.contact-security {
+  background: linear-gradient(var(--sand-text), var(--sand-text)) top / 100% 2px no-repeat, var(--surface);
+}
+.contact-security .contact-icon {
+  color: var(--sand-text);
 }
 .contact-card h3 {
   font-family: var(--display);
@@ -2838,20 +3043,20 @@ p {
   border: 1px solid var(--line);
   background: var(--surface);
 }
-.legal > div + div {
+.legal-block + .legal-block {
   margin-top: 28px;
   padding-top: 28px;
   border-top: 1px solid var(--line);
 }
-.legal dt {
+/* Real h2s, so the outline lists every block, set as the small mono label they replace. */
+.legal-title {
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
-.legal dd {
-  margin: 0;
+.legal-body {
   white-space: pre-line;
 }
 .legal-list {
@@ -2886,7 +3091,8 @@ p {
   position: absolute;
   inset: 0 0 auto;
   height: 14px;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   border-bottom: 1px solid rgba(214, 222, 196, 0.16);
 }
 .footer-top {
@@ -2899,14 +3105,36 @@ p {
   max-width: 36ch;
   margin: 20px 0 0;
 }
+/* One line, like a stamp: the 36ch measure of the paragraph above would break it. */
 .footer-intro .footer-eu {
   display: flex;
   align-items: center;
   gap: 10px;
+  max-width: none;
+  white-space: nowrap;
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text);
+}
+.footer-eu .eu-mark {
+  flex: none;
+  color: var(--sand-text);
+}
+/* Under the stamp, quieter: indented to the stamp's text, past the mark. */
+.footer-intro .footer-independent {
+  max-width: none;
+  margin-top: 8px;
+  padding-left: 30px;
+  font: 500 11px/1.5 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (max-width: 400px) {
+  .footer-intro .footer-eu {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
 }
 .footer-cols {
   display: grid;
@@ -2934,6 +3162,10 @@ p {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+.footer-col a .icon {
+  margin-left: 6px;
+  opacity: 0.7;
+}
 .footer-mark {
   margin: clamp(48px, 7vw, 96px) 0 0;
   font-family: var(--brand);
@@ -2944,7 +3176,9 @@ p {
   text-align: center;
   white-space: nowrap;
   user-select: none;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--text) 18%, transparent), transparent 88%);
+  /* One flat tint over the whole word: a fade towards the baseline left only its upper half
+     visible on a phone, which read as a fault rather than a mark. */
+  background: linear-gradient(color-mix(in srgb, var(--text) 12%, transparent), color-mix(in srgb, var(--text) 12%, transparent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -2955,10 +3189,17 @@ p {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px 24px;
-  padding-top: 24px;
+  /* The back-to-top ring rests in the corner at the end of the page; the readout stops short
+     of it instead of running into it. */
+  padding: 24px 72px 0 0;
   border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--muted);
+}
+.footer-bottom .mono {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* ---------- responsive ---------- */
@@ -2981,11 +3222,10 @@ p {
 
 @media (max-width: 900px) {
   .section-head,
-  .about-grid,
   .craft-grid,
   .europe-grid,
   .live-grid,
-  .photo-split-grid,
+  .split-grid,
   .adversary-grid,
   .demo-grid,
   .p-hero-grid,
@@ -3001,6 +3241,11 @@ p {
   .contact-grid,
   .prose-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  /* Stacked, the cards no longer share a height, so the deep gap that lines their titles up in
+     a row is only empty space. */
+  .pillar-icon {
+    margin-bottom: 28px;
   }
   .timeline {
     grid-template-columns: minmax(0, 1fr);
@@ -3032,8 +3277,7 @@ p {
     margin-left: -40px;
     padding-left: 40px;
   }
-  .craft-media,
-  .photo-frame {
+  .craft-media {
     aspect-ratio: 16 / 11;
   }
   .europe-photo {
@@ -3057,13 +3301,11 @@ p {
   .float-bubble {
     left: -30%;
   }
-  .screens {
-    grid-template-columns: minmax(0, 1fr);
-    max-width: 22rem;
-    margin: 0 auto;
-  }
-  .screen:nth-child(2) {
-    margin-top: 0;
+  /* The phone is smaller than its chips here, so any spot for them is on its words; the readout
+     above already names MLS and X-Wing, and the feed chip keeps the empty lower screen. */
+  .chip-a,
+  .chip-b {
+    display: none;
   }
   .stack-algos {
     grid-template-columns: minmax(0, 1fr);
@@ -3074,38 +3316,6 @@ p {
 }
 
 @media (max-width: 640px) {
-  .facts {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .fact {
-    padding: 22px;
-  }
-  .stack-products {
-    --skew: 0%;
-    --split: 50%;
-    min-height: 420px;
-  }
-  .stack-products:has(.stack-messenger:hover),
-  .stack-products:has(.stack-helix:hover) {
-    --split: 50%;
-  }
-  /* Stacked: the products split top and bottom along a gentle diagonal. */
-  .stack-messenger {
-    clip-path: polygon(0 0, 100% 0, 100% 46%, 0 54%);
-    padding: 24px 24px 54%;
-    justify-content: flex-start;
-  }
-  .stack-helix {
-    clip-path: polygon(0 54%, 100% 46%, 100% 100%, 0 100%);
-    padding: 54% 24px 24px;
-    justify-content: flex-end;
-  }
-  .stack-blade {
-    clip-path: polygon(0 calc(54% - 2px), 100% calc(46% - 2px), 100% calc(46% + 2px), 0 calc(54% + 2px));
-  }
-  .stack-go {
-    display: none;
-  }
   .nots,
   .link-grid,
   .chain {
@@ -3139,25 +3349,19 @@ p {
     flex-direction: column;
   }
   .float-chip {
-    font-size: 11px;
     padding: 8px 11px;
-  }
-  .chip-a {
-    right: -22%;
-  }
-  .chip-b {
-    left: -24%;
   }
   .chip-c {
     right: -14%;
   }
   .cipher-loop {
     width: 200px;
+    max-width: calc(100vw - 32px);
     font-size: 13px;
   }
   .float-bubble {
-    left: -34%;
-    top: 66%;
+    left: -22%;
+    top: 70%;
   }
   .footer-bottom {
     flex-direction: column;
@@ -3175,54 +3379,20 @@ p {
   }
 }
 
-/* ---------- reduced motion ----------
-   Everything here is complete without motion: the canvases draw one still frame, the scroll-
-   linked text is fully lit, and nothing loops. */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-  .marquee-track {
-    animation: none;
-    width: auto;
-  }
-  .marquee-run {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 10px;
-  }
-  .marquee-run + .marquee-run {
-    display: none;
-  }
-  .gate-glow b::after {
-    display: none;
-  }
-}
-
 /* =====================================================================================
    v2 — live chain, tokenomics, message route, features, motion
    ===================================================================================== */
 
 /* ---------- block stream ---------- */
 
+/* The 6px of side padding leave room for a focus ring (2px, 3px out), which the clipping would
+   otherwise cut; the negative margin keeps the tiles on the column's edges. */
 .stream {
   position: relative;
-  margin: 0 0 24px;
-  padding: 26px 0 8px;
+  margin: 0 -6px 24px;
+  padding: 26px 6px 8px;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent);
-  mask-image: linear-gradient(90deg, #000 70%, transparent);
+  container: stream / inline-size;
 }
 .stream-row {
   list-style: none;
@@ -3231,11 +3401,44 @@ p {
   display: flex;
   gap: 14px;
 }
+/* Tiles share the row evenly and are never narrower than 168px: the queries below show only as
+   many as fit (k tiles need 182k − 14px), so the row always ends on a whole tile. Their selectors
+   carry the row so they outrank the empty tile's display: grid further down. */
 .stream-block {
   position: relative;
-  flex: 0 0 auto;
-  width: 168px;
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 132px;
+}
+@container stream (width < 1442px) {
+  .stream-row > .stream-block:nth-child(n + 8) {
+    display: none;
+  }
+}
+@container stream (width < 1260px) {
+  .stream-row > .stream-block:nth-child(n + 7) {
+    display: none;
+  }
+}
+@container stream (width < 1078px) {
+  .stream-row > .stream-block:nth-child(n + 6) {
+    display: none;
+  }
+}
+@container stream (width < 896px) {
+  .stream-row > .stream-block:nth-child(n + 5) {
+    display: none;
+  }
+}
+@container stream (width < 714px) {
+  .stream-row > .stream-block:nth-child(n + 4) {
+    display: none;
+  }
+}
+@container stream (width < 532px) {
+  .stream-row > .stream-block:nth-child(n + 3) {
+    display: none;
+  }
 }
 .stream-link,
 .stream-block.empty {
@@ -3248,15 +3451,12 @@ p {
   padding: 16px 16px 14px;
   border-radius: var(--r-ctl);
   border: 1px solid color-mix(in srgb, var(--amber) 26%, var(--line));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--amber) 9%, var(--surface)), var(--surface));
+  background: var(--surface);
   color: var(--text);
   text-decoration: none;
-  transition:
-    transform 0.4s var(--ease-out),
-    border-color 0.3s;
+  transition: border-color 0.3s;
 }
 .stream-link:hover {
-  transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--amber) 60%, transparent);
 }
 /* The top face of the block: a slanted lid, the explorer's cube in two dimensions. */
@@ -3266,7 +3466,7 @@ p {
   right: -1px;
   top: -22px;
   height: 22px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--amber) 22%, var(--surface-2)), color-mix(in srgb, var(--amber) 10%, var(--surface)));
+  background: color-mix(in srgb, var(--amber) 30%, var(--surface));
   clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
   border-radius: var(--r-ctl) var(--r-ctl) 0 0;
 }
@@ -3294,16 +3494,24 @@ p {
 }
 .stream-block.newest .stream-link {
   animation: block-in 0.9s var(--ease-out);
-  border-color: color-mix(in srgb, var(--amber) 70%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--amber) 30%, transparent), 0 18px 50px -18px rgba(224, 164, 74, 0.6);
+  border-color: var(--amber);
+  box-shadow: inset 0 3px 0 var(--amber);
 }
 .stream-block.newest .stream-top {
-  background: linear-gradient(180deg, #f6c56f, #c78a30);
+  animation: lid-in 0.9s var(--ease-out);
+  background: var(--amber);
 }
+/* The new block only slides in; its text is at full contrast from the first frame,
+   because a block arrives every two seconds and the newest one is read first.
+   The amber lid fading in carries the "new" signal instead. */
 @keyframes block-in {
   from {
-    opacity: 0;
     transform: translateX(-36px) scale(0.92);
+  }
+}
+@keyframes lid-in {
+  from {
+    opacity: 0;
   }
 }
 .live-under {
@@ -3351,8 +3559,9 @@ p {
   vertical-align: -3px;
   margin-right: 10px;
 }
+/* A plain dash, not a red alarm: the left column states a common trade-off, not an attack. */
 .compare td:first-child .icon {
-  color: var(--bad);
+  color: var(--muted);
 }
 .compare td:last-child .icon {
   color: var(--ok);
@@ -3370,7 +3579,7 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 .supply-chart {
   padding: clamp(20px, 3vw, 32px);
@@ -3379,13 +3588,11 @@ p {
   background: var(--surface);
 }
 .chart-title {
-  font-size: 15px;
-  font-weight: 600;
   margin: 0 0 16px;
 }
 .chart {
   margin: 0;
-  --series: #bd832b;
+  --series: var(--amber);
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) .chart {
@@ -3398,8 +3605,13 @@ p {
 .chart-box {
   position: relative;
 }
+/* Labels may run past the drawing's edge rather than be cut: with wider letter and word spacing
+   (WCAG 1.4.12) "30 Mio." would otherwise lose its first digit. */
 .chart-box svg {
   display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
   touch-action: pan-y;
   outline: none;
 }
@@ -3423,8 +3635,10 @@ p {
 }
 .chart-label,
 .chart-end {
-  font: 600 12px var(--font);
-  fill: var(--text);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--muted);
 }
 .chart-line {
   fill: none;
@@ -3457,16 +3671,16 @@ p {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 170px;
+  width: 176px;
   padding: 10px 12px;
   border-radius: var(--r-ctl);
   background: var(--surface-2);
   border: 1px solid var(--line-2);
-  box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.5);
   font-size: 13px;
   color: var(--muted);
 }
 .chart-tip strong {
+  font-family: var(--mono);
   font-size: 16px;
   color: var(--text);
 }
@@ -3480,12 +3694,20 @@ p {
   font-size: 14px;
 }
 .chart-table summary {
+  list-style: none;
   cursor: pointer;
   color: var(--text);
-  font-weight: 500;
-  min-height: 32px;
+  min-height: 44px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.chart-table summary::-webkit-details-marker {
+  display: none;
 }
 .chart-table table {
   width: 100%;
@@ -3507,6 +3729,7 @@ p {
 .figures {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: stretch;
   gap: 1px;
   margin: 0;
   border-radius: var(--radius);
@@ -3533,6 +3756,69 @@ p {
 .figure dt {
   font-size: 13.5px;
   color: var(--muted);
+}
+.genesis {
+  margin-top: 24px;
+  padding: clamp(20px, 3vw, 32px);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.genesis-alloc {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 0;
+}
+.genesis-alloc div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.genesis-alloc dd {
+  margin: 0;
+  font: 600 16px/1.3 var(--mono);
+  color: var(--amber-text);
+}
+.genesis-alloc dt {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.genesis-hash {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line-2);
+  font-size: 14px;
+}
+.genesis-hash-label {
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* Sixty-four characters do not fit a phone's width; the hash breaks anywhere rather than
+   pushing the page sideways. */
+.genesis-hash code {
+  font: 500 13px/1.5 var(--mono);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.genesis-hash a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  color: var(--text);
+}
+@media (max-width: 720px) {
+  .genesis-alloc {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .supply-note {
   display: flex;
@@ -3617,6 +3903,13 @@ p {
 .code-block .terminal-bar {
   padding: 10px 14px;
 }
+.code-block .terminal-bar::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--signal);
+}
 .code-copy {
   margin-left: auto;
   min-height: 28px;
@@ -3625,7 +3918,9 @@ p {
   border: 1px solid var(--line-2);
   background: transparent;
   color: var(--text);
-  font: 500 12px var(--mono);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 .code-copy:hover {
@@ -3636,7 +3931,7 @@ p {
   padding: 16px;
   overflow-x: auto;
   font: 12.5px/1.65 var(--mono);
-  color: #e4e4e7;
+  color: var(--text);
 }
 /* A command wider than the card wraps under itself instead of hiding behind a scrollbar;
    copying still takes the lines as written. */
@@ -3649,10 +3944,10 @@ p {
   text-indent: -2ch;
 }
 .code-comment {
-  color: #8b8b94;
+  color: var(--faint);
 }
 .code-line {
-  color: #f0c27a;
+  color: var(--amber-text);
 }
 .code-tok {
   white-space: nowrap;
@@ -3681,8 +3976,10 @@ p {
 
 /* ---------- the route of a message ---------- */
 
+/* Clipped sideways: the packet's lane, moved a full track's width, would otherwise widen the page. */
 .journey {
   position: relative;
+  overflow-x: clip;
 }
 .journey-track {
   position: absolute;
@@ -3692,6 +3989,13 @@ p {
   height: 2px;
   background: linear-gradient(90deg, var(--silver), var(--line-2) 30%, var(--line-2) 70%, var(--silver));
   opacity: 0.8;
+}
+/* The packet rides a lane as wide as the track, and the lane is what moves: a transform in
+   percent of its own width covers the track exactly, without animating layout. */
+.journey-lane {
+  position: absolute;
+  inset: 0;
+  animation: packet 5.2s var(--ease) infinite;
 }
 .journey-packet {
   position: absolute;
@@ -3703,15 +4007,14 @@ p {
   border-radius: var(--r-ctl);
   display: grid;
   place-items: center;
-  color: #050506;
-  background: #f4f4f5;
-  box-shadow: 0 0 0 6px color-mix(in srgb, #f4f4f5 18%, transparent), 0 0 30px rgba(220, 230, 245, 0.6);
-  animation: packet 5.2s var(--ease) infinite;
+  color: var(--inverse);
+  background: var(--signal);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--signal) 18%, transparent);
 }
 @keyframes packet {
   0%,
   8% {
-    left: 0;
+    transform: translateX(0);
     opacity: 0;
   }
   12% {
@@ -3719,15 +4022,15 @@ p {
   }
   44%,
   56% {
-    left: 50%;
+    transform: translateX(50%);
   }
   88% {
-    left: 100%;
+    transform: translateX(100%);
     opacity: 1;
   }
   96%,
   100% {
-    left: 100%;
+    transform: translateX(100%);
     opacity: 0;
   }
 }
@@ -3770,7 +4073,11 @@ p {
   color: var(--muted);
   margin: 0 0 16px;
 }
+/* As tall as the two-line cipher in the middle, so the three stops line up; a one-line message
+   sits in the middle of that height rather than leaving its lower half empty. */
 .journey-bubble {
+  display: flex;
+  align-items: center;
   width: min(100%, 280px);
   min-height: 74px;
   margin: 0 0 22px;
@@ -3797,9 +4104,6 @@ p {
   color: var(--muted);
   background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--text) 3%, transparent) 6px 7px), var(--surface);
   border: 1px dashed var(--line-2);
-}
-.journey-stop h3 {
-  font-size: 17px;
 }
 .journey-stop p.muted {
   max-width: 34ch;
@@ -3836,7 +4140,6 @@ p {
   color: var(--text);
 }
 .feature h3 {
-  font-size: 16.5px;
   margin-bottom: 6px;
 }
 .feature p {
@@ -3890,23 +4193,16 @@ p {
   top: -20vh;
   bottom: -20vh;
   left: 0;
-  width: 10px;
-  background: #fff;
+  width: 4px;
+  background: #d4b86a;
   transform: translateX(-12vw) skewX(-12deg);
-  box-shadow:
-    -40px 0 80px 20px rgba(210, 222, 240, 0.35),
-    40px 0 80px 20px rgba(224, 164, 74, 0.35);
   animation: wipe 0.7s cubic-bezier(0.5, 0.05, 0.25, 1) forwards;
 }
 .wipe-helix i {
-  box-shadow:
-    -40px 0 80px 20px rgba(224, 164, 74, 0.45),
-    40px 0 80px 20px rgba(224, 164, 74, 0.3);
+  background: #e0a44a;
 }
 .wipe-messenger i {
-  box-shadow:
-    -40px 0 80px 20px rgba(210, 222, 240, 0.45),
-    40px 0 80px 20px rgba(210, 222, 240, 0.3);
+  background: #d9ddd3;
 }
 @keyframes wipe {
   to {
@@ -3929,8 +4225,15 @@ p {
   opacity: 0.85;
   pointer-events: none;
 }
-:root[data-world="silvra"] .scroll-progress {
-  background: linear-gradient(90deg, var(--silver), var(--amber));
+/* On Silvra's own pages the line is sand, and the light theme's darker sand rather than its
+   navy accent: the progress of reading is not an action. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-world="silvra"] .scroll-progress {
+    background: #7a5c12;
+  }
+}
+:root[data-theme="light"][data-world="silvra"] .scroll-progress {
+  background: #7a5c12;
 }
 
 /* ---------- the gate's entrance ---------- */
@@ -3954,24 +4257,33 @@ p {
     opacity: 0;
   }
 }
+/* The kicker, title and text are the largest thing on the first screen, so the browser times the
+   page's first meaningful paint by them; an element at opacity 0 does not count as painted. They
+   are there from the first frame and only slide into place; the button alone fades in after. */
 .gate-content > * {
   animation: rise-in 0.9s var(--ease-out) backwards;
 }
-.gate-messenger .gate-content > :nth-child(1) { animation-delay: 0.55s; }
-.gate-messenger .gate-content > :nth-child(2) { animation-delay: 0.62s; }
-.gate-messenger .gate-content > :nth-child(3) { animation-delay: 0.72s; }
+.gate-content > :not(.gate-cta) {
+  animation-name: rise-move;
+  animation-duration: 0.7s;
+}
+.gate-messenger .gate-content > :nth-child(1) { animation-delay: 0.1s; }
+.gate-messenger .gate-content > :nth-child(2) { animation-delay: 0.16s; }
+.gate-messenger .gate-content > :nth-child(3) { animation-delay: 0.22s; }
 .gate-messenger .gate-content > :nth-child(4) { animation-delay: 0.8s; }
-.gate-messenger .gate-content > :nth-child(5) { animation-delay: 0.88s; }
-.gate-helix .gate-content > :nth-child(1) { animation-delay: 0.75s; }
-.gate-helix .gate-content > :nth-child(2) { animation-delay: 0.82s; }
-.gate-helix .gate-content > :nth-child(3) { animation-delay: 0.9s; }
+.gate-helix .gate-content > :nth-child(1) { animation-delay: 0.2s; }
+.gate-helix .gate-content > :nth-child(2) { animation-delay: 0.26s; }
+.gate-helix .gate-content > :nth-child(3) { animation-delay: 0.32s; }
 .gate-helix .gate-content > :nth-child(4) { animation-delay: 0.98s; }
-.gate-helix .gate-content > :nth-child(5) { animation-delay: 1.04s; }
-.gate-helix .gate-content > :nth-child(6) { animation-delay: 1.1s; }
 @keyframes rise-in {
   from {
     opacity: 0;
     transform: translateY(26px);
+  }
+}
+@keyframes rise-move {
+  from {
+    transform: translateY(18px);
   }
 }
 .gate-seal {
@@ -3986,20 +4298,23 @@ p {
 
 /* ---------- scroll-driven depth, where the browser has it ---------- */
 
-@media (prefers-reduced-motion: no-preference) {
+/* A heading finishes arriving as it fully enters the viewport, so one at rest anywhere on the
+   screen is whole and fully opaque. Screen only: paper has no scroll position, and a headline
+   still waiting for one would print as a blank. */
+@media screen {
   @supports (animation-timeline: view()) {
-    :root:not([data-motion="still"]) :is(.section-head h2,
+    :root[data-motion="moving"] :is(.section-head h2,
     .section > .container > h2,
     .craft-body h2,
     .europe-grid h2,
     .live-grid h2,
-    .photo-split-grid h2,
+    .split-grid h2,
     .demo-grid h2) {
       animation: headline-in linear both;
       animation-timeline: view();
-      animation-range: entry 5% cover 28%;
+      animation-range: entry 0% entry 100%;
     }
-    :root:not([data-motion="still"]) .photo img {
+    :root[data-motion="moving"] .photo img {
       animation: photo-drift linear both;
       animation-timeline: view();
       animation-range: cover;
@@ -4010,12 +4325,10 @@ p {
   from {
     opacity: 0;
     transform: translateY(38px);
-    clip-path: inset(0 0 100% 0);
   }
   to {
     opacity: 1;
     transform: none;
-    clip-path: inset(0 0 -20% 0);
   }
 }
 @keyframes photo-drift {
@@ -4059,16 +4372,18 @@ p {
   .features {
     grid-template-columns: minmax(0, 1fr);
   }
-  .stream-block,
-  .stream-block .stream-link {
-    width: 140px;
-  }
+  /* Stacked into problem/answer pairs: the column headers stay for screen readers, and each
+     cell carries its column's name on screen. */
   .compare thead {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
   }
   .compare tr {
     display: block;
-    border-top: 1px solid var(--line);
+    border-top: 10px solid var(--bg-2);
   }
   .compare tr:first-child {
     border-top: 0;
@@ -4078,18 +4393,21 @@ p {
     width: auto;
     border-top: 0;
   }
+  .compare td:last-child {
+    border-top: 1px dashed var(--line);
+  }
+  .compare td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    font: 500 10.5px/1.4 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
   .spec > div {
     grid-template-columns: minmax(0, 1fr);
     gap: 2px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .route-wipe {
-    display: none;
-  }
-  .journey-packet {
-    animation: none;
-    left: 50%;
   }
 }
 
@@ -4103,9 +4421,15 @@ p {
   display: inline-block;
   padding: 4px 0;
 }
+/* An address inside a sentence is exempt from the 24px minimum, but padding on the inline box
+   gives a thumb a full 24px to hit without moving the line. */
+.legal-body a,
+.contact-card p a {
+  padding-block: 2px;
+}
 
 /* =====================================================================================
-   v3 — rhythm, light that follows the cursor, bento, tour, FAQ, navigation aids
+   v3 — rhythm, bento, tour, FAQ, navigation aids
    ===================================================================================== */
 
 /* ---------- reading ---------- */
@@ -4131,57 +4455,6 @@ dd {
 }
 .section.band + .section.band {
   border-top: 0;
-}
-
-/* ---------- the light under the cursor ---------- */
-
-.spot {
-  isolation: isolate;
-}
-.feature,
-.ledger-col,
-.not,
-.faq-item,
-.figure {
-  position: relative;
-}
-.spot::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  width: auto;
-  height: auto;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--text) 7%, transparent), transparent 55%);
-  opacity: 0;
-  transition: opacity 0.35s;
-}
-.spot:hover::before {
-  opacity: 1;
-}
-.tile-helix.spot::before,
-.block.spot::before,
-.path.spot::before,
-.stack-helix.spot::before {
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(224, 164, 74, 0.14), transparent 55%);
-}
-/* The contact cards' top rule moves from a pseudo-element into the background, freeing the
-   pseudo-element for the light. */
-.contact-card {
-  background: var(--metal) top / 100% 3px no-repeat, var(--surface);
-}
-.contact-validator {
-  background: var(--gold) top / 100% 3px no-repeat, var(--surface);
-}
-
-.magnetic {
-  transition:
-    transform 0.35s var(--ease-out),
-    box-shadow 0.4s,
-    background 0.3s;
-  will-change: transform;
 }
 
 /* ---------- back to top ---------- */
@@ -4218,6 +4491,15 @@ dd {
 .to-top:hover {
   border-color: var(--text);
 }
+/* Two rings, page colour then accent, so the focus shows over the paper page and the night
+   olive footer alike; and round, where the global focus style would square it off. */
+.to-top:focus-visible {
+  outline: none;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--accent-text);
+}
 .to-top .to-top-svg {
   position: absolute;
   inset: 2px;
@@ -4235,6 +4517,16 @@ dd {
   stroke: var(--accent);
   stroke-width: 2;
   stroke-linecap: round;
+}
+/* Smaller and tighter to the corner on a phone, where it otherwise covers the controls at the
+   right edge of the content. */
+@media (max-width: 820px) {
+  .to-top {
+    width: 44px;
+    height: 44px;
+    right: 12px;
+    bottom: 12px;
+  }
 }
 
 /* ---------- sticky action on phones ---------- */
@@ -4261,10 +4553,17 @@ dd {
     backdrop-filter: blur(16px) saturate(1.4);
     box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.6);
     transform: translateY(140%);
-    transition: transform 0.5s var(--ease-out);
+    /* Hidden means hidden: out of the tab order and the accessibility tree once it has slid
+       away, not just below the edge of the screen. */
+    visibility: hidden;
+    transition:
+      transform 0.5s var(--ease-out),
+      visibility 0s linear 0.5s;
   }
   .sticky-cta.shown {
     transform: none;
+    visibility: visible;
+    transition-delay: 0s;
   }
   .sticky-cta .btn {
     flex: none;
@@ -4272,6 +4571,11 @@ dd {
     padding: 0 18px;
     font-size: 14px;
     white-space: nowrap;
+  }
+  /* Without a note (the node not answering) the button takes the bar, instead of leaving two
+     thirds of it empty. */
+  .sticky-cta .btn:only-child {
+    flex: 1;
   }
   .sticky-cta-note {
     display: grid;
@@ -4294,12 +4598,10 @@ dd {
   .sticky-cta-note.live > span::before {
     content: "";
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     margin: 0 7px 1px 0;
-    border-radius: 50%;
     background: var(--ok);
-    box-shadow: 0 0 8px var(--ok);
   }
   body:has(.sticky-cta.shown) .to-top {
     bottom: 84px;
@@ -4317,10 +4619,9 @@ dd {
     background 0.3s,
     border-color 0.3s;
 }
+/* Opaque for the same reason as the header: frosted paper over a dark band is a grey slab. */
 .section-nav.stuck {
-  background: color-mix(in srgb, var(--bg) 84%, transparent);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  backdrop-filter: blur(16px) saturate(1.4);
+  background: var(--bg);
   border-bottom-color: var(--line);
 }
 .section-nav-track {
@@ -4360,6 +4661,12 @@ dd {
   color: var(--accent-ink);
   background: var(--accent);
 }
+@media (forced-colors: active) {
+  .section-nav-link.active {
+    outline: 2px solid CanvasText;
+    outline-offset: -2px;
+  }
+}
 
 /* ---------- FAQ ---------- */
 
@@ -4384,7 +4691,8 @@ dd {
   transition: border-color 0.3s;
   interpolate-size: allow-keywords;
 }
-.faq-item[open] {
+.faq-item[open],
+.faq-item:hover {
   border-color: var(--line-2);
 }
 .faq-item summary {
@@ -4406,6 +4714,13 @@ dd {
   outline-offset: -2px;
   border-radius: var(--r-ctl);
 }
+/* On a phone the back-to-top button sits over the right edge of the list; the open/close mark
+   moves in from under it. */
+@media (max-width: 820px) {
+  .faq-item summary {
+    padding-right: 64px;
+  }
+}
 .faq-icon {
   flex: none;
   display: grid;
@@ -4415,15 +4730,29 @@ dd {
   border-radius: var(--r-ctl);
   border: 1px solid var(--line-2);
   transition:
-    transform 0.4s var(--ease-out),
     background 0.3s,
-    color 0.3s;
+    color 0.3s,
+    border-color 0.3s;
 }
-.faq-item[open] .faq-icon {
-  transform: rotate(45deg);
+/* A closed question answers the pointer the way the other controls do; an open one is already
+   filled in the accent. */
+.faq-item:not([open]) summary:hover .faq-icon {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+/* The box stays square; only the plus inside it turns into a cross. */
+.faq-icon svg {
+  transition: transform 0.4s var(--ease-out);
+}
+.faq-item[open] .faq-icon,
+.chart-table[open] .faq-icon {
   background: var(--accent);
   color: var(--accent-ink);
   border-color: transparent;
+}
+.faq-item[open] .faq-icon svg,
+.chart-table[open] .faq-icon svg {
+  transform: rotate(45deg);
 }
 .faq-answer {
   padding: 0 22px 20px;
@@ -4451,7 +4780,6 @@ dd {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-auto-rows: minmax(190px, auto);
   gap: 12px;
-  margin-top: clamp(40px, 5vw, 64px);
 }
 .tile {
   position: relative;
@@ -4465,28 +4793,21 @@ dd {
   color: var(--text);
   text-decoration: none;
   overflow: hidden;
-  transition:
-    border-color 0.3s,
-    transform 0.5s var(--ease-out);
+  transition: border-color 0.3s;
 }
 a.tile:hover {
-  border-color: var(--line-2);
-  transform: translateY(-3px);
+  border-color: var(--accent);
 }
+/* The two product tiles are dark in both themes, each in its own world's black, with the
+   gate's scan lines over it. */
 .tile-messenger {
   grid-column: span 7;
   grid-row: span 2;
-  background:
-    radial-gradient(70% 80% at 85% 100%, rgba(210, 222, 240, 0.16), transparent 70%),
-    linear-gradient(160deg, #18191d, #08090a);
-  background-color: #08090a;
+  background: #0e0f11 repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
 }
 .tile-helix {
   grid-column: span 5;
-  background:
-    radial-gradient(80% 90% at 100% 0%, rgba(224, 164, 74, 0.26), transparent 70%),
-    linear-gradient(200deg, #1f1607, #080603);
-  background-color: #080603;
+  background: #120d05 repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
 }
 .tile-open {
   grid-column: span 5;
@@ -4499,9 +4820,9 @@ a.tile:hover {
   background: color-mix(in srgb, var(--bg) 70%, transparent);
   font: 500 12.5px/1.75 var(--mono);
   color: var(--muted);
-  white-space: pre;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* A narrow tile wraps the clone URL the way a terminal would, instead of cutting it off. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .tile-term-p {
   color: var(--faint);
@@ -4512,10 +4833,14 @@ a.tile:hover {
 .tile-standards {
   grid-column: span 5;
 }
+/* Europe on the pattern of the claim band rather than as a second globe: the section further
+   down shows the photograph. */
 .tile-eu {
   grid-column: span 4;
   padding: 0;
   min-height: 220px;
+  background: #0a0c09 var(--camo) 0 0 / 384px;
+  image-rendering: pixelated;
 }
 .tile-zero {
   grid-column: span 3;
@@ -4567,7 +4892,7 @@ a.tile:hover .tile-go {
   background: var(--text);
   color: var(--bg);
 }
-.tile-helix:hover .tile-go {
+a.tile-helix:hover .tile-go {
   background: var(--amber);
   color: #160f04;
 }
@@ -4587,21 +4912,31 @@ a.tile:hover .tile-go {
   border: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 14.5px;
 }
+/* One line in both states: the hex is longer than the sentence it hides, and a bubble that
+   grows a line every few seconds shakes the whole tile. */
 .tile-bubble-loop {
   align-self: flex-end;
+  width: min(100%, 300px);
+  min-height: 0;
   border-radius: 18px 18px 5px 18px;
-  background: #f4f4f5;
-  color: #050506;
+  background: #eef0e9;
+  color: #0a0c09;
   border: 0;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
 }
+.tile-bubble-loop .cipher-loop-text {
+  min-width: 0;
+  line-height: 21px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* A light bubble: the light theme's signal and muted ink, which read on it. */
 .tile-bubble-loop .cipher-loop-lock {
-  color: #15803d;
+  color: #0a6e53;
 }
+.tile-bubble-loop[data-plain="false"] .cipher-loop-lock,
 .tile-bubble-loop[data-plain="false"] .cipher-loop-text {
-  color: #52525b;
+  color: #44525c;
 }
 .tile-big {
   margin: 4px 0 0;
@@ -4609,7 +4944,7 @@ a.tile:hover .tile-go {
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: #f0bb68;
+  color: var(--amber-text);
   font-variant-numeric: tabular-nums;
 }
 .tile-seals {
@@ -4637,10 +4972,6 @@ a.tile:hover .tile-go {
   background: var(--surface-2);
   border: 1px solid var(--line);
 }
-.tile-photo {
-  position: absolute;
-  inset: 0;
-}
 .tile-eu::after {
   content: "";
   position: absolute;
@@ -4665,11 +4996,7 @@ a.tile:hover .tile-go {
   font-size: clamp(70px, 7.4vw, 108px);
   line-height: 0.9;
   letter-spacing: 0.005em;
-  background: var(--metal);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--text);
   font-weight: 600;
 }
 .tile-zero-list {
@@ -4685,8 +5012,10 @@ a.tile:hover .tile-go {
   align-items: center;
   gap: 8px;
 }
+/* Muted, not red: red is kept for the threat on the timeline, and these are things that are
+   absent, not alarms. */
 .tile-zero-list .icon {
-  color: var(--bad);
+  color: var(--muted);
   flex: none;
 }
 
@@ -4710,14 +5039,6 @@ a.tile:hover .tile-go {
   position: relative;
   width: min(100%, 300px);
   aspect-ratio: 600 / 1182;
-  filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.45));
-}
-.tour-phone::before {
-  content: "";
-  position: absolute;
-  inset: 12% -30% 10%;
-  z-index: -1;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--silver) 22%, transparent), transparent);
 }
 .tour-phone img {
   position: absolute;
@@ -4740,8 +5061,7 @@ a.tile:hover .tile-go {
 }
 .tour-dots span {
   width: 8px;
-  height: 8px;
-  border-radius: 99px;
+  height: 4px;
   background: var(--line-2);
   transition:
     width 0.4s var(--ease-out),
@@ -4804,26 +5124,11 @@ a.tile:hover .tile-go {
 
 /* ---------- download with a code to scan ---------- */
 
-.download-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: center;
-  text-align: left;
-}
-.download-panel .label {
-  justify-content: flex-start;
-}
-.download-panel .lead {
-  margin-inline: 0;
-}
-.download-panel .btn-row {
-  justify-content: flex-start;
-}
 .download-note {
   margin: 18px 0 0;
-  font: 500 12px/1.4 var(--mono);
-  letter-spacing: 0.06em;
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 .download-qr {
@@ -4835,8 +5140,7 @@ a.tile:hover .tile-go {
   padding: 18px 18px 14px;
   border-radius: var(--radius);
   background: #ffffff;
-  color: #0b0b0d;
-  box-shadow: 0 30px 80px -30px rgba(210, 222, 240, 0.45);
+  color: #0a0c09;
 }
 .download-qr img {
   width: 168px;
@@ -4852,6 +5156,27 @@ a.tile:hover .tile-go {
   }
   .download-panel {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* On a phone the store button is the panel's one job: full width, on one line. */
+@media (max-width: 480px) {
+  .download-panel {
+    padding-inline: 16px;
+  }
+  .download-panel .btn {
+    width: 100%;
+    white-space: nowrap;
+  }
+}
+.btn-short {
+  display: none;
+}
+@media (max-width: 380px) {
+  .download-panel .btn-long {
+    display: none;
+  }
+  .download-panel .btn-short {
+    display: inline;
   }
 }
 .path-note {
@@ -4871,16 +5196,16 @@ a.tile:hover .tile-go {
     grid-row: span 1;
     min-height: 320px;
   }
+  /* Rows of two halves and a closing full row, in the order the tiles come: no row is left
+     with a half-empty gap beside its last tile. */
   .tile-helix,
-  .tile-open {
-    grid-column: span 3;
-  }
-  .tile-standards {
-    grid-column: span 6;
-  }
+  .tile-standards,
   .tile-eu,
   .tile-zero {
     grid-column: span 3;
+  }
+  .tile-open {
+    grid-column: span 6;
   }
 }
 @media (max-width: 900px) {
@@ -4925,12 +5250,6 @@ a.tile:hover .tile-go {
     min-height: 260px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .magnetic {
-    transform: none !important;
-  }
-}
-
 /* The messenger tile shows the product: the app's welcome screen rising from the tile's
    lower edge, with a conversation in front of it. */
 .tile-phone {
@@ -4953,7 +5272,17 @@ a.tile-messenger:hover .tile-phone {
 }
 .tile-messenger .tile-bubble-loop {
   align-self: flex-start;
+  width: min(100% - 48px, 300px);
   margin-left: 48px;
+}
+/* In the short single-row tile the phone is hung from a fixed height instead, below the arrow
+   in the corner, so its screen still shows and nothing sits on it. */
+@media (max-width: 1060px) {
+  .tile-phone {
+    top: 96px;
+    bottom: auto;
+    width: min(34%, 230px);
+  }
 }
 @media (max-width: 640px) {
   .tile-phone {
@@ -4961,6 +5290,13 @@ a.tile-messenger:hover .tile-phone {
   }
   .tile-messenger .tile-chat {
     max-width: none;
+  }
+  /* Too narrow for the sentence on one line: two fixed lines instead, so the message is never
+     cut short and the hex, wrapping the same way, still cannot change the bubble's height. */
+  .tile-bubble-loop .cipher-loop-text {
+    height: 42px;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -5001,7 +5337,6 @@ a.tile-messenger:hover .tile-phone {
 }
 .inventory-bar .seg {
   min-width: 6px;
-  border-radius: 3px;
   background: var(--st);
 }
 .inventory-legend {
@@ -5045,10 +5380,6 @@ a.tile-messenger:hover .tile-phone {
 .inventory-group th {
   padding: 12px 24px;
   text-align: left;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--text);
   background: color-mix(in srgb, var(--text) 3.5%, transparent);
   border-top: 1px solid var(--line);
 }
@@ -5166,9 +5497,10 @@ a.tile-messenger:hover .tile-phone {
 }
 
 /* ---------- motion switch (WCAG 2.2.2) ----------
-   "Bewegung anhalten" in the header puts data-motion="still" on <html>; so does the OS setting
-   when no choice has been made (index.html). The rules mirror the reduced-motion queries above,
-   so the switch and the OS setting look the same. */
+   data-motion on <html> is the one source of truth: index.html sets it before first paint from
+   the page's own switch ("Bewegung anhalten") or, when no choice has been made, the OS setting.
+   Everything still is complete: the canvases draw one frame, the scroll-linked text is fully
+   lit, nothing loops and nothing waits on a delay. */
 
 :root[data-motion="still"] {
   scroll-behavior: auto;
@@ -5178,34 +5510,101 @@ a.tile-messenger:hover .tile-phone {
 :root[data-motion="still"] *::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
   transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
 }
 :root[data-motion="still"] .reveal {
   opacity: 1;
   transform: none;
 }
+/* Still, the band is not a stopped ticker but a strip of readings: one copy of the claims in
+   ruled cells across the content column, no fade at the edges and no slash left hanging at
+   the end of a line. Each cell is ruled on both sides and overlaps its neighbour by the rule,
+   so a row of one claim is framed like a row of four. */
+:root[data-motion="still"] .marquee {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
 :root[data-motion="still"] .marquee-track {
   animation: none;
+  display: block;
   width: auto;
 }
 :root[data-motion="still"] .marquee-run {
   flex-wrap: wrap;
-  justify-content: center;
-  row-gap: 10px;
+  row-gap: 8px;
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter);
 }
-:root[data-motion="still"] .marquee-run + .marquee-run {
+:root[data-motion="still"] .marquee-run + .marquee-run,
+:root[data-motion="still"] .marquee-slash {
   display: none;
 }
-:root[data-motion="still"] .gate-glow b::after,
+:root[data-motion="still"] .marquee-item {
+  flex: 1 1 auto;
+  justify-content: center;
+  margin-left: -1px;
+  padding: 4px 16px;
+  border-inline: 1px solid var(--line-2);
+  white-space: normal;
+  text-align: center;
+}
+:root[data-motion="still"] .gate-pulse,
 :root[data-motion="still"] .route-wipe {
   display: none;
 }
-:root[data-motion="still"] .journey-packet {
+:root[data-motion="still"] .journey-lane {
   animation: none;
-  left: 50%;
+  transform: translateX(50%);
 }
-:root[data-motion="still"] .magnetic {
-  transform: none !important;
+/* Without a script nothing sets data-motion, so the OS setting is followed directly. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion]) {
+    scroll-behavior: auto;
+  }
+  :root:not([data-motion]) *,
+  :root:not([data-motion]) *::before,
+  :root:not([data-motion]) *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+  :root:not([data-motion]) .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  :root:not([data-motion]) .marquee-track {
+    animation: none;
+    display: block;
+    width: auto;
+  }
+  :root:not([data-motion]) .marquee-run {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  :root:not([data-motion]) .marquee-run + .marquee-run,
+  :root:not([data-motion]) .marquee-slash {
+    display: none;
+  }
+  :root:not([data-motion]) .marquee-item {
+    flex: 1 1 auto;
+    justify-content: center;
+    margin-left: -1px;
+    padding: 4px 16px;
+    border-inline: 1px solid var(--line-2);
+    white-space: normal;
+    text-align: center;
+  }
+  :root:not([data-motion]) .gate-pulse {
+    display: none;
+  }
 }
 
 .motion-toggle[aria-pressed="true"] {
@@ -5234,6 +5633,10 @@ a.tile-messenger:hover .tile-phone {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
+}
+/* The theme row sits right under the motion row, as one group of display settings. */
+.motion-row + .theme-row {
+  margin-top: 8px;
 }
 .motion-row[aria-pressed="true"] {
   border-color: var(--accent);
@@ -5306,11 +5709,18 @@ a.tile-messenger:hover .tile-phone {
   letter-spacing: 0;
   color: #eef0e9;
 }
+/* The arrow keys are no use without a keyboard. */
+@media (pointer: coarse) {
+  .gate-choose {
+    display: none;
+  }
+}
 
 .gate-camo {
   position: absolute;
   inset: 0;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   opacity: 0.6;
 }
 .gate-messenger .gate-camo {
@@ -5331,7 +5741,8 @@ a.tile-messenger:hover .tile-phone {
   pointer-events: none;
   transition: opacity 0.4s;
 }
-.gate-scan {
+.gate-scan,
+.hud-scan {
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
@@ -5385,7 +5796,7 @@ a.tile-messenger:hover .tile-phone {
   margin: 0;
 }
 .readout-messenger {
-  left: var(--gutter);
+  left: var(--edge);
   bottom: 38px;
 }
 .readout-messenger div:last-child dd {
@@ -5403,8 +5814,15 @@ a.tile-messenger:hover .tile-phone {
   box-shadow: 0 0 10px currentColor;
 }
 .readout-helix {
-  right: var(--gutter);
+  right: var(--edge);
   top: calc(var(--header-h) + 40px);
+}
+/* The messenger opening reads out the same channel as the gate's messenger half, but in flow
+   under the buttons and at every width (the gate hides its own readouts on narrower screens). */
+.gate-readout.p-hero-readout {
+  position: static;
+  display: grid;
+  margin-top: 40px;
 }
 .readout-helix div {
   justify-content: flex-end;
@@ -5426,11 +5844,14 @@ a.tile-messenger:hover .tile-phone {
 }
 
 /* The emblem's fixed bezel: sixty ticks and four heavier ones, still while the text ring turns. */
+/* No max-width: the global cap of 100% would hold it to the seal's own size, 24px narrower than
+   it is drawn, and push the ring off centre. */
 .gate-seal-bezel {
   position: absolute;
   inset: -12px;
   width: calc(100% + 24px);
   height: calc(100% + 24px);
+  max-width: none;
   transform: rotate(-90deg);
 }
 .gate-seal-bezel circle {
@@ -5446,9 +5867,13 @@ a.tile-messenger:hover .tile-phone {
   stroke-dashoffset: 0.8;
 }
 
-.gate:has(.gate-side:hover) .gate-plate,
-.gate:has(.gate-side:focus-visible) .gate-plate {
+/* The words step back, the plate stays solid: the blade must not show through the claim. */
+.gate:has(.gate-side:hover) .gate-plate > *,
+.gate:has(.gate-side:focus-visible) .gate-plate > * {
   opacity: 0.55;
+}
+.gate-plate > * {
+  transition: opacity 0.4s;
 }
 .gate[data-leaving] .gate-hud,
 .gate[data-leaving] .gate-plate {
@@ -5461,11 +5886,16 @@ a.tile-messenger:hover .tile-phone {
   }
 }
 @media (max-width: 820px) {
+  /* In the first row of the stacked gate, in flow, so a claim that wraps pushes the rest down. */
   .gate-plate {
-    left: var(--gutter);
-    right: var(--gutter);
-    top: calc(var(--header-h) + 10px);
+    grid-row: 1;
+    grid-column: 1;
+    align-self: start;
+    position: relative;
+    left: auto;
+    top: auto;
     transform: none;
+    margin: calc(var(--header-h) + 10px) var(--gutter) 0;
     padding: 9px 12px;
     white-space: normal;
   }
@@ -5475,9 +5905,6 @@ a.tile-messenger:hover .tile-phone {
   }
   .gate-choose {
     display: none;
-  }
-  .gate-messenger .gate-content {
-    top: calc(var(--header-h) + 66px);
   }
   .hud-corner {
     display: none;
@@ -5497,8 +5924,15 @@ a.tile-messenger:hover .tile-phone {
   position: relative;
   isolation: isolate;
   padding: var(--section-y) 0;
-  background: #0a0c09 url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: #0a0c09 var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   border-block: 1px solid rgba(214, 222, 196, 0.12);
+}
+/* image-rendering is inherited: only the band's own pattern is drawn pixelated, not a picture
+   that may sit inside it. The same holds for the EU tile. */
+.claim-band > *,
+.tile-eu > * {
+  image-rendering: auto;
 }
 .claim-band::before {
   content: "";
@@ -5569,6 +6003,7 @@ a.tile-messenger:hover .tile-phone {
     z-index: 70;
     width: 10px;
     background: var(--camo) 0 0 / 384px;
+    image-rendering: pixelated;
     pointer-events: none;
   }
   .camo-frame i:first-child {
@@ -5592,7 +6027,8 @@ a.tile-messenger:hover .tile-phone {
 .hud-camo {
   position: absolute;
   inset: 0;
-  background: url("./assets/camo-dark.svg") 0 0 / 384px;
+  background: var(--camo-dark) 0 0 / 384px;
+  image-rendering: pixelated;
   opacity: 0.55;
   -webkit-mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
   mask-image: radial-gradient(90% 85% at 40% 45%, transparent 42%, #000 100%);
@@ -5601,18 +6037,15 @@ a.tile-messenger:hover .tile-phone {
   opacity: 0.4;
   mix-blend-mode: luminosity;
 }
-.hud-scan,
-.gate-scan {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(180deg, rgba(238, 240, 233, 0.025) 0 1px, transparent 1px 3px);
-}
 /* Page openings end in a diagonal 5vw higher on the right; the lower right mark follows it. */
 .hud-frame .hud-corner.bl {
   bottom: 18px;
 }
 .hud-frame .hud-corner.br {
   bottom: calc(5vw + 18px);
+}
+.page-hero--last .hud-frame .hud-corner.br {
+  bottom: 18px;
 }
 @media (max-width: 820px) {
   .hud-frame .hud-corner {
@@ -5621,17 +6054,31 @@ a.tile-messenger:hover .tile-phone {
 }
 
 /* ---------- corner marks on the panels that report state ----------
-   The live chain panel, the cryptography inventory and the download panel carry the same four
-   corner marks as the page openings: the site's way of saying "this is a reading". */
+   The live chain panel, the cryptography inventory, the download panel, the terminals, the
+   hybrid diagram, the contact cards, the legal panels, the photo beside the craft list and the
+   Helix readout carry the same four corner marks as the page openings: the site's way of saying
+   "this is a reading". */
 
 .testnet,
 .inventory,
-.download-panel {
+.download-panel,
+.terminal,
+.hybrid,
+.contact-card,
+.legal,
+.craft-media,
+.helix-readout {
   position: relative;
 }
 .testnet::after,
 .inventory::after,
-.download-panel::after {
+.download-panel::after,
+.terminal::after,
+.hybrid::after,
+.contact-card::after,
+.legal::after,
+.craft-media::after,
+.helix-readout::after {
   --hc: color-mix(in srgb, var(--accent) 75%, transparent);
   content: "";
   position: absolute;
@@ -5648,4 +6095,61 @@ a.tile-messenger:hover .tile-phone {
     linear-gradient(var(--hc), var(--hc)) right bottom / 16px 2px,
     linear-gradient(var(--hc), var(--hc)) right bottom / 2px 16px;
   background-repeat: no-repeat;
+}
+/* The photo has no border to sit on and clips what overhangs it, so its marks sit inside, in
+   the dark theme's sand: the photograph is dark in both themes, and navy would vanish on it. */
+.craft-media::after {
+  --hc: #d4b86a;
+  inset: 0;
+}
+
+/* ---------- short viewports: 400 % zoom, a phone on its side ----------
+   At 1440 × 900 zoomed to 400 % the page is 360 × 225 CSS pixels. Fixed and sticky bars that
+   take a third of that each would leave a slit to read through (WCAG 1.4.10), so here they
+   scroll away with the page, the sticky call to action goes (the page offers it in place), and
+   focused elements only need to clear the edges. The open menu keeps its header fixed: its
+   close button must stay on screen. */
+@media (max-height: 480px) {
+  .site-header {
+    position: absolute;
+  }
+  .site-header.is-open {
+    position: fixed;
+  }
+  .section-nav {
+    position: relative;
+    top: auto;
+  }
+  .sticky-cta {
+    display: none;
+  }
+  html {
+    scroll-padding-top: 16px;
+    scroll-padding-bottom: 16px;
+  }
+  section[id],
+  .section-group[id] {
+    scroll-margin-top: 16px;
+  }
+  .to-top {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ---------- print ----------
+   The bars that follow the reader on screen would sit on top of the text on every printed page,
+   and the camouflage frame and the wipe are decoration. The header prints once, at the top. */
+@media print {
+  .site-header,
+  .section-nav {
+    position: static;
+  }
+  .sticky-cta,
+  .to-top,
+  .camo-frame,
+  .route-wipe,
+  .scroll-progress {
+    display: none;
+  }
 }

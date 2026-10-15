@@ -10,17 +10,17 @@ export default function NotFound() {
   useSeo(t("meta.notFound.title"), t("meta.notFound.description"));
 
   return (
-    <PageHero label="404" title={<Scramble text={t("notFound.title")} />} lead={t("notFound.body")}>
+    <PageHero label="404" title={<Scramble text={t("notFound.title")} />} lead={t("notFound.body")} compact last>
       <div className="btn-row">
         <Link className="btn primary" to="/">
           {t("notFound.cta")}
           <Icon name="arrowRight" size={16} />
         </Link>
-        <Link className="btn" to="/messenger">
+        <Link className="btn" to="/messenger/">
           Silvra Messenger
         </Link>
-        <Link className="btn" to="/helix">
-          Helix Blockchain
+        <Link className="btn" to="/helix/">
+          {t("nav.helixFull")}
         </Link>
       </div>
     </PageHero>

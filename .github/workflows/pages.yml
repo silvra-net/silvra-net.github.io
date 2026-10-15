@@ -10,6 +10,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # security.txt is written with an expiry a year after the build (scripts/prerender.mjs), so a
+  # monthly rebuild keeps it well inside that year even when nothing else changes. GitHub pauses
+  # schedules in a repository without activity for 60 days; the footer year no longer depends on
+  # this (it reads the visitor's clock), but the expiry does, so a paused schedule needs a re-enable.
+  schedule:
+    - cron: "0 3 1 * *"
 
 permissions:
   contents: read

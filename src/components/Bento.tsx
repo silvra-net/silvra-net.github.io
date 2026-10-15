@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import CipherLoop from "./CipherLoop";
 import CountUp from "./CountUp";
+import EuMark from "./EuMark";
 import Icon from "./Icon";
-import Photo from "./Photo";
+import Units from "./Units";
 import { useI18n } from "../i18n";
 import { useNodeStatus } from "../lib/node";
-import { HELIX_REPO } from "../lib/links";
+import { HELIX_REPO, HELIX_TAG } from "../lib/links";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
+import NewTab from "./NewTab";
 
 /**
  * Silvra at a glance, as a bento grid: each tile one fact, several of them alive — a message
@@ -15,12 +17,12 @@ import welcomeEn from "../assets/Welcome_EN.webp";
  */
 export default function Bento() {
   const { t, list, lang } = useI18n();
-  const { status, validators } = useNodeStatus();
+  const { status, failed, validators } = useNodeStatus();
   const locale = lang === "de" ? "de-DE" : "en-GB";
 
   return (
     <div className="bento">
-      <Link to="/messenger" className="tile tile-messenger spot dark-zone">
+      <Link to="/messenger/" className="tile tile-messenger dark-zone">
         <span className="tile-kicker mono">{t("home.bento.messenger.kicker")}</span>
         <h3 className="tile-title">{t("home.bento.messenger.title")}</h3>
         <p className="tile-body">{t("home.bento.messenger.body")}</p>
@@ -34,21 +36,25 @@ export default function Bento() {
         </span>
       </Link>
 
-      <Link to="/helix" className="tile tile-helix spot dark-zone">
+      <Link to="/helix/" className="tile tile-helix dark-zone">
         <span className="tile-kicker mono">
-          <span className={status ? "dot ok pulse" : "dot off"} /> {t("home.bento.helix.kicker")}
+          {/* The words are the project's state, the dot is the node's: it lights only once the
+              node has answered, like the panel's. */}
+          <span className={status ? "dot ok pulse" : "dot off"} />{" "}
+          {failed ? `Helix · ${t("home.testnet.offline")}` : t("home.bento.helix.kicker")}
         </span>
-        <h3 className="tile-title">{t("home.bento.helix.title")}</h3>
+        {/* "just now" only while there is a height to show. */}
+        <h3 className="tile-title">{t(failed ? "home.bento.helix.titleOffline" : "home.bento.helix.title")}</h3>
         <p className="tile-big mono">{status ? <CountUp value={status.height} locale={locale} /> : "—"}</p>
         <p className="tile-body">
-          {t("home.bento.helix.body", { validators: validators ?? "—" })}
+          <Units text={t("home.bento.helix.body", { validators: validators ?? "—" })} />
         </p>
         <span className="tile-go" aria-hidden="true">
           <Icon name="arrowRight" size={18} />
         </span>
       </Link>
 
-      <div className="tile tile-standards spot">
+      <div className="tile tile-standards">
         <span className="tile-kicker mono">{t("home.bento.standards.kicker")}</span>
         <ul className="tile-seals">
           {list<{ code: string; name: string }>("home.bento.standards.items").map((s) => (
@@ -60,17 +66,16 @@ export default function Bento() {
         </ul>
       </div>
 
-      <div className="tile tile-eu spot dark-zone">
-        <Photo slot="europe" className="tile-photo" />
+      <div className="tile tile-eu dark-zone">
         <div className="tile-overlay">
           <span className="tile-kicker mono">
-            <span className="eu-dots" aria-hidden="true" /> {t("home.bento.eu.kicker")}
+            <EuMark /> {t("home.bento.eu.kicker")}
           </span>
           <h3 className="tile-title">{t("home.bento.eu.title")}</h3>
         </div>
       </div>
 
-      <div className="tile tile-zero spot">
+      <div className="tile tile-zero">
         <p className="tile-zero-num">0</p>
         <ul className="tile-zero-list">
           {list<string>("home.bento.zero.items").map((z) => (
@@ -82,21 +87,25 @@ export default function Bento() {
         </ul>
       </div>
 
-      <a className="tile tile-open spot" href={HELIX_REPO} rel="noreferrer noopener" target="_blank">
+      <a className="tile tile-open" href={HELIX_REPO} rel="noreferrer noopener" target="_blank">
         <span className="tile-kicker mono">
           <Icon name="code" size={14} /> {t("home.bento.open.kicker")}
         </span>
         <h3 className="tile-title">{t("home.bento.open.title")}</h3>
         <p className="tile-body">{t("home.bento.open.body")}</p>
-        {/* The README's own build steps, so the tile shows what "open" means in practice. */}
+        {/* The README's own build steps, so the tile shows what "open" means in practice. The
+            release tag matters: master may be ahead of what the mainnet runs; the documentation
+            links on the Helix page point at the same tag. */}
         <pre className="tile-term" aria-hidden="true">
-          <span className="tile-term-p">$</span> git clone github.com/silvra-net/helix{"\n"}
+          <span className="tile-term-p">$</span> git clone https://github.com/silvra-net/helix.git{"\n"}
+          <span className="tile-term-p">$</span> cd helix && git checkout {HELIX_TAG}{"\n"}
           <span className="tile-term-p">$</span> cargo build --release{"\n"}
           <span className="tile-term-ok">✓</span> target/release/helix
         </pre>
         <span className="tile-go" aria-hidden="true">
           <Icon name="arrowUpRight" size={18} />
         </span>
+        <NewTab />
       </a>
     </div>
   );

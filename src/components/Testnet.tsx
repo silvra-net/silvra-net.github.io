@@ -1,5 +1,6 @@
 import { useI18n } from "../i18n";
 import { useNodeStatus } from "../lib/node";
+import { useReducedMotion } from "../lib/motion";
 import CountUp from "./CountUp";
 import Icon from "./Icon";
 import { EXPLORER } from "../lib/links";
@@ -7,10 +8,14 @@ import { EXPLORER } from "../lib/links";
 /**
  * The live state of the network, as a panel. Every number is fetched from node.silvra.net;
  * nothing here is cached or invented on our side, and an unreachable node says so.
+ *
+ * `height={false}` leaves out the large block height, for a page whose opening and block stream
+ * already show it; the panel then leads with the validators.
  */
-export default function Testnet({ explorer = true }: { explorer?: boolean }) {
+export default function Testnet({ explorer = true, height = true }: { explorer?: boolean; height?: boolean }) {
   const { t, lang } = useI18n();
-  const { status, failed, validators } = useNodeStatus();
+  const { status, failed, validators, at } = useNodeStatus();
+  const paused = useReducedMotion();
   const locale = lang === "de" ? "de-DE" : "en-GB";
   const hlx = (v?: number, digits = 0) =>
     v === undefined ? "—" : `${v.toLocaleString(locale, { maximumFractionDigits: digits })}`;
@@ -29,14 +34,34 @@ export default function Testnet({ explorer = true }: { explorer?: boolean }) {
       <div className="testnet-head">
         <span className={status && !failed ? "dot ok pulse" : "dot off"} />
         <span className="testnet-title">{t("home.testnet.title")}</span>
-        <span className="testnet-source mono">{failed ? t("home.testnet.offline") : t("home.testnet.live")}</span>
-      </div>
-      <div className="testnet-height">
-        <span className="testnet-label">{t("home.testnet.stats.height")}</span>
-        <span className="testnet-big mono">
-          {status ? <CountUp value={status.height} locale={locale} /> : failed ? "—" : "…"}
+        {/* "live" only once the node has answered: the prerendered page, and a visitor without
+            JavaScript, never get further than "connecting". A page that stands still holds its
+            first reading, and says from when it is rather than calling it live. */}
+        <span className="testnet-source mono">
+          {status && paused && at
+            ? t("home.testnet.paused", {
+                time: new Date(at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+              })
+            : status
+              ? t("home.testnet.live")
+              : failed
+                ? t("home.testnet.offline")
+                : t("home.testnet.connecting")}
         </span>
       </div>
+      {/* Without a script the panel never connects; it says why instead of "connecting" for ever
+          (index.html hides that word in the same case). */}
+      <noscript>
+        <p className="testnet-nojs mono">{t("home.testnet.noscript")}</p>
+      </noscript>
+      {height && (
+        <div className="testnet-height">
+          <span className="testnet-label">{t("home.testnet.stats.height")}</span>
+          <span className="testnet-big mono">
+            {status ? <CountUp value={status.height} locale={locale} /> : failed ? "—" : "…"}
+          </span>
+        </div>
+      )}
       <dl className="testnet-stats">
         {stats.map((s) => (
           <div key={s.label}>

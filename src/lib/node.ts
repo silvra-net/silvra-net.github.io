@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { motionChoice, subscribeMotion } from "./motion";
+import { prefersReducedMotion, subscribeMotion } from "./motion";
 
 /** The public node. The only place the site's numbers come from — nothing here is cached or
  *  precomputed on our side, and the node answers browsers directly (CORS is open). */
@@ -37,8 +37,10 @@ export interface NodeState {
   /** Newest first, consecutive, straight from the chain. Filled only while a block stream is
    *  on screen — the gate needs a height, not a block history. */
   blocks: SeenBlock[];
-  /** Seconds per block, from the timestamps of the blocks above; null until two are known. */
+  /** Seconds per block, averaged over the last BLOCK_TIME_SPAN blocks; null until measured. */
   blockTime: number | null;
+  /** When the status above was read (ms since the epoch), for a page that has stopped updating. */
+  at: number | null;
 }
 
 /*
@@ -48,19 +50,38 @@ export interface NodeState {
 
   Blocks come every two seconds, so the status is asked for every three — often enough that the
   height visibly moves, rare enough to be a light load on the node. A hidden tab asks for
-  nothing: nobody is looking. Nor does a page whose visitor pressed "Bewegung anhalten": WCAG
-  2.2.2 counts numbers that update themselves as moving content, so after the first reading they
-  hold still until motion is switched back on.
+  nothing: nobody is looking. Nor does a page that stands still, whether by the "Bewegung
+  anhalten" switch or by the OS setting it starts from: WCAG 2.2.2 counts numbers that update
+  themselves as moving content, so after the first reading they hold still until motion is
+  switched back on.
+
+  A request that takes longer than four seconds is given up, and only one status request is ever
+  out at a time, so a slow node is not buried under a queue of them. One miss can be a dropped
+  packet; two in a row mean the node is down, and only then does the page say so. From then on
+  it is asked less and less often, up to once a minute, until it answers again, the tab comes
+  back into view or motion is switched back on.
+
+  The block time is the average over the last hundred blocks, not over the few on screen: a
+  handful of blocks swings by a second either way and would contradict the "≈ 2 s" beside it.
 */
 const STATUS_EVERY = 3_000;
 const VALIDATORS_EVERY = 30_000;
 const KEEP_BLOCKS = 14;
+const BLOCK_TIME_SPAN = 100;
+const TIMEOUT = 4_000;
+const MISSES_TO_FAIL = 2;
+const BACKOFF_MAX = 60_000;
 
-let state: NodeState = { status: null, failed: false, validators: null, blocks: [], blockTime: null };
+let state: NodeState = { status: null, failed: false, validators: null, blocks: [], blockTime: null, at: null };
 const listeners = new Set<() => void>();
 let statusTimer: ReturnType<typeof setInterval> | undefined;
 let validatorTimer: ReturnType<typeof setInterval> | undefined;
 let streamWanted = 0;
+let inFlight = false;
+let misses = 0;
+let backoff = STATUS_EVERY;
+let nextTry = 0;
+let blockTimeAt = 0;
 
 function emit(patch: Partial<NodeState>) {
   state = { ...state, ...patch };
@@ -68,48 +89,92 @@ function emit(patch: Partial<NodeState>) {
 }
 
 const hidden = () => typeof document !== "undefined" && document.visibilityState === "hidden";
-/** Only the page's own switch pauses the data; the OS setting asks for less animation, not stale numbers. */
-const paused = () => motionChoice() === "still";
+/** Pauses whenever the switch shows paused — the page's own choice, or else the OS setting — so
+ *  the switch and the numbers always agree. */
+const paused = () => prefersReducedMotion();
 
-async function loadStatus() {
-  if (hidden() || (paused() && state.status)) return;
+const get = (path: string) => fetch(`${NODE}${path}`, { cache: "no-store", signal: AbortSignal.timeout(TIMEOUT) });
+
+/** `force` skips the wait between attempts at a node that is down: the visitor has just come
+ *  back to the tab or switched motion on, and should see the current state now. */
+async function loadStatus(force = false) {
+  // A page that stands still holds what it has, an honest "unreachable" included.
+  if (inFlight || hidden() || (paused() && (state.status || state.failed))) return;
+  if (state.failed && !force && Date.now() < nextTry) return;
+  inFlight = true;
   try {
-    const res = await fetch(`${NODE}/status`, { cache: "no-store" });
+    const res = await get("/status");
     if (!res.ok) throw new Error(String(res.status));
     const status = (await res.json()) as NodeStatus;
-    emit({ status, failed: false });
+    const recovered = state.failed;
+    misses = 0;
+    backoff = STATUS_EVERY;
+    emit({ status, failed: false, at: Date.now() });
+    if (recovered) void loadValidators();
     if (streamWanted > 0) await loadBlocks(status.height);
   } catch {
     // A node that cannot be reached is reported as such rather than as a frozen number: a stale
-    // height that looks live is worse than an honest gap.
-    emit({ status: null, failed: true });
+    // height that looks live is worse than an honest gap. That goes for every number from it.
+    misses += 1;
+    if (misses >= MISSES_TO_FAIL) {
+      if (!state.failed) emit({ status: null, failed: true, validators: null, blockTime: null, at: null });
+      else backoff = Math.min(BACKOFF_MAX, backoff * 2);
+      nextTry = Date.now() + backoff;
+    }
+  } finally {
+    inFlight = false;
   }
 }
 
-/** Fetch whatever blocks the stream does not have yet, up to the given height. */
+const trim = ({ height, hash, timestamp, tx_count, validator }: SeenBlock): SeenBlock => ({
+  height,
+  hash,
+  timestamp,
+  tx_count,
+  validator,
+});
+
+/** Fetch whatever blocks the stream does not have yet, up to the given height. Two of these can
+ *  be under way at once (a stream mounting while a poll runs), so the answer is merged into what
+ *  is there by height rather than replacing it: the one that lands last must not drop the blocks
+ *  the other one added. */
 async function loadBlocks(height: number) {
   const known = state.blocks[0]?.height ?? 0;
   if (height <= known) return;
   const from = Math.max(known + 1, height - KEEP_BLOCKS + 1);
   try {
-    const res = await fetch(`${NODE}/blocks/range?from=${from}&count=${height - from + 1}`, { cache: "no-store" });
+    const res = await get(`/blocks/range?from=${from}&count=${height - from + 1}`);
     if (!res.ok) return;
-    const fresh = ((await res.json()) as SeenBlock[])
-      .map(({ height: h, hash, timestamp, tx_count, validator }) => ({ height: h, hash, timestamp, tx_count, validator }))
-      .sort((a, b) => b.height - a.height);
-    const blocks = [...fresh, ...state.blocks.filter((b) => b.height < from)].slice(0, KEEP_BLOCKS);
-    const span = blocks.length >= 2 ? (blocks[0].timestamp - blocks[blocks.length - 1].timestamp) / 1000 : 0;
-    const blockTime = blocks.length >= 2 && span > 0 ? span / (blocks[0].height - blocks[blocks.length - 1].height) : null;
-    emit({ blocks, blockTime });
+    const fresh = ((await res.json()) as SeenBlock[]).map(trim);
+    const byHeight = new Map([...state.blocks, ...fresh].map((b) => [b.height, b]));
+    const blocks = [...byHeight.values()].sort((a, b) => b.height - a.height).slice(0, KEEP_BLOCKS);
+    emit({ blocks });
+    if (Date.now() - blockTimeAt >= VALIDATORS_EVERY) await loadBlockTime(blocks[0]);
   } catch {
     /* a missed range is filled by the next one */
   }
 }
 
-async function loadValidators() {
-  if (hidden() || (paused() && state.validators !== null)) return;
+/** The average block time over the last BLOCK_TIME_SPAN blocks: the newest block's timestamp
+ *  against that of the block that many below it, measured again every half minute. */
+async function loadBlockTime(newest: SeenBlock | undefined) {
+  if (!newest || newest.height <= BLOCK_TIME_SPAN) return;
+  blockTimeAt = Date.now();
   try {
-    const res = await fetch(`${NODE}/validators`, { cache: "no-store" });
+    const res = await get(`/blocks/range?from=${newest.height - BLOCK_TIME_SPAN}&count=1`);
+    if (!res.ok) return;
+    const [old] = (await res.json()) as SeenBlock[];
+    const span = old ? (newest.timestamp - old.timestamp) / 1000 : 0;
+    if (span > 0) emit({ blockTime: span / BLOCK_TIME_SPAN });
+  } catch {
+    /* measured again with the next blocks */
+  }
+}
+
+async function loadValidators() {
+  if (hidden() || state.failed || (paused() && state.validators !== null)) return;
+  try {
+    const res = await get("/validators");
     if (!res.ok) throw new Error(String(res.status));
     const data = (await res.json()) as { validators?: { active?: boolean }[] };
     const active = (data.validators ?? []).filter((v) => v.active !== false).length;
@@ -121,7 +186,7 @@ async function loadValidators() {
 
 function onVisible() {
   if (!hidden()) {
-    void loadStatus();
+    void loadStatus(true);
   }
 }
 
@@ -132,13 +197,13 @@ function subscribe(listener: () => void) {
   if (!statusTimer) {
     void loadStatus();
     void loadValidators();
-    statusTimer = setInterval(loadStatus, STATUS_EVERY);
+    statusTimer = setInterval(() => void loadStatus(), STATUS_EVERY);
     validatorTimer = setInterval(loadValidators, VALIDATORS_EVERY);
     document.addEventListener("visibilitychange", onVisible);
     // Switching motion back on brings the numbers up to date at once, not at the next tick.
     offMotion = subscribeMotion(() => {
       if (!paused()) {
-        void loadStatus();
+        void loadStatus(true);
         void loadValidators();
       }
     });

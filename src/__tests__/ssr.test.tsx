@@ -24,3 +24,25 @@ describe("server rendering", () => {
     }
   }
 });
+
+describe("server rendering, as the pages are served", () => {
+  // Pages serves every page at /page/, and the build renders it at that address. The header
+  // must mark the current page there already: hydration keeps whatever the server wrote.
+  for (const route of routes) {
+    it(`marks ${route}/ as the current page in the header`, () => {
+      const html = render(`${route}/`);
+      const link = html.match(new RegExp(`<a[^>]*class="nav-link[^"]*"[^>]*href="${route}/"[^>]*>`))?.[0];
+      if (!["/impressum", "/barrierefreiheit"].includes(route)) expect(link).toContain('aria-current="page"');
+    });
+  }
+
+  // Pages answers an unknown path below a product page (/helix/xyz) with 404.html, rendered as
+  // /404. The client must render exactly that markup there, or hydration fails and the page
+  // turns into Helix's colours with Helix marked as current.
+  it("renders an unknown path below a product page like the not-found page", () => {
+    for (const path of ["/helix/xyz", "/messenger/unbekannt/"]) {
+      expect(render(path)).toBe(render("/404"));
+    }
+  });
+});
+

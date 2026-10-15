@@ -61,11 +61,8 @@ export default function Scramble({ text, className, duration = 1000 }: { text: s
       }
     });
     io.observe(el);
-    // Text nobody has scrolled to in this long is text that should not be left encrypted.
-    const failsafe = setTimeout(run, 3000);
     return () => {
       io.disconnect();
-      clearTimeout(failsafe);
       cancelAnimationFrame(raf);
     };
   }, [text, duration, still]);

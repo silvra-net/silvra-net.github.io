@@ -10,8 +10,8 @@ interface Block {
 
 /**
  * The accessibility statement: what the site aims for, how that is checked, what is known not to
- * work yet, and where to report a barrier. Set like the legal notice — one panel, label above
- * value — because it is a document people look things up in, not a page they browse.
+ * work yet, and where to report a barrier. Set like the legal notice — one panel of headed
+ * blocks — because it is a document people look things up in, not a page they browse.
  */
 export default function Accessibility() {
   const { t, list } = useI18n();
@@ -19,14 +19,14 @@ export default function Accessibility() {
 
   return (
     <>
-      <PageHero label={t("accessibility.eyebrow")} title={t("accessibility.title")} lead={t("accessibility.subtitle")} />
+      <PageHero label={t("accessibility.eyebrow")} title={t("accessibility.title")} lead={t("accessibility.subtitle")} compact />
       <section className="section">
         <div className="container">
-          <dl className="legal">
+          <div className="legal">
             {list<Block>("accessibility.sections").map((s) => (
-              <div key={s.title}>
-                <dt>{s.title}</dt>
-                <dd>
+              <section className="legal-block" key={s.title}>
+                <h2 className="legal-title">{s.title}</h2>
+                <div className="legal-body">
                   {s.body}
                   {s.items && (
                     <ul className="legal-list">
@@ -35,19 +35,19 @@ export default function Accessibility() {
                       ))}
                     </ul>
                   )}
-                </dd>
-              </div>
+                </div>
+              </section>
             ))}
-            <div>
-              <dt>{t("accessibility.reportTitle")}</dt>
-              <dd>
+            <section className="legal-block">
+              <h2 className="legal-title">{t("accessibility.reportTitle")}</h2>
+              <div className="legal-body">
                 {t("accessibility.reportBody")}{" "}
                 <a href={`mailto:info@silvra.net?subject=${encodeURIComponent(t("accessibility.reportSubject"))}`}>
                   info@silvra.net
                 </a>
-              </dd>
-            </div>
-          </dl>
+              </div>
+            </section>
+          </div>
         </div>
       </section>
     </>
