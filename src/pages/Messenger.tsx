@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import CipherCanvas from "../components/CipherCanvas";
 import CipherLoop from "../components/CipherLoop";
 import CryptoDemo from "../components/CryptoDemo";
@@ -42,10 +43,14 @@ interface Spec {
 
 /**
  * Where the hero's ciphertext may surface a message: on a wide screen only to the right of the
- * words, over the screenshot's side; stacked, only in the lower half, under the buttons.
+ * words, beside the screenshot and below the header bar; stacked, only in the lower half, under
+ * the buttons. The phone and the chips around it sit in front of the canvas, so a message that
+ * lands under them is cut off mid-word; their boxes are measured at the moment a message is
+ * placed and kept clear.
  */
-function fitsHero(x: number, y: number, w: number, W: number, H: number): boolean {
-  return W >= 900 ? x > W * 0.56 && x + w < W - 40 : y > H * 0.5 && x + w < W - 16;
+function fitsHero(x: number, y: number, w: number, W: number, H: number, cell: number, blocked: DOMRect[]): boolean {
+  const zone = W >= 900 ? y > 112 && x > W * 0.56 && x + w < W - 40 : y > H * 0.5 && x + w < W - 16;
+  return zone && !blocked.some((b) => x < b.right + 16 && x + w > b.left - 16 && y < b.bottom + 8 && y + cell > b.top - 8);
 }
 
 /** `short` is the label used where the long one would not fit on one line (narrow phones). */
@@ -68,6 +73,8 @@ function PlayButton({ label, short }: { label: string; short?: string }) {
 
 export default function Messenger() {
   const { t, list, raw, lang } = useI18n();
+  const heroBg = useRef<HTMLDivElement>(null);
+  const heroVisual = useRef<HTMLDivElement>(null);
   useSeo(t("meta.messenger.title"), t("meta.messenger.description"));
 
   // The screenshots are of the app in the visitor's language; German UI next to an English
@@ -89,9 +96,22 @@ export default function Messenger() {
   return (
     <>
       <section className="p-hero p-hero-messenger dark-zone">
-        <div className="p-hero-bg" aria-hidden="true">
+        <div ref={heroBg} className="p-hero-bg" aria-hidden="true">
           <div className="p-hero-aura" />
-          <CipherCanvas phrases={list<string>("home.gate.messenger.phrases")} fits={fitsHero} cell={22} />
+          <CipherCanvas
+            phrases={list<string>("home.gate.messenger.phrases")}
+            fits={(x, y, w, W, H) => {
+              const bg = heroBg.current?.getBoundingClientRect();
+              const visual = heroVisual.current;
+              if (!bg || !visual) return false;
+              const blocked = [...visual.children].map((el) => {
+                const r = el.getBoundingClientRect();
+                return new DOMRect(r.left - bg.left, r.top - bg.top, r.width, r.height);
+              });
+              return fitsHero(x, y, w, W, H, 22, blocked);
+            }}
+            cell={22}
+          />
         </div>
         <HudFrame />
         <div className="container p-hero-grid">
@@ -120,7 +140,7 @@ export default function Messenger() {
               ))}
             </dl>
           </div>
-          <div className="p-hero-visual">
+          <div ref={heroVisual} className="p-hero-visual">
             <img
               className="phone-shot"
               src={shots[0]}
