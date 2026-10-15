@@ -2242,6 +2242,13 @@ p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px 24px;
   }
+  /* A label that wraps to two lines would push its value below its neighbour's; values sit at
+     the foot of the row instead, so each row reads on one line. */
+  .hero-stats > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
 
 /* ---------- messenger ---------- */
@@ -2375,12 +2382,15 @@ p {
   letter-spacing: 0.005em;
   max-width: 34em;
 }
+/* The slash leans by a fixed angle, so its sideways travel grows with its length: over a long
+   quote on a phone it would run into the first word and out of the gutter. Capped at five
+   lines, it stays within the padding at every width. */
 .quote::before {
   content: "";
   position: absolute;
   left: 0;
   top: 4px;
-  bottom: 4px;
+  height: min(calc(100% - 8px), 5em);
   width: 3px;
   background: var(--accent);
   transform: skewX(-12deg);

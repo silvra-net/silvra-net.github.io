@@ -8,7 +8,7 @@ export const HELIX_REPO = "https://github.com/silvra-net/helix";
 export const HELIX_RELEASES = "https://github.com/silvra-net/helix/releases/latest";
 /** The release the public node runs. Documentation is linked at this tag rather than at master,
  *  which may already describe what the mainnet does not run yet. */
-export const HELIX_TAG = "v1.0.1";
+export const HELIX_TAG = "v1.1.0";
 export const HELIX_DOCS = `https://github.com/silvra-net/helix/blob/${HELIX_TAG}/docs`;
 export const HELIX_TOKENOMICS = `https://github.com/silvra-net/helix/blob/${HELIX_TAG}/TOKENOMICS.md`;
 /** The genesis block as the node serves it: allocations and header, as JSON. */
