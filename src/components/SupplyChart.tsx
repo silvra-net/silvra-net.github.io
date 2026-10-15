@@ -108,10 +108,19 @@ export default function SupplyChart() {
     const year = Math.round(((px - pad.left) / iw) * YEARS);
     setActive(Math.min(YEARS, Math.max(0, year)));
   };
+  // A tap shows the readout too: the leave event that follows lifting a finger is ignored, and
+  // the readout goes when the chart loses focus to a tap elsewhere.
+  const onLeave = (e: PointerEvent<SVGSVGElement>) => {
+    if (e.pointerType !== "touch") setActive(null);
+  };
   const onKey = (e: KeyboardEvent<SVGSVGElement>) => {
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       e.preventDefault();
       setActive((a) => Math.min(YEARS, Math.max(0, (a ?? 0) + (e.key === "ArrowRight" ? 1 : -1))));
+    }
+    if (e.key === "Home" || e.key === "End") {
+      e.preventDefault();
+      setActive(e.key === "Home" ? 0 : YEARS);
     }
     if (e.key === "Escape") setActive(null);
   };
@@ -128,8 +137,9 @@ export default function SupplyChart() {
           role="img"
           aria-label={t("helix.supply.aria")}
           tabIndex={0}
+          onPointerDown={onMove}
           onPointerMove={onMove}
-          onPointerLeave={() => setActive(null)}
+          onPointerLeave={onLeave}
           onKeyDown={onKey}
           onBlur={() => setActive(null)}
         >

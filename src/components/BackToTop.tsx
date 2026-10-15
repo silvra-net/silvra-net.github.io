@@ -12,7 +12,9 @@ const C = 2 * Math.PI * R;
 export default function BackToTop() {
   const { t } = useI18n();
   const [shown, setShown] = useState(false);
+  const [overFooter, setOverFooter] = useState(false);
   const ring = useRef<SVGCircleElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let raf = 0;
@@ -22,6 +24,11 @@ export default function BackToTop() {
       const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
       ring.current?.style.setProperty("stroke-dashoffset", String(C * (1 - p)));
       setShown(window.scrollY > window.innerHeight * 1.4);
+      // Over the footer, which is night olive in both themes, the button takes the dark palette
+      // too, instead of floating there as a paper disc.
+      const footer = document.querySelector(".site-footer")?.getBoundingClientRect().top ?? Infinity;
+      const self = button.current?.getBoundingClientRect();
+      setOverFooter(!!self && footer < self.top + self.height / 2);
     };
     const on = () => {
       if (!raf) raf = requestAnimationFrame(paint);
@@ -38,8 +45,9 @@ export default function BackToTop() {
 
   return (
     <button
+      ref={button}
       type="button"
-      className={shown ? "to-top shown" : "to-top"}
+      className={`to-top${shown ? " shown" : ""}${overFooter ? " dark-zone" : ""}`}
       aria-label={t("nav.top")}
       tabIndex={shown ? 0 : -1}
       onClick={() => {

@@ -71,6 +71,26 @@ async function check({ theme, viewport: { name, ...vp }, locale, pass }) {
         if (end) break;
       }
       await page.waitForTimeout(900);
+      // Entrance animations that end (a reveal, a new block sliding in) are waited out, so axe
+      // measures where they land rather than a frame in between. Endless loops are left running,
+      // and so are scroll-driven ones, which only finish when scrolled through; a few seconds
+      // cap the wait in any case.
+      await page.evaluate(() =>
+        Promise.race([
+          Promise.all(
+            document
+              .getAnimations()
+              .filter(
+                (a) =>
+                  a.playState === "running" &&
+                  a.timeline instanceof DocumentTimeline &&
+                  Number.isFinite(a.effect?.getTiming().iterations),
+              )
+              .map((a) => a.finished.catch(() => {})),
+          ),
+          new Promise((done) => setTimeout(done, 4000)),
+        ]),
+      );
     }
     await page.addScriptTag({ content: AXE });
     const result = await page.evaluate(
@@ -86,6 +106,30 @@ async function check({ theme, viewport: { name, ...vp }, locale, pass }) {
   await ctx.close();
 }
 
+// What axe cannot see, because it needs a resize: a phone menu left open when the window grows
+// past the phone layout loses its only close button, and must close itself.
+async function menuAfterResize() {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/", { waitUntil: "load" });
+  await page.click(".nav-toggle");
+  await page.waitForTimeout(400);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.waitForTimeout(600);
+  const state = await page.evaluate(() => ({
+    menu: !!document.getElementById("mobile-menu")?.checkVisibility(),
+    inert: !!document.querySelector("main")?.hasAttribute("inert"),
+  }));
+  if (state.menu || state.inert) {
+    found.set("menu-after-resize", {
+      help: "The phone menu stays open, or the page stays inert, after widening past the phone layout",
+      impact: "serious",
+      where: new Set([`/ 390 → 1280  menu visible: ${state.menu}, main inert: ${state.inert}`]),
+    });
+  }
+  await ctx.close();
+}
+
 const runs = PASSES.flatMap((pass) =>
   LOCALES.flatMap((locale) => THEMES.flatMap((theme) => VIEWPORTS.map((viewport) => ({ pass, locale, theme, viewport })))),
 );
@@ -96,6 +140,7 @@ await Promise.all(
     while (queue.length) await check(queue.shift());
   }),
 );
+await menuAfterResize();
 await browser.close();
 
 if (found.size === 0) {

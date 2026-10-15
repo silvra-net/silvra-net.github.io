@@ -354,6 +354,7 @@
       "live": "live · node.silvra.net",
       "offline": "Knoten nicht erreichbar",
       "connecting": "Verbinde …",
+      "noscript": "Live-Werte benötigen JavaScript.",
       "explorer": "Explorer öffnen",
       "stats": {
         "height": "Blockhöhe",

@@ -16,6 +16,7 @@ import Icon from "../components/Icon";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { DISCORD } from "../lib/links";
+import NewTab from "../components/NewTab";
 
 interface Point {
   title: string;
@@ -217,7 +218,7 @@ export default function Home() {
       </section>
 
       {/* ---- 07 · Questions ---- */}
-      <section className="section band" id="faq">
+      <section className="section" id="faq">
         <div className="container faq-grid">
           <div>
             <SectionLabel index="07" text={t("home.faq.label")} />
@@ -247,6 +248,7 @@ export default function Home() {
               <a className="btn" href={DISCORD} rel="noreferrer noopener" target="_blank">
                 <Icon name="people" size={16} />
                 Discord
+                <NewTab />
               </a>
               <Link className="btn" to="/contact/">
                 {t("nav.contact")}

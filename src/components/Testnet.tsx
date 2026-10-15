@@ -49,6 +49,11 @@ export default function Testnet({ explorer = true, height = true }: { explorer?:
                 : t("home.testnet.connecting")}
         </span>
       </div>
+      {/* Without a script the panel never connects; it says why instead of "connecting" for ever
+          (index.html hides that word in the same case). */}
+      <noscript>
+        <p className="testnet-nojs mono">{t("home.testnet.noscript")}</p>
+      </noscript>
       {height && (
         <div className="testnet-height">
           <span className="testnet-label">{t("home.testnet.stats.height")}</span>

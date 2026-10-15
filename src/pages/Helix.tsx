@@ -19,6 +19,7 @@ import { useOs } from "../lib/os";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { useNodeStatus } from "../lib/node";
+import NewTab from "../components/NewTab";
 import {
   DISCORD,
   EXPLORER,
@@ -100,6 +101,7 @@ export default function Helix() {
                   <a className="btn" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                     <Icon name="arrowDown" size={16} />
                     {t("helix.download.generic")}
+                    <NewTab />
                   </a>
                 </div>
                 <p className="path-note">{t("helix.download.mobileNote")}</p>
@@ -109,6 +111,7 @@ export default function Helix() {
                 <a className="btn primary" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                   <Icon name="arrowDown" size={16} />
                   {walletLabel}
+                  <NewTab />
                 </a>
                 <a className="btn" href={EXPLORER}>
                   {t("helix.cta.explorer")}
@@ -290,6 +293,7 @@ export default function Helix() {
                 <a href={HELIX_GENESIS} rel="noreferrer noopener" target="_blank">
                   {t("helix.supply.alloc.source")}
                   <Icon name="arrowUpRight" size={14} />
+                  <NewTab />
                 </a>
               </p>
             </Reveal>
@@ -299,6 +303,7 @@ export default function Helix() {
                 {t("helix.supply.note")}{" "}
                 <a href={HELIX_TOKENOMICS} rel="noreferrer noopener" target="_blank">
                   TOKENOMICS.md
+                  <NewTab />
                 </a>
                 .
               </span>
@@ -330,6 +335,7 @@ export default function Helix() {
                 <a className="btn primary" href={HELIX_RELEASES} rel="noreferrer noopener" target="_blank">
                   <Icon name="arrowDown" size={16} />
                   {walletLabel}
+                  <NewTab />
                 </a>
                 {os === "mobile" && <p className="path-note">{t("helix.download.mobileNote")}</p>}
               </Reveal>
@@ -341,6 +347,7 @@ export default function Helix() {
                 <a className="btn" href={`${HELIX_DOCS}/cli.md`} rel="noreferrer noopener" target="_blank">
                   {t("helix.start.cli.cta")}
                   <Icon name="arrowUpRight" size={14} />
+                  <NewTab />
                 </a>
               </Reveal>
               <Reveal className="path" delay={180}>
@@ -359,10 +366,12 @@ export default function Helix() {
                   <a className="btn" href={`${HELIX_DOCS}/running-a-node.md`} rel="noreferrer noopener" target="_blank">
                     {t("helix.start.validate.cta")}
                     <Icon name="arrowUpRight" size={14} />
+                    <NewTab />
                   </a>
                   <a className="btn" href={`${HELIX_DOCS}/staking.md`} rel="noreferrer noopener" target="_blank">
                     {t("helix.start.validate.cta2")}
                     <Icon name="arrowUpRight" size={14} />
+                    <NewTab />
                   </a>
                 </div>
               </Reveal>
@@ -421,6 +430,7 @@ export default function Helix() {
                 <span className="link-card-title">silvra-net/helix</span>
                 <span className="muted">{t("helix.cta.githubBody")}</span>
                 <Icon name="arrowUpRight" size={18} className="link-card-go" />
+                <NewTab />
               </a>
               <a className="link-card" href={EXPLORER}>
                 <Icon name="cube" size={22} />
@@ -433,12 +443,14 @@ export default function Helix() {
                 <span className="link-card-title">{NODE_HOST}</span>
                 <span className="muted">{t("helix.cta.nodeBody")}</span>
                 <Icon name="arrowUpRight" size={18} className="link-card-go" />
+                <NewTab />
               </a>
               <a className="link-card" href={DISCORD} rel="noreferrer noopener" target="_blank">
                 <Icon name="people" size={22} />
                 <span className="link-card-title">Discord</span>
                 <span className="muted">{t("helix.cta.discordBody")}</span>
                 <Icon name="arrowUpRight" size={18} className="link-card-go" />
+                <NewTab />
               </a>
             </div>
           </div>

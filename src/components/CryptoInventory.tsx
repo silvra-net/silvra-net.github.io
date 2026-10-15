@@ -1,6 +1,7 @@
 import { useI18n } from "../i18n";
 import Icon from "./Icon";
 import { HELIX_DOCS } from "../lib/links";
+import NewTab from "./NewTab";
 
 type Status = "pq" | "sym" | "classic" | "none";
 
@@ -96,6 +97,7 @@ export default function CryptoInventory() {
         <span className="mono">{t("home.inventory.sourcesLabel")}</span>
         <a href={`${HELIX_DOCS}/internals.md#cryptography--determinism`} rel="noreferrer noopener" target="_blank">
           {t("home.inventory.sourceHelix")}
+          <NewTab />
         </a>
         <span aria-hidden="true">·</span>
         {/* The messenger's source is not public, so there is nothing to link to but our own word,

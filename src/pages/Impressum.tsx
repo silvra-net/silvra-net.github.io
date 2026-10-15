@@ -3,6 +3,7 @@ import MailText from "../components/MailText";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { photoCredits } from "../lib/photos";
+import NewTab from "../components/NewTab";
 
 interface Block {
   title: string;
@@ -43,6 +44,7 @@ export default function Impressum() {
                       <li key={slot}>
                         <a href={credit.url} rel="noreferrer noopener" target="_blank">
                           {credit.author}
+                          <NewTab />
                         </a>
                       </li>
                     ))}

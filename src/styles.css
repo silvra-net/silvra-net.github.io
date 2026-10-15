@@ -220,10 +220,10 @@ a {
   background: var(--accent);
   color: var(--accent-ink);
 }
+/* The ring keeps the element's own corners: square things get a square ring. */
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: var(--r-ctl);
+  outline-offset: 2px;
 }
 /* Focus is moved to these on purpose (skip link, back to top, a new page), never by Tab: a ring
    round the whole page or its heading would only look like a fault. */
@@ -232,9 +232,12 @@ main:focus,
 main h1:focus {
   outline: none;
 }
+/* The html scroll padding already clears the header and the section bar, and a jump adds this
+   margin on top of it. Taking the section's own top padding back off leaves its numbered label
+   just under the bar, instead of a band's worth of the previous section above it. */
 section[id],
 .section-group[id] {
-  scroll-margin-top: calc(var(--header-h) + 56px);
+  scroll-margin-top: calc(24px - var(--section-y));
 }
 
 .sr-only {
@@ -393,11 +396,13 @@ p {
   opacity: 0.6;
 }
 
+/* Heading and lead end on one baseline, however many lines either takes; their boxes' lower
+   edges differ by the heading's tighter line height. */
 .section-head {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 24px 64px;
-  align-items: end;
+  align-items: last baseline;
   margin-bottom: clamp(40px, 5vw, 72px);
 }
 .section-head h2,
@@ -783,6 +788,19 @@ p {
   background: var(--text);
   color: var(--bg);
 }
+/* Forced colours drop fills and shadows, which is all that marks the current page and the
+   current language; a system-coloured underline and frame stand in for them. */
+@media (forced-colors: active) {
+  .nav-link.active,
+  .mobile-links a[aria-current="page"] {
+    text-decoration: underline 2px;
+    text-underline-offset: 6px;
+  }
+  .lang-btn.active {
+    outline: 2px solid CanvasText;
+    outline-offset: -2px;
+  }
+}
 .icon-btn {
   width: 38px;
   height: 38px;
@@ -869,9 +887,12 @@ p {
   color: #dcc27e;
   padding-top: 6px;
 }
+/* One line down to the narrowest phone; if larger text still wraps it, the two lines stay one
+   title rather than two labels. */
 .mobile-title {
   font-family: var(--display);
-  font-size: 27px;
+  font-size: clamp(22px, 7.2vw, 27px);
+  line-height: 1.05;
   letter-spacing: 0.005em;
   font-weight: 700;
   text-transform: uppercase;
@@ -1034,26 +1055,26 @@ p {
   width: 100%;
   height: 100%;
 }
-/* The noise thins out behind the title so the words never fight it, and fades out under the
-   header so the navigation never sits on a bright strand. */
+/* The noise thins out behind the words, title and lead alike, so they never fight it, and fades
+   out under the header so the navigation never sits on a bright strand. */
 .gate-messenger .fx-canvas {
   -webkit-mask-image:
     linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
-    radial-gradient(60% 50% at 18% 34%, rgba(0, 0, 0, 0.18), #000 75%);
+    radial-gradient(60% 62% at 18% 42%, rgba(0, 0, 0, 0.12), #000 78%);
   -webkit-mask-composite: source-in;
   mask-image:
     linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
-    radial-gradient(60% 50% at 18% 34%, rgba(0, 0, 0, 0.18), #000 75%);
+    radial-gradient(60% 62% at 18% 42%, rgba(0, 0, 0, 0.12), #000 78%);
   mask-composite: intersect;
 }
 .gate-helix .fx-canvas {
   -webkit-mask-image:
     linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
-    radial-gradient(45% 42% at 86% 78%, rgba(0, 0, 0, 0.35), #000 80%);
+    radial-gradient(50% 48% at 84% 80%, rgba(0, 0, 0, 0.18), #000 80%);
   -webkit-mask-composite: source-in;
   mask-image:
     linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px)),
-    radial-gradient(45% 42% at 86% 78%, rgba(0, 0, 0, 0.35), #000 80%);
+    radial-gradient(50% 48% at 84% 80%, rgba(0, 0, 0, 0.18), #000 80%);
   mask-composite: intersect;
 }
 
@@ -1120,6 +1141,14 @@ p {
   color: rgba(238, 240, 233, 0.8);
   max-width: 28rem;
   margin: 0 0 22px;
+}
+/* The messenger's lead sits at the seal's height. Pointing at the chain moves the seam to 41%,
+   so the line ends 24px short of where the 150px seal then lands (41vw less its 75px radius),
+   counted from the content column's left edge. */
+@media (min-width: 821px) {
+  .gate-messenger .gate-text {
+    max-width: min(28rem, calc(41vw - 99px - max(var(--gutter), (100vw - var(--measure)) / 2)));
+  }
 }
 .gate-cta {
   display: inline-flex;
@@ -1815,6 +1844,13 @@ p {
 .testnet-source {
   margin-left: auto;
 }
+.testnet-nojs {
+  margin: -12px 0 24px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 .testnet-height {
   display: flex;
   flex-direction: column;
@@ -1953,10 +1989,14 @@ p {
 .page-hero--last {
   clip-path: none;
 }
+/* The picture fades out under the header, as the gate's noise does, so no bright line of it
+   ever runs through the navigation. */
 .page-hero-media {
   position: absolute;
   inset: 0;
   z-index: -2;
+  -webkit-mask-image: linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px));
+  mask-image: linear-gradient(180deg, transparent calc(var(--header-h) - 8px), #000 calc(var(--header-h) + 72px));
 }
 .page-hero-media .photo {
   position: absolute;
@@ -2055,6 +2095,12 @@ p {
       linear-gradient(90deg, transparent 0 70%, #000 100%);
     mask-composite: intersect;
   }
+  /* With the strand pushed to the edge there is no picture to fill a full screen, as the
+     messenger's stacked phone does; the opening ends with its readings instead of half a
+     screen of empty gradient. */
+  .p-hero-helix {
+    min-height: 0;
+  }
 }
 .p-hero-grid {
   display: grid;
@@ -2115,14 +2161,16 @@ p {
   background: rgba(10, 12, 9, 0.84);
   border: 1px solid rgba(238, 240, 233, 0.18);
 }
+/* Each chip overlaps the frame only where the screen behind it is empty: above the logo, beside
+   the wordmark, below the button. Their outer edges stay inside the content column. */
 .chip-a {
-  right: -26%;
-  top: 9%;
+  right: -14%;
+  top: 2%;
   animation-delay: -2s;
 }
 .chip-b {
   left: -36%;
-  top: 30%;
+  top: 22%;
   animation-delay: -4s;
 }
 .chip-c {
@@ -2208,7 +2256,7 @@ p {
   padding: 36px 32px 32px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, var(--surface), var(--bg));
+  background: var(--surface);
   transition: border-color 0.3s;
 }
 .pillar:hover {
@@ -2230,7 +2278,7 @@ p {
   margin-bottom: 64px;
   color: var(--text);
   border: 1px solid var(--line-2);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--text) 10%, transparent), transparent);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
 }
 .pillar h3 {
   font-family: var(--display);
@@ -2575,7 +2623,7 @@ p {
   transition: opacity 0.6s;
 }
 /* The words sit on the left, so the picture fades out there; on a phone the words take the
-   whole width, and the picture keeps to the lower edge, under them. */
+   whole width, and the picture moves down into room of its own under the button. */
 .next-helix .next-world-bg {
   -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0 45%, #000 60%);
   mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0 45%, #000 60%);
@@ -2585,10 +2633,14 @@ p {
   mask-image: linear-gradient(90deg, transparent 0 40%, #000 80%);
 }
 @media (max-width: 760px) {
+  .next-world {
+    padding-bottom: 260px;
+  }
   .next-helix .next-world-bg,
   .next-messenger .next-world-bg {
-    -webkit-mask-image: linear-gradient(180deg, transparent 0 62%, #000 82%);
-    mask-image: linear-gradient(180deg, transparent 0 62%, #000 82%);
+    top: 40%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0 30%, #000 60%);
+    mask-image: linear-gradient(180deg, transparent 0 30%, #000 60%);
   }
 }
 .next-world-title {
@@ -3114,7 +3166,9 @@ p {
   text-align: center;
   white-space: nowrap;
   user-select: none;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--text) 18%, transparent), transparent 88%);
+  /* One flat tint over the whole word: a fade towards the baseline left only its upper half
+     visible on a phone, which read as a fault rather than a mark. */
+  background: linear-gradient(color-mix(in srgb, var(--text) 12%, transparent), color-mix(in srgb, var(--text) 12%, transparent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -3125,7 +3179,9 @@ p {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px 24px;
-  padding-top: 24px;
+  /* The back-to-top ring rests in the corner at the end of the page; the readout stops short
+     of it instead of running into it. */
+  padding: 24px 72px 0 0;
   border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--muted);
@@ -3235,6 +3291,12 @@ p {
   .float-bubble {
     left: -30%;
   }
+  /* The phone is smaller than its chips here, so any spot for them is on its words; the readout
+     above already names MLS and X-Wing, and the feed chip keeps the empty lower screen. */
+  .chip-a,
+  .chip-b {
+    display: none;
+  }
   .stack-algos {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -3278,12 +3340,6 @@ p {
   }
   .float-chip {
     padding: 8px 11px;
-  }
-  .chip-a {
-    right: -22%;
-  }
-  .chip-b {
-    left: -24%;
   }
   .chip-c {
     right: -14%;
@@ -3432,12 +3488,20 @@ p {
   box-shadow: inset 0 3px 0 var(--amber);
 }
 .stream-block.newest .stream-top {
+  animation: lid-in 0.9s var(--ease-out);
   background: var(--amber);
 }
+/* The new block only slides in; its text is at full contrast from the first frame,
+   because a block arrives every two seconds and the newest one is read first.
+   The amber lid fading in carries the "new" signal instead. */
 @keyframes block-in {
   from {
-    opacity: 0;
     transform: translateX(-36px) scale(0.92);
+  }
+}
+@keyframes lid-in {
+  from {
+    opacity: 0;
   }
 }
 .live-under {
@@ -3531,10 +3595,13 @@ p {
 .chart-box {
   position: relative;
 }
+/* Labels may run past the drawing's edge rather than be cut: with wider letter and word spacing
+   (WCAG 1.4.12) "30 Mio." would otherwise lose its first digit. */
 .chart-box svg {
   display: block;
   width: 100%;
   height: auto;
+  overflow: visible;
   touch-action: pan-y;
   outline: none;
 }
@@ -4495,6 +4562,11 @@ dd {
     font-size: 14px;
     white-space: nowrap;
   }
+  /* Without a note (the node not answering) the button takes the bar, instead of leaving two
+     thirds of it empty. */
+  .sticky-cta .btn:only-child {
+    flex: 1;
+  }
   .sticky-cta-note {
     display: grid;
     gap: 2px;
@@ -4579,6 +4651,12 @@ dd {
   color: var(--accent-ink);
   background: var(--accent);
 }
+@media (forced-colors: active) {
+  .section-nav-link.active {
+    outline: 2px solid CanvasText;
+    outline-offset: -2px;
+  }
+}
 
 /* ---------- FAQ ---------- */
 
@@ -4603,7 +4681,8 @@ dd {
   transition: border-color 0.3s;
   interpolate-size: allow-keywords;
 }
-.faq-item[open] {
+.faq-item[open],
+.faq-item:hover {
   border-color: var(--line-2);
 }
 .faq-item summary {
@@ -4642,7 +4721,14 @@ dd {
   border: 1px solid var(--line-2);
   transition:
     background 0.3s,
-    color 0.3s;
+    color 0.3s,
+    border-color 0.3s;
+}
+/* A closed question answers the pointer the way the other controls do; an open one is already
+   filled in the accent. */
+.faq-item:not([open]) summary:hover .faq-icon {
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 /* The box stays square; only the plus inside it turns into a cross. */
 .faq-icon svg {
@@ -5100,16 +5186,16 @@ a.tile-helix:hover .tile-go {
     grid-row: span 1;
     min-height: 320px;
   }
+  /* Rows of two halves and a closing full row, in the order the tiles come: no row is left
+     with a half-empty gap beside its last tile. */
   .tile-helix,
-  .tile-open {
-    grid-column: span 3;
-  }
-  .tile-standards {
-    grid-column: span 6;
-  }
+  .tile-standards,
   .tile-eu,
   .tile-zero {
     grid-column: span 3;
+  }
+  .tile-open {
+    grid-column: span 6;
   }
 }
 @media (max-width: 900px) {
@@ -5179,12 +5265,28 @@ a.tile-messenger:hover .tile-phone {
   width: min(100% - 48px, 300px);
   margin-left: 48px;
 }
+/* In the short single-row tile the phone is hung from a fixed height instead, below the arrow
+   in the corner, so its screen still shows and nothing sits on it. */
+@media (max-width: 1060px) {
+  .tile-phone {
+    top: 96px;
+    bottom: auto;
+    width: min(34%, 230px);
+  }
+}
 @media (max-width: 640px) {
   .tile-phone {
     display: none;
   }
   .tile-messenger .tile-chat {
     max-width: none;
+  }
+  /* Too narrow for the sentence on one line: two fixed lines instead, so the message is never
+     cut short and the hex, wrapping the same way, still cannot change the bubble's height. */
+  .tile-bubble-loop .cipher-loop-text {
+    height: 42px;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -5406,17 +5508,38 @@ a.tile-messenger:hover .tile-phone {
   opacity: 1;
   transform: none;
 }
+/* Still, the band is not a stopped ticker but a strip of readings: one copy of the claims in
+   ruled cells across the content column, no fade at the edges and no slash left hanging at
+   the end of a line. Each cell is ruled on both sides and overlaps its neighbour by the rule,
+   so a row of one claim is framed like a row of four. */
+:root[data-motion="still"] .marquee {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
 :root[data-motion="still"] .marquee-track {
   animation: none;
+  display: block;
   width: auto;
 }
 :root[data-motion="still"] .marquee-run {
   flex-wrap: wrap;
-  justify-content: center;
-  row-gap: 10px;
+  row-gap: 8px;
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter);
 }
-:root[data-motion="still"] .marquee-run + .marquee-run {
+:root[data-motion="still"] .marquee-run + .marquee-run,
+:root[data-motion="still"] .marquee-slash {
   display: none;
+}
+:root[data-motion="still"] .marquee-item {
+  flex: 1 1 auto;
+  justify-content: center;
+  margin-left: -1px;
+  padding: 4px 16px;
+  border-inline: 1px solid var(--line-2);
+  white-space: normal;
+  text-align: center;
 }
 :root[data-motion="still"] .gate-pulse,
 :root[data-motion="still"] .route-wipe {
@@ -5440,17 +5563,34 @@ a.tile-messenger:hover .tile-phone {
     transition-duration: 0.001ms !important;
     transition-delay: 0s !important;
   }
+  :root:not([data-motion]) .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
   :root:not([data-motion]) .marquee-track {
     animation: none;
+    display: block;
     width: auto;
   }
   :root:not([data-motion]) .marquee-run {
     flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 10px;
+    row-gap: 8px;
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 0 var(--gutter);
   }
-  :root:not([data-motion]) .marquee-run + .marquee-run {
+  :root:not([data-motion]) .marquee-run + .marquee-run,
+  :root:not([data-motion]) .marquee-slash {
     display: none;
+  }
+  :root:not([data-motion]) .marquee-item {
+    flex: 1 1 auto;
+    justify-content: center;
+    margin-left: -1px;
+    padding: 4px 16px;
+    border-inline: 1px solid var(--line-2);
+    white-space: normal;
+    text-align: center;
   }
   :root:not([data-motion]) .gate-pulse {
     display: none;

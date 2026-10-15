@@ -54,6 +54,15 @@
           background: var(--bg);
           border-bottom-color: var(--line);
         }
+        /* Controls that only a script can work: the header's buttons (menu, language, theme,
+           motion; the footer lists every page instead of the menu), the copy buttons, and the
+           live panel's "connecting", which never would. */
+        .site-header button,
+        .site-header .lang,
+        .code-copy,
+        .testnet-source {
+          display: none;
+        }
       </style>
     </noscript>
   </head>

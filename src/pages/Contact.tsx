@@ -7,6 +7,7 @@ import MailText from "../components/MailText";
 import { useI18n } from "../i18n";
 import { useSeo } from "../lib/seo";
 import { DISCORD, EXPLORER, GITHUB, NODE_HOST } from "../lib/links";
+import NewTab from "../components/NewTab";
 
 interface Card {
   /** Which line of work the card is for; it picks the colour of the card's top rule. */
@@ -34,6 +35,7 @@ export default function Contact() {
           <a className="btn" href={DISCORD} rel="noreferrer noopener" target="_blank">
             <Icon name="people" size={16} />
             Discord
+            <NewTab />
           </a>
         </div>
       </PageHero>
@@ -78,10 +80,12 @@ export default function Contact() {
             <a className="btn" href={`https://${NODE_HOST}`} rel="noreferrer noopener" target="_blank">
               {NODE_HOST}
               <Icon name="arrowUpRight" size={14} />
+              <NewTab />
             </a>
             <a className="btn" href={GITHUB} rel="noreferrer noopener" target="_blank">
               GitHub
               <Icon name="arrowUpRight" size={14} />
+              <NewTab />
             </a>
           </div>
         </div>

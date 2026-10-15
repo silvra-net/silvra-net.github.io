@@ -10,6 +10,7 @@ import { setMotionStill, useReducedMotion } from "../lib/motion";
 import { DISCORD, EXPLORER, GITHUB } from "../lib/links";
 import icon from "../assets/silvra-icon.png";
 import type { ReactNode } from "react";
+import NewTab from "./NewTab";
 
 // The server has no layout to measure; there the plain effect stands in, silently.
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -90,7 +91,10 @@ function ThemeToggle({ labelled = false }: { labelled?: boolean }) {
       {labelled && (
         <>
           <span>{action}</span>
-          <span className="motion-state mono">{dark ? t("nav.themeIsDark") : t("nav.themeIsLight")}</span>
+          {/* Shown, not read: the row's name already says which way it switches. */}
+          <span className="motion-state mono" aria-hidden="true">
+            {dark ? t("nav.themeIsDark") : t("nav.themeIsLight")}
+          </span>
         </>
       )}
     </button>
@@ -121,7 +125,10 @@ function MotionToggle({ labelled = false }: { labelled?: boolean }) {
       {labelled && (
         <>
           <span>{t("nav.motion")}</span>
-          <span className="motion-state mono">{pressed ? t("nav.motionPaused") : t("nav.motionRunning")}</span>
+          {/* Shown, not read: the pressed state already says it. */}
+          <span className="motion-state mono" aria-hidden="true">
+            {pressed ? t("nav.motionPaused") : t("nav.motionRunning")}
+          </span>
         </>
       )}
     </button>
@@ -143,7 +150,11 @@ function LanguageSwitcher() {
           key={l}
           type="button"
           className={l === lang ? "lang-btn active" : "lang-btn"}
-          aria-current={l === lang}
+          // Spoken in its own language, with the language named after the visible code; pressed
+          // is the state screen readers announce on a button, which aria-current is not.
+          lang={l}
+          aria-label={`${l.toUpperCase()} – ${l === "de" ? "Deutsch" : "English"}`}
+          aria-pressed={l === lang}
           onClick={() => setLang(l)}
         >
           {l.toUpperCase()}
@@ -273,9 +284,15 @@ export default function Layout({ children }: { children: ReactNode }) {
       }
     };
     window.addEventListener("keydown", onKey);
+    // Above the phone breakpoint the menu button is gone; a menu still open after the window is
+    // widened or a tablet turned would cover the page with no visible way out.
+    const wide = window.matchMedia("(min-width: 1021px)");
+    const onWide = () => wide.matches && setOpen(false);
+    wide.addEventListener("change", onWide);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      wide.removeEventListener("change", onWide);
       release();
       if (closedByRoute.current) closedByRoute.current = false;
       else btn?.focus();
@@ -439,12 +456,12 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Link to="/contact/">{t("nav.contact")}</Link>
                 <a href={GITHUB} rel="noreferrer noopener" target="_blank">
                   GitHub
-                  <span className="sr-only">{t("footer.newTab")}</span>
+                  <NewTab />
                   <Icon name="arrowUpRight" size={12} />
                 </a>
                 <a href={DISCORD} rel="noreferrer noopener" target="_blank">
                   Discord
-                  <span className="sr-only">{t("footer.newTab")}</span>
+                  <NewTab />
                   <Icon name="arrowUpRight" size={12} />
                 </a>
               </div>

@@ -9,6 +9,7 @@ import { useNodeStatus } from "../lib/node";
 import { HELIX_REPO, HELIX_TAG } from "../lib/links";
 import welcomeDe from "../assets/Welcome_DE-portrait.webp";
 import welcomeEn from "../assets/Welcome_EN.webp";
+import NewTab from "./NewTab";
 
 /**
  * Silvra at a glance, as a bento grid: each tile one fact, several of them alive — a message
@@ -104,6 +105,7 @@ export default function Bento() {
         <span className="tile-go" aria-hidden="true">
           <Icon name="arrowUpRight" size={18} />
         </span>
+        <NewTab />
       </a>
     </div>
   );

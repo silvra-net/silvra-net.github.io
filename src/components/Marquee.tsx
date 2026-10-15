@@ -21,7 +21,11 @@ export default function Marquee({ items }: { items: string[] }) {
           <div className="marquee-run" key={copy}>
             {items.map((item) => (
               <span className="marquee-item" key={item}>
-                <Units text={item} />
+                {/* One inline box for the claim: as loose flex items, the text after a unit
+                    would lose its leading space ("2 sPRO BLOCK"). */}
+                <span>
+                  <Units text={item} />
+                </span>
                 <span className="marquee-slash">/</span>
               </span>
             ))}
