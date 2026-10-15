@@ -16,13 +16,13 @@ import NewTab from "./NewTab";
  * that keeps encrypting itself, the chain's real height, a standard you can look up.
  */
 export default function Bento() {
-  const { t, list, lang } = useI18n();
+  const { t, list, lang, path } = useI18n();
   const { status, failed, validators } = useNodeStatus();
   const locale = lang === "de" ? "de-DE" : "en-GB";
 
   return (
     <div className="bento">
-      <Link to="/messenger/" className="tile tile-messenger dark-zone">
+      <Link to={path("messenger")} className="tile tile-messenger dark-zone">
         <span className="tile-kicker mono">{t("home.bento.messenger.kicker")}</span>
         <h3 className="tile-title">{t("home.bento.messenger.title")}</h3>
         <p className="tile-body">{t("home.bento.messenger.body")}</p>
@@ -36,7 +36,7 @@ export default function Bento() {
         </span>
       </Link>
 
-      <Link to="/helix/" className="tile tile-helix dark-zone">
+      <Link to={path("helix")} className="tile tile-helix dark-zone">
         <span className="tile-kicker mono">
           {/* The words are the project's state, the dot is the node's: it lights only once the
               node has answered, like the panel's. */}

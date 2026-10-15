@@ -3,32 +3,43 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { I18nProvider } from "./i18n";
+import { langOf, pagePath, routeOf } from "./lib/routes";
+import type { Lang } from "./lib/routes";
 import "./styles/fonts.css";
 import "./styles.css";
 
 const root = document.getElementById("root")!;
+const { pathname } = window.location;
+const html = document.documentElement;
+
+// A path that is no page has no language in its address. Under /en/ the not-found page is English;
+// elsewhere it is in the language the head script chose for this visitor (scripts/lang-script.mjs
+// leaves it on <html>), or German where the script made no choice — for a crawler, say.
+const page = routeOf(pathname);
+const notFound: Lang = langOf(pathname) === "en" || html.dataset.langPref === "en" ? "en" : "de";
+const lang: Lang = page ? page.lang : notFound;
+
 // A prerendered page carries its markup, the route it was rendered for and the language it was
 // rendered in; it is hydrated, so nothing on screen is thrown away and redrawn. Markup for another
-// route — a host that answers an unknown path with the home page — is replaced instead, as is an
-// empty root (the dev server). The not-found page is rendered for any path, hence "*".
-const trim = (path: string) => path.replace(/\/+$/, "") || "/";
+// route or another language is replaced instead: a host that answers an unknown path with the home
+// page, the not-found page (built once, in German) shown in English, or an empty root (the dev
+// server). The not-found page is rendered for any path that is not a page, hence "*".
 const route = root.dataset.route;
-const matches = route === "*" || (route !== undefined && trim(route) === trim(window.location.pathname));
-const prerendered =
-  root.hasChildNodes() && matches ? (document.documentElement.dataset.prerendered as "de" | "en" | undefined) : undefined;
+const matches = route === "*" ? !page : route !== undefined && pagePath(route) === pagePath(pathname);
+const hydrate = root.hasChildNodes() && matches && html.dataset.prerendered === lang;
 
 const app = (
   <React.StrictMode>
-    <I18nProvider initial={prerendered}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <I18nProvider notFound={notFound}>
         <App />
-      </BrowserRouter>
-    </I18nProvider>
+      </I18nProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
-if (prerendered) ReactDOM.hydrateRoot(root, app);
+if (hydrate) ReactDOM.hydrateRoot(root, app);
 else ReactDOM.createRoot(root).render(app);
 // The bundle is running: from here the reveals are driven by their own observers, so the
 // stylesheet's timed fallback (for a bundle that never arrives) stands down.
-document.documentElement.classList.add("app");
+html.classList.add("app");

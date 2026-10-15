@@ -1,21 +1,55 @@
 import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import routes from "../../scripts/routes.json";
+import { ROUTES, counterpart, langOf, routeOf } from "../lib/routes";
 
 /**
- * The build writes one directory per route so Pages answers 200 instead of 404. That list lives
- * in scripts/routes.json and the real one lives in the router, so a page added to the app but
- * not to the list would quietly go back to answering 404 — which is exactly what this guards.
+ * src/routes.json is the one list of pages: the router, every link, the language switch, the
+ * prerender, the sitemap, the head script and the checks all read it. A page missing a language,
+ * or an address written differently from how Pages serves it, would break all of them at once.
  */
-describe("prerendered routes", () => {
-  const app = readFileSync(join(__dirname, "..", "App.tsx"), "utf-8");
-  const inRouter = [...app.matchAll(/<Route\s+path="([^"*]+)"/g)]
-    .map((m) => m[1])
-    .filter((p) => p !== "/");
+describe("the route table", () => {
+  it("gives every page a German and an English address, each ending in a slash", () => {
+    expect(ROUTES.length).toBeGreaterThanOrEqual(8);
+    for (const r of ROUTES) {
+      expect(r.key).toMatch(/^[a-z]+$/);
+      expect(r.de, r.key).toMatch(/^\/([\w-]+\/)*$/);
+      expect(r.en, r.key).toMatch(/^\/en\/([\w-]+\/)*$/);
+      expect(r.de.startsWith("/en/"), r.key).toBe(false);
+    }
+  });
 
-  it("match the routes the router declares", () => {
-    expect([...routes].sort()).toEqual([...inRouter].sort());
+  it("has no key or address twice", () => {
+    const all = ROUTES.flatMap((r) => [r.de, r.en]);
+    expect(new Set(all).size).toBe(all.length);
+    expect(new Set(ROUTES.map((r) => r.key)).size).toBe(ROUTES.length);
+  });
+
+  it("keeps the German addresses the site has always had", () => {
+    expect(ROUTES.map((r) => r.de)).toEqual([
+      "/",
+      "/messenger/",
+      "/helix/",
+      "/mission/",
+      "/contact/",
+      "/impressum/",
+      "/barrierefreiheit/",
+      "/privacy/",
+    ]);
+  });
+
+  it("finds the page and its language at any address, with or without the slash", () => {
+    expect(routeOf("/en/legal-notice")?.route.key).toBe("impressum");
+    expect(routeOf("/en/legal-notice/")?.lang).toBe("en");
+    expect(routeOf("/barrierefreiheit")?.route.key).toBe("accessibility");
+    expect(routeOf("/en")?.route.key).toBe("home");
+    expect(routeOf("/helix/xyz")).toBeUndefined();
+    expect(routeOf("/en/impressum/")).toBeUndefined();
+    expect(langOf("/en/xyz")).toBe("en");
+    expect(langOf("/english/")).toBe("de");
+    expect(counterpart("/impressum/", "en")).toBe("/en/legal-notice/");
+    expect(counterpart("/en/accessibility/", "de")).toBe("/barrierefreiheit/");
+    expect(counterpart("/en/xyz", "de")).toBe("/");
   });
 });
 
@@ -30,17 +64,27 @@ function sources(dir: string): [string, string][] {
 
 describe("internal links", () => {
   /**
-   * Pages serves every page at /page/ and answers /page with a redirect to it. A link without
-   * the slash costs every visitor that extra round trip, and hands crawlers two addresses for one
-   * page, so each one is written the way it is served.
+   * Every page exists in two languages, at different addresses, so a path written into a
+   * component is right in one of them at most: an English page would lead back into German.
+   * Links take their address from the route table through path() (src/i18n), which knows the
+   * language on screen.
    */
-  it("end the path in a slash", () => {
-    const bare: string[] = [];
+  it("are never written as a literal path", () => {
+    const literal: string[] = [];
     for (const [file, src] of sources(join(__dirname, ".."))) {
-      for (const m of src.matchAll(/(?:\bto=\{?|\bto:\s*|navigate\(|href=\{?)["'`](\/[\w$\-{}]+)(?=["'`#?])/g)) {
-        bare.push(`${file.split("src")[1]}: ${m[1]}`);
+      for (const m of src.matchAll(/(?:\bto=\{?|\bto:\s*|navigate\(|href=\{?)["'`](\/[^"'`]*)/g)) {
+        literal.push(`${file.split("src")[1]}: ${m[1]}`);
       }
     }
-    expect(bare).toEqual([]);
+    expect(literal).toEqual([]);
+  });
+});
+
+describe("the redirect pages for old addresses", () => {
+  // Links already in the wild — the Play Store listing among them — must keep working.
+  const page = (name: string) => readFileSync(join(__dirname, "..", "..", "public", name, "index.html"), "utf-8");
+  it("send /datenschutz to the privacy policy and /kontakt to the contact page", () => {
+    expect(page("datenschutz")).toContain('url=/privacy/"');
+    expect(page("kontakt")).toContain('url=/contact/"');
   });
 });

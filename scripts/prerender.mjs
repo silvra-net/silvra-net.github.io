@@ -5,27 +5,31 @@
 // readable without running a line of JavaScript. The bundle then hydrates that markup rather
 // than replacing it (src/main.tsx).
 //
-// The pages are rendered in German, the site's first language; a visitor whose browser prefers
-// English is switched right after hydration. Unknown paths still land on 404.html, which is the
-// not-found page rendered the same way.
+// Every page exists twice: in German at the address it always had, in English under /en/
+// (src/routes.json, which the app reads as well). Each is rendered in its own language with its
+// own head, and names the other as its alternate, so search engines index both and show each
+// reader theirs. A visitor whose browser is not German is sent to the English page by a script in
+// the head (scripts/lang-script.mjs). Unknown paths land on 404.html, the not-found page rendered
+// once, in German; the bundle redraws it in English where that is the visitor's language.
 //
-// The route list lives in routes.json rather than here, so the test that checks it against the
-// router can read it without importing — and running — this script.
+// The privacy policy is a static page outside the app. Its one source, public/privacy/index.html,
+// holds both languages; it is split here into /privacy/ and /en/privacy/.
 //
 // It also writes what a static host cannot send as headers: a Content Security Policy and a
-// referrer policy on every page (the JS-free /privacy page and the three redirect pages
+// referrer policy on every page (the JS-free privacy pages and the three redirect pages
 // included); and the files that must not go stale: the sitemap and security.txt.
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { withLangScript } from "./lang-script.mjs";
 
 const SITE = "https://silvra.net";
 const dist = "dist";
-const routes = JSON.parse(readFileSync(new URL("./routes.json", import.meta.url), "utf-8"));
+const ROUTES = JSON.parse(readFileSync(new URL("../src/routes.json", import.meta.url), "utf-8"));
+const LANGS = ["de", "en"];
 const { render, dictionaries } = await import(pathToFileURL(resolve("dist-ssr/entry-server.js")).href);
-const de = dictionaries.de;
 const template = readFileSync(join(dist, "index.html"), "utf-8");
 const NODE = "https://node.silvra.net";
 
@@ -81,21 +85,23 @@ const PRELOAD = [
 
 /** Which dictionary entry and which preview image belong to which page. */
 const PAGES = {
-  "/": { meta: "home", og: "home", faq: "home.faq.items", live: true },
-  "/messenger": { meta: "messenger", og: "messenger", faq: "messenger.faq.items" },
-  "/helix": { meta: "helix", og: "helix", faq: "helix.faq.items", live: true },
-  "/mission": { meta: "mission", og: "home" },
-  "/contact": { meta: "contact", og: "home" },
-  "/impressum": { meta: "impressum", og: "home" },
-  "/barrierefreiheit": { meta: "accessibility", og: "home" },
+  home: { meta: "home", og: "home", faq: "home.faq.items", live: true },
+  messenger: { meta: "messenger", og: "messenger", faq: "messenger.faq.items" },
+  helix: { meta: "helix", og: "helix", faq: "helix.faq.items", live: true },
+  mission: { meta: "mission", og: "home" },
+  contact: { meta: "contact", og: "home" },
+  impressum: { meta: "impressum", og: "home" },
+  accessibility: { meta: "accessibility", og: "home" },
 };
+const LOCALE = { de: "de_DE", en: "en_GB" };
+const other = (lang) => (lang === "de" ? "en" : "de");
 
 // The dictionaries bind "ML-KEM" and "X-Wing" with an invisible word joiner so a line never
 // breaks at the hyphen. Machines read these strings, not lines: a search for "ML-KEM" must find
 // them, so the joiner is dropped from everything written into the head.
 const plain = (s) => String(s).replace(/\u2060/g, "");
-const get = (path) => {
-  const v = path.split(".").reduce((o, k) => (o ? o[k] : undefined), de);
+const get = (lang, path) => {
+  const v = path.split(".").reduce((o, k) => (o ? o[k] : undefined), dictionaries[lang]);
   return typeof v === "string" ? plain(v) : v;
 };
 const esc = (s) =>
@@ -104,53 +110,57 @@ const esc = (s) =>
 const ld = (obj) =>
   `<script type="application/ld+json">${plain(JSON.stringify(obj)).replace(/</g, "\\u003c")}</script>`;
 
-const organization = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Silvra",
-  url: `${SITE}/`,
-  logo: `${SITE}/favicon.png`,
-  email: "info@silvra.net",
-  description: get("footer.description"),
-  sameAs: ["https://github.com/silvra-net", "https://discord.gg/98gZj6TqVv"],
-};
-
-function structured(route, page) {
+/** The structured data of a page, in the page's language. */
+function structured(key, lang, page) {
+  const home = `${SITE}${ROUTES.find((r) => r.key === "home")[lang]}`;
+  const publisher = { "@type": "Organization", name: "Silvra", url: `${SITE}/` };
   const out = [];
-  if (route === "/") {
-    out.push(organization);
-    out.push({ "@context": "https://schema.org", "@type": "WebSite", name: "Silvra", url: `${SITE}/`, inLanguage: ["de", "en"] });
+  if (key === "home") {
+    out.push({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Silvra",
+      url: `${SITE}/`,
+      logo: `${SITE}/favicon.png`,
+      email: "info@silvra.net",
+      description: get(lang, "footer.description"),
+      sameAs: ["https://github.com/silvra-net", "https://discord.gg/98gZj6TqVv"],
+    });
+    out.push({ "@context": "https://schema.org", "@type": "WebSite", name: "Silvra", url: home, inLanguage: lang });
   }
-  if (route === "/messenger") {
+  if (key === "messenger") {
     out.push({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       name: "Silvra Messenger",
       operatingSystem: "Android",
       applicationCategory: "CommunicationApplication",
-      description: get("meta.messenger.description"),
+      description: get(lang, "meta.messenger.description"),
+      inLanguage: lang,
       installUrl: "https://play.google.com/store/apps/details?id=net.silvra.spark",
       offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
-      publisher: { "@type": "Organization", name: "Silvra", url: `${SITE}/` },
+      publisher,
     });
   }
-  if (route === "/helix") {
+  if (key === "helix") {
     out.push({
       "@context": "https://schema.org",
       "@type": "SoftwareSourceCode",
       name: "Helix",
-      description: get("meta.helix.description"),
+      description: get(lang, "meta.helix.description"),
+      inLanguage: lang,
       codeRepository: "https://github.com/silvra-net/helix",
       license: "https://opensource.org/licenses/MIT",
       programmingLanguage: "Rust",
-      publisher: { "@type": "Organization", name: "Silvra", url: `${SITE}/` },
+      publisher,
     });
   }
   if (page.faq) {
     out.push({
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: get(page.faq).map((it) => ({
+      inLanguage: lang,
+      mainEntity: get(lang, page.faq).map((it) => ({
         "@type": "Question",
         name: it.q,
         acceptedAnswer: { "@type": "Answer", text: it.a },
@@ -163,24 +173,36 @@ function structured(route, page) {
 /** The colour world a page is painted in, as Layout's worldOf() decides it on the client. On the
  *  root element from the first byte, so the product pages do not paint in sand until the bundle
  *  runs, and stay in their colour without JavaScript. */
-const worldFor = (route) => (route === "/messenger" ? "messenger" : route === "/helix" ? "helix" : "silvra");
+const worldFor = (key) => (key === "messenger" || key === "helix" ? key : "silvra");
 
-function documentFor(route, { title, description, og, ogAlt, canonical, noindex, live, structuredData }) {
+/** The links that tie a page to its other language: each version names both, and x-default
+ *  names the English one, the version every visitor not reading German is sent to. */
+const alternates = (route) =>
+  [
+    `<link rel="alternate" hreflang="de" href="${SITE}${route.de}" />`,
+    `<link rel="alternate" hreflang="en" href="${SITE}${route.en}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${SITE}${route.en}" />`,
+  ];
+
+function documentFor({ key, lang, path, title, description, og, ogAlt, route, live, structuredData }) {
+  const canonical = route ? `${SITE}${route[lang]}` : null;
+  const image = `${SITE}/og/${lang === "en" ? "en/" : ""}${og}.jpg`;
   const head = [
     ...PRELOAD,
     // The live panels ask the node for its status as soon as the page runs; the connection is
     // opened while the bundle is still loading.
     live ? `<link rel="preconnect" href="${NODE}" crossorigin />` : "",
-    // A page kept out of the index names no canonical address of its own.
-    noindex ? "" : `<link rel="canonical" href="${canonical}" />`,
+    // A page kept out of the index (the not-found page) names no address of its own.
+    canonical ? `<link rel="canonical" href="${canonical}" />` : "",
+    ...(route ? alternates(route) : []),
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="Silvra" />`,
-    `<meta property="og:locale" content="de_DE" />`,
-    `<meta property="og:locale:alternate" content="en_GB" />`,
-    noindex ? "" : `<meta property="og:url" content="${canonical}" />`,
+    `<meta property="og:locale" content="${LOCALE[lang]}" />`,
+    `<meta property="og:locale:alternate" content="${LOCALE[other(lang)]}" />`,
+    canonical ? `<meta property="og:url" content="${canonical}" />` : "",
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(description)}" />`,
-    `<meta property="og:image" content="${SITE}/og/${og}.jpg" />`,
+    `<meta property="og:image" content="${image}" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
     `<meta property="og:image:type" content="image/jpeg" />`,
@@ -188,97 +210,161 @@ function documentFor(route, { title, description, og, ogAlt, canonical, noindex,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(description)}" />`,
-    `<meta name="twitter:image" content="${SITE}/og/${og}.jpg" />`,
+    `<meta name="twitter:image" content="${image}" />`,
     `<meta name="twitter:image:alt" content="${esc(ogAlt)}" />`,
-    noindex ? `<meta name="robots" content="noindex" />` : "",
+    route ? "" : `<meta name="robots" content="noindex" />`,
     ...structuredData.map(ld),
   ]
     .filter(Boolean)
     .join("\n    ");
 
+  if (!template.includes('<html lang="de">')) throw new Error("prerender: the template's <html lang=\"de\"> has changed");
   return csp(template)
-    .replace('<html lang="de">', `<html lang="de" data-prerendered="de" data-world="${worldFor(route)}">`)
+    .replace('<html lang="de">', `<html lang="${lang}" data-prerendered="${lang}" data-world="${worldFor(key)}">`)
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
     .replace(/<meta\s+name="description"[\s\S]*?\/>/, `<meta name="description" content="${esc(description)}" />`)
     .replace("</head>", `    ${head}\n  </head>`)
     // Rendered at the address the page is served from (/messenger/, not /messenger), so that the
     // header marks the same link as current as the client will: hydration does not correct an
     // attribute the server got wrong, and the page would never show where the visitor is.
-    .replace(
-      '<div id="root"></div>',
-      `<div id="root" data-route="${route === "/404" ? "*" : route}">${render(route === "/" || route === "/404" ? route : `${route}/`)}</div>`,
-    );
+    .replace('<div id="root"></div>', `<div id="root" data-route="${route ? path : "*"}">${render(path)}</div>`);
 }
 
 let count = 0;
-for (const route of ["/", ...routes]) {
-  const page = PAGES[route];
-  if (!page) throw new Error(`prerender: no page entry for ${route}`);
-  const html = documentFor(route, {
-    title: get(`meta.${page.meta}.title`),
-    description: get(`meta.${page.meta}.description`),
-    og: page.og,
-    ogAlt: get(`meta.${page.meta}.ogAlt`),
-    canonical: route === "/" ? `${SITE}/` : `${SITE}${route}/`,
-    live: page.live,
-    structuredData: structured(route, page),
-  });
-  const dir = route === "/" ? dist : join(dist, route);
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, "index.html"), html);
-  count++;
+for (const route of ROUTES.filter((r) => !r.static)) {
+  const page = PAGES[route.key];
+  if (!page) throw new Error(`prerender: no page entry for ${route.key}`);
+  for (const lang of LANGS) {
+    const path = route[lang];
+    const html = documentFor({
+      key: route.key,
+      lang,
+      path,
+      title: get(lang, `meta.${page.meta}.title`),
+      description: get(lang, `meta.${page.meta}.description`),
+      og: page.og,
+      ogAlt: get(lang, `meta.${page.meta}.ogAlt`),
+      route,
+      live: page.live,
+      structuredData: structured(route.key, lang, page),
+    });
+    const dir = join(dist, path);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
 }
 
 // Anything genuinely unknown lands here, still answered as a 404 by Pages.
 writeFileSync(
   join(dist, "404.html"),
-  documentFor("/404", {
-    title: get("meta.notFound.title"),
-    description: get("meta.notFound.description"),
+  documentFor({
+    key: "notFound",
+    lang: "de",
+    path: "/404",
+    title: get("de", "meta.notFound.title"),
+    description: get("de", "meta.notFound.description"),
     og: "home",
-    ogAlt: get("meta.notFound.ogAlt"),
-    noindex: true,
+    ogAlt: get("de", "meta.notFound.ogAlt"),
     structuredData: [],
   }),
 );
 
-// The static pages from public/ carry inline scripts of their own (the privacy page its theme,
-// the redirect pages their location.replace), so each gets a policy with its own hashes. The
-// privacy page talks to nothing but its own origin, the redirects to nothing at all.
-for (const [page, connect] of [
-  ["privacy", "'self'"],
-  ["explorer", "'none'"],
-  ["datenschutz", "'none'"],
-  ["kontakt", "'none'"],
-]) {
+// The privacy policy, from its one bilingual source (public/privacy/index.html), as two pages of
+// one language each. The source marks what belongs to one language only with data-only="de|en";
+// the other language's elements are dropped, and in the English page every link to a German page
+// leads to its English counterpart instead. Title and description are the article's own heading
+// and lead, so the head cannot say something the page does not.
+const privacyRoute = ROUTES.find((r) => r.key === "privacy");
+const privacySource = readFileSync(join(dist, "privacy", "index.html"), "utf-8");
+
+/** The source with every element marked for the other language removed, nested ones included. */
+function onlyLang(html, lang) {
+  const start = new RegExp(`<(\\w+)\\b[^>]*\\sdata-only="${other(lang)}"[^>]*>`);
+  for (let m = start.exec(html); m; m = start.exec(html)) {
+    const tags = new RegExp(`<(/?)${m[1]}\\b[^>]*>`, "g");
+    tags.lastIndex = m.index + m[0].length;
+    for (let depth = 1; depth > 0; ) {
+      const t = tags.exec(html);
+      if (!t) throw new Error(`prerender: unclosed <${m[1]} data-only> in the privacy source`);
+      depth += t[1] ? -1 : 1;
+    }
+    html = html.slice(0, m.index).replace(/\n[ \t]*$/, "") + html.slice(tags.lastIndex);
+  }
+  return html.replaceAll(` data-only="${lang}"`, "");
+}
+
+/** In the English page, links to German pages lead to their English counterparts. The language
+ *  pair (the links with hreflang) is left as written: it names both on purpose. */
+function localLinks(html, lang) {
+  if (lang === "de") return html;
+  const english = Object.fromEntries(ROUTES.map((r) => [r.de, r.en]));
+  return html.replace(/<a\b[^>]*>/g, (tag) =>
+    tag.includes("hreflang=") ? tag : tag.replace(/href="(\/[^"#?]*)/, (whole, path) => (english[path] ? `href="${english[path]}` : whole)),
+  );
+}
+
+for (const lang of LANGS) {
+  let html = localLinks(onlyLang(privacySource, lang), lang);
+  const text = (re) => {
+    const hit = html.match(re);
+    if (!hit) throw new Error(`prerender: the privacy page has no ${re}`);
+    return hit[1].replace(/<[^>]+>/g, "").trim();
+  };
+  // The separator each language's titles use elsewhere (meta.*.title).
+  const title = `${text(/<h1>([\s\S]*?)<\/h1>/)} ${lang === "de" ? "–" : "—"} Silvra`;
+  const description = text(/<p class="lead">([\s\S]*?)<\/p>/);
+  if (!html.includes('<html lang="de">')) throw new Error('prerender: the privacy source\'s <html lang="de"> has changed');
+  html = withLangScript(html, "public/privacy/index.html")
+    .replace('<html lang="de">', `<html lang="${lang}">`)
+    .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
+    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(description)}">`)
+    .replace(
+      /<link rel="canonical"[^>]*>/,
+      [`<link rel="canonical" href="${SITE}${privacyRoute[lang]}">`, ...alternates(privacyRoute).map((l) => l.replace(" />", ">"))].join("\n"),
+    )
+    // The source names the site's fonts by their unhashed copies in public/privacy/fonts, which
+    // keep it readable on the dev server. On the built site it uses the app's own hashed files,
+    // so a visitor going between the two downloads each font once; the copies are not deployed.
+    .replace(/\/privacy\/fonts\/([\w.-]+\.woff2)/g, (_, name) => {
+      const key = Object.keys(manifest).find((k) => k.endsWith(`/files/${name}`));
+      if (!key) throw new Error(`prerender: the privacy page's font ${name} is not in the build manifest`);
+      return `/${manifest[key].file}`;
+    });
+  const file = join(dist, privacyRoute[lang], "index.html");
+  mkdirSync(dirname(file), { recursive: true });
+  // It talks to nothing but its own origin.
+  writeFileSync(file, csp(html, { connect: "'self'" }));
+}
+rmSync(join(dist, "privacy", "fonts"), { recursive: true, force: true });
+
+// The redirect pages from public/ carry an inline script or none, and talk to nothing at all.
+for (const page of ["explorer", "datenschutz", "kontakt"]) {
   const file = join(dist, page, "index.html");
   if (!existsSync(file)) throw new Error(`prerender: ${file} is missing`);
-  writeFileSync(file, csp(readFileSync(file, "utf-8"), { connect }));
+  writeFileSync(file, csp(readFileSync(file, "utf-8"), { connect: "'none'" }));
 }
 
-// The privacy page names the site's fonts by their unhashed copies in public/privacy/fonts, which
-// keep it readable on the dev server. On the built site it uses the app's own hashed files, so a
-// visitor going between the two downloads each font once; the copies are not deployed.
-{
-  const file = join(dist, "privacy", "index.html");
-  const html = readFileSync(file, "utf-8").replace(/\/privacy\/fonts\/([\w.-]+\.woff2)/g, (_, name) => {
-    const key = Object.keys(manifest).find((k) => k.endsWith(`/files/${name}`));
-    if (!key) throw new Error(`prerender: the privacy page's font ${name} is not in the build manifest`);
-    return `/${manifest[key].file}`;
-  });
-  writeFileSync(file, html);
-  rmSync(join(dist, "privacy", "fonts"), { recursive: true, force: true });
-}
-
-// Every indexable page, with the address it is served at. No <lastmod>: the only date a build
-// knows is its own, and a sitemap that calls every page changed on every deploy teaches search
-// engines to ignore the field.
-const urls = ["/", ...routes.map((r) => `${r}/`), "/privacy/"];
+// Every indexable page in both languages, with the address it is served at, and each with its
+// counterpart named. No <lastmod>: the only date a build knows is its own, and a sitemap that
+// calls every page changed on every deploy teaches search engines to ignore the field.
+const entries = ROUTES.flatMap((route) =>
+  LANGS.map((lang) =>
+    [
+      `  <url>`,
+      `    <loc>${SITE}${route[lang]}</loc>`,
+      `    <xhtml:link rel="alternate" hreflang="de" href="${SITE}${route.de}"/>`,
+      `    <xhtml:link rel="alternate" hreflang="en" href="${SITE}${route.en}"/>`,
+      `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${route.en}"/>`,
+      `  </url>`,
+    ].join("\n"),
+  ),
+);
 writeFileSync(
   join(dist, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${SITE}${u}</loc></url>`).join("\n")}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${entries.join("\n")}
 </urlset>
 `,
 );
@@ -304,4 +390,7 @@ writeFileSync(
 rmSync("dist-ssr", { recursive: true, force: true });
 rmSync(join(dist, ".vite"), { recursive: true, force: true });
 
-console.log(`prerender: ${count} pages + 404.html, each with content, meta and structured data; sitemap with ${urls.length} URLs`);
+console.log(
+  `prerender: ${count} pages + 404.html, each with content, meta and structured data; ` +
+    `2 privacy pages; sitemap with ${entries.length} URLs`,
+);
