@@ -1,21 +1,12 @@
-import { createContext, useContext } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import PageHero from "../components/PageHero";
 import Scramble from "../components/Scramble";
 import Icon from "../components/Icon";
-import { phrase, useI18n } from "../i18n";
+import { BothLanguages, phrase, useI18n } from "../i18n";
 import type { Lang } from "../i18n";
 import { pathFor } from "../lib/routes";
 import { useSeo } from "../lib/seo";
-
-/**
- * True only while the build renders 404.html (src/entry-server.tsx). GitHub Pages answers every
- * unknown address with that one file, and without JavaScript nothing can tell whether the address
- * was under /en/; so the file says everything twice, in German and in English, each with its own
- * ways back. With JavaScript the page is drawn again in the one language the visitor reads
- * (src/main.tsx), and this stays false.
- */
-export const BothLanguages = createContext(false);
 
 function WaysBack({ lang }: { lang: Lang }) {
   return (

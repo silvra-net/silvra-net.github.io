@@ -1,8 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { useI18n } from "../i18n";
-import { LANGS, counterpart, routeOf } from "../lib/routes";
-import type { RouteKey } from "../lib/routes";
+import { BothLanguages, phrase, useI18n } from "../i18n";
+import { LANGS, counterpart, pathFor, routeOf } from "../lib/routes";
+import type { Lang, RouteKey } from "../lib/routes";
 import { setTheme } from "../theme";
 import Icon from "./Icon";
 import EuMark from "./EuMark";
@@ -139,23 +139,25 @@ function MotionToggle({ labelled = false }: { labelled?: boolean }) {
  */
 function LanguageSwitcher() {
   const { lang, t } = useI18n();
+  // On the page built in both languages neither is the current one.
+  const current = useContext(BothLanguages) ? null : lang;
   const { pathname, hash } = useLocation();
   // The section the reader is at goes along, but only once the page runs: the prerendered markup
   // knows no hash, and hydration would keep its link without one anyway.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   return (
-    <div className="lang" role="group" aria-label={t("nav.switchLang")}>
+    <div className="lang" role="group" aria-label={current ? t("nav.switchLang") : `${phrase("de", "nav.switchLang")} · ${phrase("en", "nav.switchLang")}`}>
       {LANGS.map((l) => (
         <Link
           key={l}
           to={counterpart(pathname, l) + (ready ? hash : "")}
-          className={l === lang ? "lang-btn active" : "lang-btn"}
+          className={l === current ? "lang-btn active" : "lang-btn"}
           // Spoken in its own language, its name starting with the code on screen (WCAG 2.5.3).
           lang={l}
           hrefLang={l}
           aria-label={`${l.toUpperCase()} – ${l === "de" ? "Deutsch" : "English"}`}
-          aria-current={l === lang ? "true" : undefined}
+          aria-current={l === current ? "true" : undefined}
         >
           {l.toUpperCase()}
         </Link>
@@ -164,8 +166,55 @@ function LanguageSwitcher() {
   );
 }
 
+/** The footer's link columns in one language, each link leading to that language's page. */
+function FooterCols({ lang }: { lang: Lang }) {
+  const t = (key: string) => phrase(lang, key);
+  const to = (page: RouteKey) => pathFor(page, lang);
+  return (
+    <>
+      <div className="footer-col">
+        <h2>{t("footer.products")}</h2>
+        <Link to={to("messenger")}>Silvra Messenger</Link>
+        <Link to={to("helix")}>{t("nav.helixFull")}</Link>
+        <a href={EXPLORER}>
+          Helix {t("nav.explorer")}
+          <Icon name="arrowUpRight" size={12} />
+        </a>
+      </div>
+      <div className="footer-col">
+        <h2>Silvra</h2>
+        <Link to={to("mission")}>{t("nav.mission")}</Link>
+        <Link to={to("contact")}>{t("nav.contact")}</Link>
+        <a href={GITHUB} rel="noreferrer noopener" target="_blank">
+          GitHub
+          <NewTab lang={lang} />
+          <Icon name="arrowUpRight" size={12} />
+        </a>
+        <a href={DISCORD} rel="noreferrer noopener" target="_blank">
+          Discord
+          <NewTab lang={lang} />
+          <Icon name="arrowUpRight" size={12} />
+        </a>
+      </div>
+      <div className="footer-col">
+        <h2>{t("footer.legal")}</h2>
+        <Link to={to("impressum")}>{t("footer.impressum")}</Link>
+        {/* Plain anchor: the privacy policy is a static page, not a route. */}
+        <a href={to("privacy")}>{t("footer.privacy")}</a>
+        <Link to={to("accessibility")}>{t("footer.accessibility")}</Link>
+        <a href={`mailto:info@silvra.net?subject=${encodeURIComponent(t("footer.reportBarrier"))}`}>
+          {t("footer.reportBarrier")}
+        </a>
+      </div>
+    </>
+  );
+}
+
 export default function Layout({ children }: { children: ReactNode }) {
-  const { t, path } = useI18n();
+  const { t, path, lang } = useI18n();
+  // The not-found page as built for a reader without JavaScript speaks both languages, and so do
+  // its header and footer: nothing on it may assume a language the address cannot tell.
+  const both = useContext(BothLanguages);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [overDark, setOverDark] = useState(true);
@@ -317,7 +366,14 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       {/* Visible only when focused: there for the people who need it, invisible to everyone else. */}
       <a className="skip-link" href="#main">
-        {t("nav.skip")}
+        {both ? (
+          <>
+            {phrase("de", "nav.skip")}
+            <span lang="en">{` · ${phrase("en", "nav.skip")}`}</span>
+          </>
+        ) : (
+          t("nav.skip")
+        )}
       </a>
 
       {/* Opaque once the page moves under it; night olive over the dark bands, paper elsewhere in
@@ -337,25 +393,29 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {t(`nav.${world}`)}
               </span>
             )}
-            <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>
+            {!both && <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>}
           </Link>
 
-          <nav className="site-nav" aria-label={t("nav.main")}>
-            {PAGES.map((p) => (
-              // `end`: the pages have no pages below them, and /helix/xyz is the not-found page,
-              // which marks no link as current.
-              <NavLink
-                key={p.page}
-                to={path(p.page)}
-                end
-                className={({ isActive }) =>
-                  `nav-link${p.world ? ` nav-${p.world}` : ""}${isActive ? " active" : ""}`
-                }
-              >
-                {t(p.key)}
-              </NavLink>
-            ))}
-          </nav>
+          {/* On the two-language page the menu would be in one language only; the page itself
+              offers the ways back in both, and so does the footer. */}
+          {!both && (
+            <nav className="site-nav" aria-label={t("nav.main")}>
+              {PAGES.map((p) => (
+                // `end`: the pages have no pages below them, and /helix/xyz is the not-found page,
+                // which marks no link as current.
+                <NavLink
+                  key={p.page}
+                  to={path(p.page)}
+                  end
+                  className={({ isActive }) =>
+                    `nav-link${p.world ? ` nav-${p.world}` : ""}${isActive ? " active" : ""}`
+                  }
+                >
+                  {t(p.key)}
+                </NavLink>
+              ))}
+            </nav>
+          )}
 
           <div className="header-tools">
             <a className="explorer-link" href={EXPLORER}>
@@ -436,53 +496,54 @@ export default function Layout({ children }: { children: ReactNode }) {
               <Link to={path("home")} className="brand">
                 <img src={icon} alt="" width={30} height={30} />
                 <span className="brand-name">Silvra</span>
-                <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>
+                {!both && <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>}
               </Link>
-              <p>{t("footer.description")}</p>
-              <p className="footer-eu">
-                <EuMark />
-                {t("footer.eu")}
-              </p>
-              {/* The look borrows from military and cyber units; the line says plainly that the
-                  project is not one, where people look for who is behind a site. */}
-              <p className="footer-independent mono">{t("footer.independent")}</p>
+              {both ? (
+                <>
+                  <p>{phrase("de", "footer.description")}</p>
+                  <p lang="en">{phrase("en", "footer.description")}</p>
+                  <p className="footer-eu">
+                    <EuMark />
+                    <span>
+                      {phrase("de", "footer.eu")}
+                      <span className="footer-eu-en" lang="en">{` ${phrase("en", "footer.eu")}`}</span>
+                    </span>
+                  </p>
+                  <p className="footer-independent mono">{phrase("de", "footer.independent")}</p>
+                  <p className="footer-independent mono" lang="en">
+                    {phrase("en", "footer.independent")}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>{t("footer.description")}</p>
+                  <p className="footer-eu">
+                    <EuMark />
+                    {t("footer.eu")}
+                  </p>
+                  {/* The look borrows from military and cyber units; the line says plainly that
+                      the project is not one, where people look for who is behind a site. */}
+                  <p className="footer-independent mono">{t("footer.independent")}</p>
+                </>
+              )}
             </div>
-            <div className="footer-cols">
-              <div className="footer-col">
-                <h2>{t("footer.products")}</h2>
-                <Link to={path("messenger")}>Silvra Messenger</Link>
-                <Link to={path("helix")}>{t("nav.helixFull")}</Link>
-                <a href={EXPLORER}>
-                  Helix {t("nav.explorer")}
-                  <Icon name="arrowUpRight" size={12} />
-                </a>
+            {both ? (
+              // One row of columns per language, each leading into its own half of the site.
+              <div className="footer-cols footer-cols--both">
+                {LANGS.map((l) => (
+                  <div key={l} className="footer-lang" lang={l}>
+                    <p className="nf-tag">{l === "de" ? "Deutsch" : "English"}</p>
+                    <div className="footer-lang-cols">
+                      <FooterCols lang={l} />
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="footer-col">
-                <h2>Silvra</h2>
-                <Link to={path("mission")}>{t("nav.mission")}</Link>
-                <Link to={path("contact")}>{t("nav.contact")}</Link>
-                <a href={GITHUB} rel="noreferrer noopener" target="_blank">
-                  GitHub
-                  <NewTab />
-                  <Icon name="arrowUpRight" size={12} />
-                </a>
-                <a href={DISCORD} rel="noreferrer noopener" target="_blank">
-                  Discord
-                  <NewTab />
-                  <Icon name="arrowUpRight" size={12} />
-                </a>
+            ) : (
+              <div className="footer-cols">
+                <FooterCols lang={lang} />
               </div>
-              <div className="footer-col">
-                <h2>{t("footer.legal")}</h2>
-                <Link to={path("impressum")}>{t("footer.impressum")}</Link>
-                {/* Plain anchor: the privacy policy is a static page, not a route. */}
-                <a href={privacy}>{t("footer.privacy")}</a>
-                <Link to={path("accessibility")}>{t("footer.accessibility")}</Link>
-                <a href={`mailto:info@silvra.net?subject=${encodeURIComponent(t("footer.reportBarrier"))}`}>
-                  {t("footer.reportBarrier")}
-                </a>
-              </div>
-            </div>
+            )}
           </div>
           <div className="footer-mark" aria-hidden="true">
             SILVRA
