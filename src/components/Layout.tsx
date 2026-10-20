@@ -1,7 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n";
-import type { Lang } from "../i18n";
+import { LANGS, counterpart, routeOf } from "../lib/routes";
+import type { RouteKey } from "../lib/routes";
 import { setTheme } from "../theme";
 import Icon from "./Icon";
 import EuMark from "./EuMark";
@@ -23,26 +24,19 @@ const DARK_BANDS = ".gate, .p-hero, .page-hero, .claim-band, .marquee-band, .nex
  *  virtual cursor can wander into a page the visitor cannot see. */
 const BEHIND_MENU = ".skip-link, #main, .site-footer, .to-top, .sticky-cta";
 
-const PAGES = [
-  { to: "/messenger/", key: "nav.messenger", world: "messenger" },
-  { to: "/helix/", key: "nav.helix", world: "helix" },
-  { to: "/mission/", key: "nav.mission" },
-  { to: "/contact/", key: "nav.contact" },
+const PAGES: { page: RouteKey; key: string; world?: "messenger" | "helix" }[] = [
+  { page: "messenger", key: "nav.messenger", world: "messenger" },
+  { page: "helix", key: "nav.helix", world: "helix" },
+  { page: "mission", key: "nav.mission" },
+  { page: "contact", key: "nav.contact" },
 ];
 
-/** A path without its trailing slash. Pages answers and links every page as /page/, the dev server
- *  and an old bookmark may say /page; both are the same page. */
-export const pagePath = (pathname: string) => pathname.replace(/\/+$/, "") || "/";
-
-/** Which world a path belongs to (with or without the trailing slash). The two product pages
- *  carry their own colour; the rest is Silvra. Only the pages themselves, not every path below
- *  them: Pages answers /helix/xyz with 404.html, which is rendered as Silvra and must hydrate
- *  as Silvra. */
+/** Which world a path belongs to, in either language. The two product pages carry their own
+ *  colour; the rest is Silvra. Only the pages themselves, not every path below them: Pages
+ *  answers /helix/xyz with 404.html, which is rendered as Silvra and must hydrate as Silvra. */
 export function worldOf(pathname: string): "messenger" | "helix" | "silvra" {
-  const page = pagePath(pathname);
-  if (page === "/messenger") return "messenger";
-  if (page === "/helix") return "helix";
-  return "silvra";
+  const key = routeOf(pathname)?.route.key;
+  return key === "messenger" || key === "helix" ? key : "silvra";
 }
 
 /** Whether the page is dark right now: the explicit choice on <html> if there is one, the OS
@@ -136,36 +130,42 @@ function MotionToggle({ labelled = false }: { labelled?: boolean }) {
 }
 
 /**
- * Both languages side by side, current one marked — rather than a button showing the other one.
- * A toggle labelled "EN" is ambiguous about whether that is the state or the action; two labels
- * with one of them active is not.
+ * Both languages side by side, current one marked — rather than a control showing the other one.
+ * Each is a link to this same page in that language, so it works without JavaScript, and a
+ * search engine sees the two versions linked to each other. Choosing one also stores it, so the
+ * head script never sends the visitor back to the language they just left. The head script
+ * (scripts/lang-script.mjs) does the storing, for every link in a .lang group, so it holds before
+ * the app has loaded and on the static privacy pages too.
  */
 function LanguageSwitcher() {
-  const { lang, setLang, t } = useI18n();
-  const langs: Lang[] = ["de", "en"];
+  const { lang, t } = useI18n();
+  const { pathname, hash } = useLocation();
+  // The section the reader is at goes along, but only once the page runs: the prerendered markup
+  // knows no hash, and hydration would keep its link without one anyway.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   return (
     <div className="lang" role="group" aria-label={t("nav.switchLang")}>
-      {langs.map((l) => (
-        <button
+      {LANGS.map((l) => (
+        <Link
           key={l}
-          type="button"
+          to={counterpart(pathname, l) + (ready ? hash : "")}
           className={l === lang ? "lang-btn active" : "lang-btn"}
-          // Spoken in its own language, with the language named after the visible code; pressed
-          // is the state screen readers announce on a button, which aria-current is not.
+          // Spoken in its own language, its name starting with the code on screen (WCAG 2.5.3).
           lang={l}
+          hrefLang={l}
           aria-label={`${l.toUpperCase()} – ${l === "de" ? "Deutsch" : "English"}`}
-          aria-pressed={l === lang}
-          onClick={() => setLang(l)}
+          aria-current={l === lang ? "true" : undefined}
         >
           {l.toUpperCase()}
-        </button>
+        </Link>
       ))}
     </div>
   );
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { t, lang } = useI18n();
+  const { t, path } = useI18n();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [overDark, setOverDark] = useState(true);
@@ -256,8 +256,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   // The open menu covers the page: the page must not scroll under it or take focus, Escape must
-  // close it, Tab must cycle between the menu and its button, and focus must go into it and come
-  // back to the button afterwards.
+  // close it, Tab must cycle through the menu and the header above it (the language pair and the
+  // menu button stay there, in sight), and focus must go into it and come back to the button
+  // afterwards.
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -273,12 +274,18 @@ export default function Layout({ children }: { children: ReactNode }) {
         return;
       }
       if (e.key !== "Tab" || !menu.current) return;
-      const items = menu.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+      const focusable = "a[href], button:not([disabled])";
+      // Only what is on screen: the header hides its wide-screen links and buttons on a phone.
+      const items = [
+        ...(btn?.closest("header")?.querySelectorAll<HTMLElement>(focusable) ?? []),
+        ...menu.current.querySelectorAll<HTMLElement>(focusable),
+      ].filter((el) => el.getClientRects().length > 0);
+      const first = items[0];
       const last = items[items.length - 1];
       if (!e.shiftKey && document.activeElement === last) {
         e.preventDefault();
-        btn?.focus();
-      } else if (e.shiftKey && document.activeElement === btn) {
+        first?.focus();
+      } else if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last?.focus();
       }
@@ -299,7 +306,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     };
   }, [open]);
 
-  const privacy = lang === "en" ? "/privacy/#en" : "/privacy/";
+  const privacy = path("privacy");
 
   // The year the page is read in, not only the year it was built: the prerendered markup carries
   // the build year (so hydration matches), and the visitor's clock takes over right after.
@@ -319,7 +326,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         className={`site-header${scrolled || open ? " is-solid" : ""}${overDark && !open ? " dark-zone" : ""}${open ? " is-open" : ""}`}
       >
         <div className="container header-row">
-          <Link to="/" className="brand">
+          <Link to={path("home")} className="brand">
             <img src={icon} alt="" width={30} height={30} />
             <span className="brand-name">Silvra</span>
             {world !== "silvra" && (
@@ -338,8 +345,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               // `end`: the pages have no pages below them, and /helix/xyz is the not-found page,
               // which marks no link as current.
               <NavLink
-                key={p.to}
-                to={p.to}
+                key={p.page}
+                to={path(p.page)}
                 end
                 className={({ isActive }) =>
                   `nav-link${p.world ? ` nav-${p.world}` : ""}${isActive ? " active" : ""}`
@@ -376,24 +383,24 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <div id="mobile-menu" ref={menu} className={open ? "mobile-menu open" : "mobile-menu"} hidden={!open}>
         <nav className="mobile-nav" aria-label={t("nav.main")}>
-          <NavLink to="/messenger/" end className="mobile-world mobile-messenger">
+          <NavLink to={path("messenger")} end className="mobile-world mobile-messenger">
             <span className="mobile-index">01</span>
             <span className="mobile-title">Silvra Messenger</span>
             <span className="mobile-tag">{t("nav.messengerTag")}</span>
           </NavLink>
-          <NavLink to="/helix/" end className="mobile-world mobile-helix">
+          <NavLink to={path("helix")} end className="mobile-world mobile-helix">
             <span className="mobile-index">02</span>
             <span className="mobile-title">{t("nav.helixFull")}</span>
             <span className="mobile-tag">{t("nav.helixTag")}</span>
           </NavLink>
           <div className="mobile-links">
-            <NavLink to="/" end>
+            <NavLink to={path("home")} end>
               {t("nav.home")}
             </NavLink>
-            <NavLink to="/mission/" end>
+            <NavLink to={path("mission")} end>
               {t("nav.mission")}
             </NavLink>
-            <NavLink to="/contact/" end>
+            <NavLink to={path("contact")} end>
               {t("nav.contact")}
             </NavLink>
             <a href={EXPLORER}>
@@ -403,9 +410,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <MotionToggle labelled />
           <ThemeToggle labelled />
           <p className="mobile-legal mono">
-            <Link to="/impressum/">{t("footer.impressum")}</Link>
+            <Link to={path("impressum")}>{t("footer.impressum")}</Link>
             <a href={privacy}>{t("footer.privacy")}</a>
-            <Link to="/barrierefreiheit/">{t("footer.accessibility")}</Link>
+            <Link to={path("accessibility")}>{t("footer.accessibility")}</Link>
           </p>
         </nav>
       </div>
@@ -426,7 +433,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="container">
           <div className="footer-top">
             <div className="footer-intro">
-              <Link to="/" className="brand">
+              <Link to={path("home")} className="brand">
                 <img src={icon} alt="" width={30} height={30} />
                 <span className="brand-name">Silvra</span>
                 <span className="sr-only">{t("common.sep")}{t("nav.home")}</span>
@@ -443,8 +450,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             <div className="footer-cols">
               <div className="footer-col">
                 <h2>{t("footer.products")}</h2>
-                <Link to="/messenger/">Silvra Messenger</Link>
-                <Link to="/helix/">{t("nav.helixFull")}</Link>
+                <Link to={path("messenger")}>Silvra Messenger</Link>
+                <Link to={path("helix")}>{t("nav.helixFull")}</Link>
                 <a href={EXPLORER}>
                   Helix {t("nav.explorer")}
                   <Icon name="arrowUpRight" size={12} />
@@ -452,8 +459,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <div className="footer-col">
                 <h2>Silvra</h2>
-                <Link to="/mission/">{t("nav.mission")}</Link>
-                <Link to="/contact/">{t("nav.contact")}</Link>
+                <Link to={path("mission")}>{t("nav.mission")}</Link>
+                <Link to={path("contact")}>{t("nav.contact")}</Link>
                 <a href={GITHUB} rel="noreferrer noopener" target="_blank">
                   GitHub
                   <NewTab />
@@ -467,11 +474,10 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <div className="footer-col">
                 <h2>{t("footer.legal")}</h2>
-                <Link to="/impressum/">{t("footer.impressum")}</Link>
-                {/* Plain anchor: the privacy policy is a static page, not a route. Both languages
-                    live on it; the English reader lands on the English half. */}
+                <Link to={path("impressum")}>{t("footer.impressum")}</Link>
+                {/* Plain anchor: the privacy policy is a static page, not a route. */}
                 <a href={privacy}>{t("footer.privacy")}</a>
-                <Link to="/barrierefreiheit/">{t("footer.accessibility")}</Link>
+                <Link to={path("accessibility")}>{t("footer.accessibility")}</Link>
                 <a href={`mailto:info@silvra.net?subject=${encodeURIComponent(t("footer.reportBarrier"))}`}>
                   {t("footer.reportBarrier")}
                 </a>

@@ -29,7 +29,7 @@ interface Step {
 }
 
 export default function Home() {
-  const { t, list } = useI18n();
+  const { t, list, path } = useI18n();
   useSeo(t("meta.home.title"), t("meta.home.description"));
 
   return (
@@ -54,11 +54,11 @@ export default function Home() {
             <ScrollWords className="statement" text={t("home.about.statement")} />
             <p className="lead">{t("home.about.body")}</p>
             <div className="btn-row">
-              <Link className="btn primary" to="/mission/">
+              <Link className="btn primary" to={path("mission")}>
                 {t("home.about.cta")}
                 <Icon name="arrowRight" size={16} />
               </Link>
-              <Link className="btn" to="/contact/">
+              <Link className="btn" to={path("contact")}>
                 {t("nav.contact")}
               </Link>
             </div>
@@ -163,7 +163,7 @@ export default function Home() {
                 </Reveal>
               ))}
             </ul>
-            <Link className="text-link" to="/mission/">
+            <Link className="text-link" to={path("mission")}>
               {t("home.craft.cta")}
               <Icon name="arrowRight" size={16} />
             </Link>
@@ -203,7 +203,7 @@ export default function Home() {
             <SectionLabel index="06" text={t("home.live.label")} />
             <h2>{t("home.live.title")}</h2>
             <p className="lead">{t("home.live.lead")}</p>
-            <Link className="text-link" to="/helix/">
+            <Link className="text-link" to={path("helix")}>
               {t("home.live.cta")}
               <Icon name="arrowRight" size={16} />
             </Link>
@@ -224,7 +224,7 @@ export default function Home() {
             <SectionLabel index="07" text={t("home.faq.label")} />
             <h2>{t("home.faq.title")}</h2>
             <p className="lead">{t("home.faq.lead")}</p>
-            <Link className="text-link" to="/contact/">
+            <Link className="text-link" to={path("contact")}>
               {t("home.faq.more")}
               <Icon name="arrowRight" size={16} />
             </Link>
@@ -250,7 +250,7 @@ export default function Home() {
                 Discord
                 <NewTab />
               </a>
-              <Link className="btn" to="/contact/">
+              <Link className="btn" to={path("contact")}>
                 {t("nav.contact")}
                 <Icon name="arrowRight" size={16} />
               </Link>

@@ -49,7 +49,7 @@ function Readout({ rows, className }: { rows: [string, string][]; className: str
  * the sweep and behave like the plain link underneath.
  */
 export default function Gate() {
-  const { t, list, lang } = useI18n();
+  const { t, list, lang, path } = useI18n();
   const navigate = useNavigate();
   const reduced = useReducedMotion();
   const { status, failed } = useNodeStatus();
@@ -68,9 +68,9 @@ export default function Gate() {
       if (reduced) return;
       e.preventDefault();
       setLeaving(side);
-      window.setTimeout(() => navigate(`/${side}/`), 640);
+      window.setTimeout(() => navigate(path(side)), 640);
     },
-    [navigate, reduced],
+    [navigate, reduced, path],
   );
 
   // ← and → pick a side while the menu is on screen and nothing else has the keyboard.
@@ -122,7 +122,7 @@ export default function Gate() {
 
       <Link
         ref={messenger}
-        to="/messenger/"
+        to={path("messenger")}
         className="gate-side gate-messenger"
         onClick={go("messenger")}
       >
@@ -151,7 +151,7 @@ export default function Gate() {
 
       <Link
         ref={helix}
-        to="/helix/"
+        to={path("helix")}
         className="gate-side gate-helix"
         onClick={go("helix")}
       >

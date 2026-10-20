@@ -13,6 +13,10 @@
 // first, so every reveal has played, and axe then measures it with the canvases and the marquee
 // running behind the text.
 //
+// Each language is visited at its own addresses (src/routes.json) by a browser set to that
+// language: a German address opened by an English browser would be sent to /en/ by the head
+// script, and the German pass would quietly check English pages twice.
+//
 // The pages carry a Content Security Policy that would refuse the injected axe script, so the
 // browser is told to bypass it; the policy itself is not under test here.
 
@@ -23,17 +27,19 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const AXE = readFileSync(require.resolve("axe-core/axe.min.js"), "utf-8");
 const BASE = process.env.BASE ?? "http://127.0.0.1:4173";
-const routes = JSON.parse(readFileSync(new URL("./routes.json", import.meta.url), "utf-8"));
-// /privacy/ is a static page outside the app (public/privacy/), so it is listed by hand. Its
-// English half is shown only as the #en target, so it is checked at that address too; without
-// it no pass would ever see the English text.
-const PAGES = ["/", ...routes.map((r) => `${r}/`), "/404.html", "/privacy/", "/privacy/#en"];
+const ROUTES = JSON.parse(readFileSync(new URL("../src/routes.json", import.meta.url), "utf-8"));
+// Every page of the table, the static privacy pages included, and the not-found page: Pages serves
+// 404.html for any unknown path, and the bundle redraws it in English under /en/.
+const PAGES = {
+  de: [...ROUTES.map((r) => r.de), "/404.html"],
+  en: [...ROUTES.map((r) => r.en), "/en/not-a-page/"],
+};
+const LOCALES = { de: "de-DE", en: "en-US" };
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "phone", width: 390, height: 844, isMobile: true, hasTouch: true },
 ];
 const THEMES = ["dark", "light"];
-const LOCALES = ["de-DE", "en-US"];
 const PASSES = [
   { name: "still", reducedMotion: "reduce" },
   { name: "moving", reducedMotion: "no-preference" },
@@ -46,7 +52,8 @@ const RULES = { "label-content-name-mismatch": { enabled: true } };
 const browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
 const found = new Map(); // rule id → { help, impact, where: Set }
 
-async function check({ theme, viewport: { name, ...vp }, locale, pass }) {
+async function check({ theme, viewport: { name, ...vp }, lang, pass }) {
+  const locale = LOCALES[lang];
   const ctx = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
     isMobile: vp.isMobile,
@@ -57,9 +64,12 @@ async function check({ theme, viewport: { name, ...vp }, locale, pass }) {
     bypassCSP: true,
   });
   const page = await ctx.newPage();
-  for (const path of PAGES) {
+  for (const path of PAGES[lang]) {
     await page.goto(BASE + path, { waitUntil: "load" });
     await page.waitForTimeout(600);
+    // A page that sent the browser elsewhere was not the page meant to be checked.
+    const landed = new URL(page.url()).pathname;
+    if (landed !== new URL(BASE + path).pathname) throw new Error(`a11y: ${locale} ${path} was redirected to ${landed}`);
     if (pass.name === "moving") {
       // Down the page a screen-ish at a time, pausing long enough for each reveal to start.
       for (let y = 0; ; y += 600) {
@@ -109,7 +119,7 @@ async function check({ theme, viewport: { name, ...vp }, locale, pass }) {
 // What axe cannot see, because it needs a resize: a phone menu left open when the window grows
 // past the phone layout loses its only close button, and must close itself.
 async function menuAfterResize() {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: "de-DE" });
   const page = await ctx.newPage();
   await page.goto(BASE + "/", { waitUntil: "load" });
   await page.click(".nav-toggle");
@@ -131,7 +141,7 @@ async function menuAfterResize() {
 }
 
 const runs = PASSES.flatMap((pass) =>
-  LOCALES.flatMap((locale) => THEMES.flatMap((theme) => VIEWPORTS.map((viewport) => ({ pass, locale, theme, viewport })))),
+  ["de", "en"].flatMap((lang) => THEMES.flatMap((theme) => VIEWPORTS.map((viewport) => ({ pass, lang, theme, viewport })))),
 );
 // A few browser contexts at a time: the moving pass waits on every scroll step.
 const queue = [...runs];
@@ -145,7 +155,7 @@ await browser.close();
 
 if (found.size === 0) {
   console.log(
-    `a11y: ${PAGES.length} pages × ${THEMES.length} themes × ${VIEWPORTS.length} widths × ${LOCALES.length} languages, ` +
+    `a11y: ${PAGES.de.length} pages × 2 languages × ${THEMES.length} themes × ${VIEWPORTS.length} widths, ` +
       `motion reduced and on — no WCAG 2.2 A/AA violations`,
   );
 } else {

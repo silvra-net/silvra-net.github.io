@@ -1,4 +1,6 @@
-// Render the link-preview images (1200×630, JPEG — small enough for every messenger) into public/og/.
+// Render the link-preview images (1200×630, JPEG — small enough for every messenger) into public/og/,
+// once per language: the German ones at public/og/, the English ones at public/og/en/, each
+// shown for the pages in its language (scripts/prerender.mjs).
 //
 // Run by hand when the brand or the copy changes — not part of the build, so a deploy never
 // depends on a headless browser. The images use the site's own fonts, marks and screenshots, so
@@ -88,16 +90,40 @@ function cipher(ctx, x0, x1, W, H, seed) {
 }
 `;
 
-const pages = {
+/** The words on the images, in each language; the English as en.json says it. */
+const COPY = {
+  de: {
+    homeTitle: `Digitale<br>Infrastruktur<br><span class="metal">aus Europa.</span>`,
+    homeFoot: "silvra.net · Post-Quanten · Entwickelt in der EU",
+    messengerTitle: "Chats Ende-zu-Ende<br>verschlüsselt.<br>Hybrid mit ML-KEM.",
+    messengerFoot: "MLS · X-Wing (X25519 + ML-KEM-768) · ohne Telefonnummer",
+    messengerShot: "Welcome_DE-portrait.webp",
+    helixLabel: "● Mainnet · seit 1.0.0",
+    helixTitle: `Post-Quanten-<br><span class="gold">Blockchain.</span>`,
+    helixFoot: "ML-DSA-65 auf jeder Signatur · BFT-Finalität ≈ 2 s · Open Source (MIT)",
+  },
+  en: {
+    homeTitle: `Digital<br>infrastructure<br><span class="metal">from Europe.</span>`,
+    homeFoot: "silvra.net · Post-quantum · Developed in the EU",
+    messengerTitle: "Chats end-to-end<br>encrypted.<br>Hybrid with ML-KEM.",
+    messengerFoot: "MLS · X-Wing (X25519 + ML-KEM-768) · no phone number",
+    messengerShot: "Welcome_EN.webp",
+    helixLabel: "● Mainnet · since 1.0.0",
+    helixTitle: `Post-quantum<br><span class="gold">blockchain.</span>`,
+    helixFoot: "ML-DSA-65 on every signature · BFT finality ≈ 2 s · Open source (MIT)",
+  },
+};
+
+const pages = (c) => ({
   home: `
     <canvas id="c" width="1200" height="630"></canvas>
     <div class="camo"></div><div class="scan"></div><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
     <div class="brand"><img src="${asset("silvra-icon.png")}"><span>SILVRA</span></div>
     <div style="position:absolute;left:64px;top:190px;z-index:5;width:560px">
       <p class="label" style="margin-bottom:22px"><span style="color:#d4b86a">Silvra</span> // Messenger · Helix</p>
-      <h1 class="title" style="font-size:80px">Digitale<br>Infrastruktur<br><span class="metal">aus Europa.</span></h1>
+      <h1 class="title" style="font-size:80px">${c.homeTitle}</h1>
     </div>
-    <p class="foot">silvra.net · Post-Quanten · Entwickelt in der EU</p>
+    <p class="foot">${c.homeFoot}</p>
     <script>
       ${drawing}
       window.ready = document.fonts.load("500 14px M").then(() => {
@@ -124,10 +150,10 @@ const pages = {
     <div class="brand"><img src="${asset("silvra-icon.png")}"><span>SILVRA</span></div>
     <div style="position:absolute;left:64px;top:178px;z-index:5;width:640px">
       <p class="label" style="margin-bottom:22px">Silvra Messenger</p>
-      <h1 class="title metal" style="font-size:70px">Chats Ende-zu-Ende<br>verschlüsselt.<br>Hybrid mit ML-KEM.</h1>
+      <h1 class="title metal" style="font-size:70px">${c.messengerTitle}</h1>
     </div>
-    <p class="foot">MLS · X-Wing (X25519 + ML-KEM-768) · ohne Telefonnummer</p>
-    <img src="${asset("Welcome_DE-portrait.webp")}" style="position:absolute;right:70px;top:70px;width:300px;transform:rotate(-6deg);filter:drop-shadow(0 40px 80px rgba(0,0,0,.7)) drop-shadow(0 0 60px rgba(200,215,235,.15));z-index:4">
+    <p class="foot">${c.messengerFoot}</p>
+    <img src="${asset(c.messengerShot)}" style="position:absolute;right:70px;top:70px;width:300px;transform:rotate(-6deg);filter:drop-shadow(0 40px 80px rgba(0,0,0,.7)) drop-shadow(0 0 60px rgba(200,215,235,.15));z-index:4">
     <script>
       ${drawing}
       window.ready = document.fonts.load("500 14px M").then(() => {
@@ -142,10 +168,10 @@ const pages = {
     <div class="camo"></div><div class="scan"></div><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
     <div class="brand"><img src="${asset("helix-icon.png")}"><span>HELIX</span></div>
     <div style="position:absolute;left:64px;top:186px;z-index:5;width:640px">
-      <p class="label" style="margin-bottom:22px;color:#e8b15c">● Mainnet · seit 1.0.0</p>
-      <h1 class="title" style="font-size:92px">Post-Quanten-<br><span class="gold">Blockchain.</span></h1>
+      <p class="label" style="margin-bottom:22px;color:#e8b15c">${c.helixLabel}</p>
+      <h1 class="title" style="font-size:92px">${c.helixTitle}</h1>
     </div>
-    <p class="foot">ML-DSA-65 auf jeder Signatur · BFT-Finalität ≈ 2 s · Open Source (MIT)</p>
+    <p class="foot">${c.helixFoot}</p>
     <script>
       ${drawing}
       window.ready = document.fonts.load("500 14px M").then(() => {
@@ -156,22 +182,25 @@ const pages = {
       helix(c, 930, 315, 118, 820, 0.22, 28);
       });
     </script>`,
-};
+});
 
-mkdirSync("public/og", { recursive: true });
 // Each template is opened from a file of its own, so it may load the fonts and images from disk.
 const scratch = mkdtempSync(join(tmpdir(), "silvra-og-"));
 const browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-for (const [name, body] of Object.entries(pages)) {
-  const file = join(scratch, `${name}.html`);
-  writeFileSync(file, `<!doctype html><html><head><meta charset="utf-8"><style>${base}</style></head><body>${body}</body></html>`);
-  const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-  await page.goto(pathToFileURL(file).href, { waitUntil: "load" });
-  await page.evaluate(() => Promise.all([document.fonts.ready, window.ready]));
-  await page.waitForTimeout(300);
-  await page.screenshot({ path: `public/og/${name}.jpg`, type: "jpeg", quality: 88 });
-  await page.close();
-  console.log(`og: public/og/${name}.jpg`);
+for (const [lang, copy] of Object.entries(COPY)) {
+  const dir = lang === "de" ? "public/og" : `public/og/${lang}`;
+  mkdirSync(dir, { recursive: true });
+  for (const [name, body] of Object.entries(pages(copy))) {
+    const file = join(scratch, `${lang}-${name}.html`);
+    writeFileSync(file, `<!doctype html><html><head><meta charset="utf-8"><style>${base}</style></head><body>${body}</body></html>`);
+    const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
+    await page.goto(pathToFileURL(file).href, { waitUntil: "load" });
+    await page.evaluate(() => Promise.all([document.fonts.ready, window.ready]));
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `${dir}/${name}.jpg`, type: "jpeg", quality: 88 });
+    await page.close();
+    console.log(`og: ${dir}/${name}.jpg`);
+  }
 }
 await browser.close();
 rmSync(scratch, { recursive: true, force: true });

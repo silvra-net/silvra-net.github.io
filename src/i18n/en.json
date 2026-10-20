@@ -3,42 +3,42 @@
     "home": {
       "title": "Silvra — Digital infrastructure from Europe",
       "description": "Silvra develops post-quantum technology in the EU: Silvra Messenger, end-to-end encrypted, and Helix, a layer-1 blockchain signed with ML-DSA-65.",
-      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.” beside a glowing gold double helix"
     },
     "messenger": {
       "title": "Silvra Messenger — End-to-end encrypted, your data not for sale",
       "description": "Free Android messenger, end-to-end encrypted with MLS and post-quantum key exchange (X-Wing, ML-KEM-768). No phone number, no ads.",
-      "ogAlt": "Silvra Messenger: welcome screen on an Android phone beside the headline “Chats end-to-end encrypted. Hybrid with ML-KEM.”, set in German"
+      "ogAlt": "Silvra Messenger: welcome screen on an Android phone beside the headline “Chats end-to-end encrypted. Hybrid with ML-KEM.”"
     },
     "helix": {
       "title": "Helix — Silvra’s post-quantum blockchain · Mainnet",
       "description": "Open-source layer-1 blockchain (MIT) with ML-DSA-65 on every transaction, block and vote, and BFT finality in ≈ 2 s. Mainnet since 1.0.0.",
-      "ogAlt": "Helix logo, the note “Mainnet since 1.0.0” and the headline “Post-quantum blockchain.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Helix logo, the note “Mainnet since 1.0.0” and the headline “Post-quantum blockchain.” beside a glowing gold double helix"
     },
     "mission": {
       "title": "Mission — Silvra",
       "description": "Why Silvra builds in post-quantum cryptography from the start — and what we hold ourselves to: open about gaps, no selling of data, developed in the EU.",
-      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.” beside a glowing gold double helix"
     },
     "contact": {
       "title": "Contact — Silvra",
       "description": "Questions about Silvra Messenger or Helix, contributing or running a validator: write to us at info@silvra.net.",
-      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.” beside a glowing gold double helix"
     },
     "impressum": {
       "title": "Legal notice — Silvra",
       "description": "Legal notice and provider details for silvra.net.",
-      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.” beside a glowing gold double helix"
     },
     "accessibility": {
       "title": "Accessibility statement — Silvra",
       "description": "How accessible silvra.net is, how we check it, what does not work yet and where to report a barrier.",
-      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.” beside a glowing gold double helix"
     },
     "notFound": {
       "title": "Page not found — Silvra",
       "description": "This page does not exist (anymore). Back to the overview.",
-      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.”, set in German, beside a glowing gold double helix"
+      "ogAlt": "Silvra logo and the headline “Digital infrastructure from Europe.” beside a glowing gold double helix"
     }
   },
   "nav": {
@@ -1309,6 +1309,7 @@
           "Status is never conveyed by colour alone, always with a symbol and a word as well.",
           "The encrypted-looking characters behind the home page and the messenger page are decoration and hidden from screen readers; what they show is said in the text.",
           "Every page is delivered as finished HTML and readable without JavaScript; headings, landmarks and language are marked up.",
+          "Every page exists in German and in English, each at its own address. On a first visit the language follows your browser’s setting; the DE/EN switch in the header leads to the same page in the other language, without JavaScript too. Your browser remembers your choice if it allows local storage.",
           "The site can be zoomed to 400% and used down to 320 pixels wide without scrolling sideways."
         ]
       },

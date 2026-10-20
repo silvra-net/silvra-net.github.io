@@ -15,6 +15,7 @@
       content="Silvra entwickelt in der EU Technologie mit Post-Quanten-Kryptographie: den Silvra Messenger mit Ende-zu-Ende-Verschlüsselung und Helix, eine Layer-1-Blockchain mit ML-DSA-65."
     />
     <title>Silvra – Digitale Infrastruktur aus Europa</title>
+    <!--lang-script-->
     <script>
       // Marks the page as scripted before first paint. Reveals and dimmed words are hidden only
       // under this class, so a visitor without JavaScript reads every word at once.
@@ -54,11 +55,10 @@
           background: var(--bg);
           border-bottom-color: var(--line);
         }
-        /* Controls that only a script can work: the header's buttons (menu, language, theme,
-           motion; the footer lists every page instead of the menu), the copy buttons, and the
-           live panel's "connecting", which never would. */
+        /* Controls that only a script can work: the header's buttons (menu, theme, motion; the
+           footer lists every page instead of the menu), the copy buttons, and the live panel's
+           "connecting", which never would. The language pair stays: it is two plain links. */
         .site-header button,
-        .site-header .lang,
         .code-copy,
         .testnet-source {
           display: none;

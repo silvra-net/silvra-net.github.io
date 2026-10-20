@@ -14,9 +14,9 @@ function fitsNext(x: number, _y: number, w: number, W: number): boolean {
  * colour, the same blade as the home page, so the two pages read as two halves of one place.
  */
 export default function NextWorld({ to }: { to: "messenger" | "helix" }) {
-  const { t, list } = useI18n();
+  const { t, list, path } = useI18n();
   return (
-    <Link to={`/${to}/`} className={`next-world next-${to} dark-zone`}>
+    <Link to={path(to)} className={`next-world next-${to} dark-zone`}>
       <div className="next-world-bg" aria-hidden="true">
         {to === "helix" ? (
           <HelixCanvas cx={0.72} cy={0.5} tilt={1.2} radius={90} length={1.4} />

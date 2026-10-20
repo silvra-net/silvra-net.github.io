@@ -18,7 +18,7 @@ interface Group {
 }
 
 export default function Mission() {
-  const { t, list, raw } = useI18n();
+  const { t, list, raw, path } = useI18n();
   useSeo(t("meta.mission.title"), t("meta.mission.description"));
   const expect = raw("mission.principles.expect") as Group;
   const noPromise = raw("mission.principles.noPromise") as Group;
@@ -98,7 +98,7 @@ export default function Mission() {
                 <Icon name="mail" size={16} />
                 {t("home.join.email")}
               </a>
-              <Link className="btn" to="/contact/">
+              <Link className="btn" to={path("contact")}>
                 {t("nav.contact")}
                 <Icon name="arrowRight" size={16} />
               </Link>

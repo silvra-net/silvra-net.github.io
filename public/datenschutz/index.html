@@ -5,6 +5,11 @@
     <title>Datenschutz — verschoben</title>
     <link rel="canonical" href="https://silvra.net/privacy/" />
     <meta http-equiv="refresh" content="0; url=/privacy/" />
+    <script>
+      // With the section kept: old links to the English half (#en) still reach the English page,
+      // by way of the head script on /privacy/.
+      location.replace("/privacy/" + location.search + location.hash);
+    </script>
   </head>
   <body>
     <p>Die Datenschutzerklärung liegt jetzt unter <a href="/privacy/">silvra.net/privacy</a>.</p>

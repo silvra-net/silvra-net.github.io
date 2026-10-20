@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Datenschutz – Silvra · Privacy</title>
+<!-- The source of both privacy pages, /privacy/ and /en/privacy/: scripts/prerender.mjs splits
+     it by data-only="de|en" and gives each its own title, description, canonical address and
+     alternates. What is written here for them is a placeholder. -->
+<title>Datenschutz – Silvra</title>
 <meta name="description" content="Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.">
 <link rel="canonical" href="https://silvra.net/privacy/">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -15,6 +18,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f3">
 <link rel="preload" href="/privacy/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/privacy/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<!--lang-script-->
 <script>
   // The theme chosen on the rest of the site, applied before first paint, as index.html does.
   // Without script, or with storage blocked, the OS preference decides.
@@ -27,14 +31,6 @@
       });
     }
   } catch (e) {}
-  // The language chosen on the rest of the site, or the browser's, as the app picks it: an English
-  // reader arriving from a bookmark or the Play Store lands on the English half. A link that names
-  // a half (#de, #en) always wins.
-  if (!location.hash) {
-    var l = null;
-    try { l = localStorage.getItem("silvra-lang"); } catch (e) {}
-    if (l === "en" || (!l && /^en/i.test(navigator.language || ""))) location.replace("#en");
-  }
 </script>
 <style>
 /* A copy of the site's tokens (src/styles.css). This page carries its own because it is
@@ -127,10 +123,11 @@ a { color: inherit; }
   font: 600 11px/1 var(--mono); letter-spacing: 0.08em;
 }
 .lang a:hover { color: var(--text); }
-/* The language on screen is filled, as on the rest of the site. German is the default; once the
-   English article is the target, the fill moves with it. */
-.lang a[href="#de"], body:has(#en:target) .lang a[href="#en"] { background: var(--text); color: #0a0c09; }
-body:has(#en:target) .lang a[href="#de"] { background: none; color: var(--muted); }
+/* The language on screen is filled, as on the rest of the site. */
+.lang a[aria-current] { background: var(--text); color: #0a0c09; }
+@media (forced-colors: active) {
+  .lang a[aria-current] { outline: 2px solid CanvasText; outline-offset: -2px; }
+}
 /* A thumb needs more than the 24px floor; a mouse does not. */
 @media (pointer: coarse) {
   .lang a { min-width: 44px; min-height: 38px; }
@@ -212,39 +209,42 @@ section p a { padding-block: 2px; }
 .site-footer a { display: inline-block; line-height: 24px; color: var(--muted); text-decoration: none; }
 .site-footer a:hover { color: var(--text); }
 
-/* Language switching without a line of JavaScript: the English article is revealed by :target,
-   and :has() hides the German one when it is. Where :has() is unsupported the page simply shows
-   both — a degradation, not a failure. */
-#en { display: none; }
-#en:target { display: block; }
-body:has(#en:target) #de { display: none; }
+/* The build removes every element meant for the other language and the marks with it; on the dev
+   server, which serves this source as it is, the page shows its German half. */
+[data-only="en"] { display: none; }
 </style>
 </head>
 <body>
-<!-- One per language: each lands on its own half of the page, which is also what shows it. -->
-<a class="skip" href="#de" lang="de">Zum Inhalt springen</a>
-<a class="skip" href="#en" lang="en">Skip to content</a>
+<a class="skip" href="#de" data-only="de">Zum Inhalt springen</a>
+<a class="skip" href="#en" data-only="en">Skip to content</a>
 <header class="site-header dark">
   <div class="wrap">
     <a class="brand" href="/">
       <img src="/favicon.png" alt="" width="30" height="30">
       <span>Silvra</span>
     </a>
-    <nav class="lang" aria-label="Sprache / Language">
-      <a href="#de" lang="de">DE</a><a href="#en" lang="en">EN</a>
-    </nav>
+    <!-- As in the app's header: the same page in each language, the current one marked, each
+         name starting with the code on screen. The head script stores the language clicked here.
+         The German page is asked for by name (#de, its article), so the head script keeps it
+         German even where storage is blocked. -->
+    <div class="lang" role="group" aria-label="Sprache wechseln" data-only="de">
+      <a href="/privacy/" lang="de" hreflang="de" aria-label="DE – Deutsch" aria-current="true">DE</a><a href="/en/privacy/" lang="en" hreflang="en" aria-label="EN – English">EN</a>
+    </div>
+    <div class="lang" role="group" aria-label="Switch language" data-only="en">
+      <a href="/privacy/#de" lang="de" hreflang="de" aria-label="DE – Deutsch">DE</a><a href="/en/privacy/" lang="en" hreflang="en" aria-label="EN – English" aria-current="true">EN</a>
+    </div>
   </div>
 </header>
 
 <main>
-  <article id="de" lang="de">
+  <article id="de" data-only="de">
     <div class="opening dark">
       <i class="corner tl" aria-hidden="true"></i><i class="corner tr" aria-hidden="true"></i><i class="corner bl" aria-hidden="true"></i><i class="corner br" aria-hidden="true"></i>
       <div class="wrap">
         <p class="eyebrow">Rechtliches</p>
         <h1>Datenschutz</h1>
         <p class="lead">Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.</p>
-        <p class="updated">Stand: 8. Oktober 2026</p>
+        <p class="updated">Stand: 15. Oktober 2026</p>
       </div>
     </div>
     <div class="wrap text">
@@ -259,7 +259,7 @@ body:has(#en:target) #de { display: none; }
         </section>
         <section>
           <h2>3. Keine Cookies, lokale Speicherung</h2>
-          <p>Diese Website verwendet keine Cookies. Ihre Auswahl von Sprache, Darstellungsmodus (hell/dunkel) und ob Bewegung angehalten ist, wird ausschließlich lokal in Ihrem Browser (Local Storage) gespeichert und nicht an uns oder Dritte übertragen.</p>
+          <p>Diese Website verwendet keine Cookies. Ihre Auswahl von Sprache, Darstellungsmodus (hell/dunkel) und ob Bewegung angehalten ist, wird ausschließlich lokal in Ihrem Browser (Local Storage) gespeichert und nicht an uns oder Dritte übertragen. Haben Sie keine Sprache gewählt, liest die Website die Spracheinstellung Ihres Browsers aus, um Ihnen die deutsche oder die englische Fassung zu zeigen; auch das geschieht nur lokal in Ihrem Browser, übertragen wird dabei nichts.</p>
         </section>
         <section>
           <h2>4. Hosting und Server-Logfiles</h2>
@@ -289,14 +289,14 @@ body:has(#en:target) #de { display: none; }
     </div>
   </article>
 
-  <article id="en" lang="en">
+  <article id="en" data-only="en">
     <div class="opening dark">
       <i class="corner tl" aria-hidden="true"></i><i class="corner tr" aria-hidden="true"></i><i class="corner bl" aria-hidden="true"></i><i class="corner br" aria-hidden="true"></i>
       <div class="wrap">
         <p class="eyebrow">Legal</p>
         <h1>Privacy Policy</h1>
         <p class="lead">Information on the processing of personal data on this website.</p>
-        <p class="updated">Last updated: 8 October 2026</p>
+        <p class="updated">Last updated: 15 October 2026</p>
       </div>
     </div>
     <div class="wrap text">
@@ -311,7 +311,7 @@ body:has(#en:target) #de { display: none; }
         </section>
         <section>
           <h2>3. No cookies, local storage</h2>
-          <p>This website does not use cookies. Your choice of language, display mode (light/dark) and whether motion is paused is stored exclusively in your browser (local storage) and is not transmitted to us or to third parties.</p>
+          <p>This website does not use cookies. Your choice of language, display mode (light/dark) and whether motion is paused is stored exclusively in your browser (local storage) and is not transmitted to us or to third parties. If you have not chosen a language, the website reads your browser’s language setting to show you the German or the English version; this too happens only locally in your browser, and nothing is transmitted.</p>
         </section>
         <section>
           <h2>4. Hosting and server log files</h2>
@@ -345,8 +345,8 @@ body:has(#en:target) #de { display: none; }
 <footer class="site-footer dark">
   <div class="wrap">
     <a href="/">silvra.net</a>
-    <a href="/impressum/">Impressum / <span lang="en">Legal notice</span></a>
-    <a href="/barrierefreiheit/">Barrierefreiheit / <span lang="en">Accessibility</span></a>
+    <a href="/impressum/"><span data-only="de">Impressum</span><span data-only="en">Legal notice</span></a>
+    <a href="/barrierefreiheit/"><span data-only="de">Barrierefreiheit</span><span data-only="en">Accessibility</span></a>
     <a href="mailto:info@silvra.net">info@silvra.net</a>
   </div>
 </footer>

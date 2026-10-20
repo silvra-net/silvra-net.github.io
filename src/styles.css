@@ -771,15 +771,17 @@ p {
   padding: 3px;
 }
 .lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 34px;
   min-height: 30px;
-  border: 0;
   border-radius: var(--r-ctl);
   background: transparent;
   color: var(--muted);
   font: 600 11px/1 var(--mono);
   letter-spacing: 0.08em;
-  cursor: pointer;
+  text-decoration: none;
 }
 .lang-btn:hover {
   color: var(--text);

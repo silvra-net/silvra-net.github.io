@@ -1,0 +1,10 @@
+[
+  { "key": "home", "de": "/", "en": "/en/" },
+  { "key": "messenger", "de": "/messenger/", "en": "/en/messenger/" },
+  { "key": "helix", "de": "/helix/", "en": "/en/helix/" },
+  { "key": "mission", "de": "/mission/", "en": "/en/mission/" },
+  { "key": "contact", "de": "/contact/", "en": "/en/contact/" },
+  { "key": "impressum", "de": "/impressum/", "en": "/en/legal-notice/" },
+  { "key": "accessibility", "de": "/barrierefreiheit/", "en": "/en/accessibility/" },
+  { "key": "privacy", "de": "/privacy/", "en": "/en/privacy/", "static": true }
+]
