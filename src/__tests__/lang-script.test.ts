@@ -209,6 +209,11 @@ describe("the language script", () => {
     expect(visit({ url: "/helix/xyz", languages: ["de-DE"], prerendered: "de" }).held).toBe(false);
     expect(visit({ url: "/en/helix/", languages: ["de-DE"], prerendered: "en" }).held).toBe(false);
     expect(visit({ url: "/en/privacy/", languages: ["de-DE"] }).held).toBe(false);
+    // The not-found page as built speaks both languages, which matches no visitor: it is always
+    // held back until the bundle has drawn it in one.
+    expect(visit({ url: "/xyz", languages: ["de-DE"], prerendered: "both" }).held).toBe(true);
+    expect(visit({ url: "/en/xyz", languages: ["en-US"], prerendered: "both" }).held).toBe(true);
+    expect(visit({ url: "/helix/xyz", languages: ["fr-FR"], stored: "de", prerendered: "both" }).held).toBe(true);
     // Should the bundle never arrive, the page shows after all.
     const v = visit({ url: "/en/xyz", languages: ["en-US"], prerendered: "de" });
     v.timers.forEach((fn) => fn());

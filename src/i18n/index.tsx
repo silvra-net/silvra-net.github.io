@@ -39,6 +39,13 @@ interface I18n {
 
 const Ctx = createContext<I18n | null>(null);
 
+/** A string in a language named outright rather than the one on screen: for the one page that is
+ *  built to speak both (the not-found page, see src/pages/NotFound.tsx). */
+export function phrase(lang: Lang, path: string): string {
+  const hit = lookup(DICTS[lang], path) ?? lookup(DICTS.de, path);
+  return typeof hit === "string" ? hit : path;
+}
+
 /**
  * The language is read from the address — /en/… is English, everything else German — on the
  * server and in the browser alike, so a prerendered page and its hydration always agree. Only a
