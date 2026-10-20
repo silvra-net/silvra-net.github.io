@@ -184,7 +184,7 @@ const alternates = (route) =>
     `<link rel="alternate" hreflang="x-default" href="${SITE}${route.en}" />`,
   ];
 
-function documentFor({ key, lang, path, title, description, og, ogAlt, route, live, structuredData }) {
+function documentFor({ key, lang, path, title, description, og, ogAlt, route, live, structuredData, both = false }) {
   const canonical = route ? `${SITE}${route[lang]}` : null;
   const image = `${SITE}/og/${lang === "en" ? "en/" : ""}${og}.jpg`;
   const head = [
@@ -220,14 +220,16 @@ function documentFor({ key, lang, path, title, description, og, ogAlt, route, li
 
   if (!template.includes('<html lang="de">')) throw new Error("prerender: the template's <html lang=\"de\"> has changed");
   return csp(template)
-    .replace('<html lang="de">', `<html lang="${lang}" data-prerendered="${lang}" data-world="${worldFor(key)}">`)
+    // A page built in both languages says so: no visitor's language matches it, so the browser
+    // always draws it again in one (src/main.tsx), held back until then (scripts/lang-script.mjs).
+    .replace('<html lang="de">', `<html lang="${lang}" data-prerendered="${both ? "both" : lang}" data-world="${worldFor(key)}">`)
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
     .replace(/<meta\s+name="description"[\s\S]*?\/>/, `<meta name="description" content="${esc(description)}" />`)
     .replace("</head>", `    ${head}\n  </head>`)
     // Rendered at the address the page is served from (/messenger/, not /messenger), so that the
     // header marks the same link as current as the client will: hydration does not correct an
     // attribute the server got wrong, and the page would never show where the visitor is.
-    .replace('<div id="root"></div>', `<div id="root" data-route="${route ? path : "*"}">${render(path)}</div>`);
+    .replace('<div id="root"></div>', `<div id="root" data-route="${route ? path : "*"}">${render(path, { bothLanguages: both })}</div>`);
 }
 
 let count = 0;
@@ -255,18 +257,22 @@ for (const route of ROUTES.filter((r) => !r.static)) {
   }
 }
 
-// Anything genuinely unknown lands here, still answered as a 404 by Pages.
+// Anything genuinely unknown lands here, still answered as a 404 by Pages. One file serves every
+// unknown address, German and English alike, and without JavaScript nothing can tell which was
+// asked for, so it is built in both languages: German first, as the document's language, with the
+// English parts marked as such.
 writeFileSync(
   join(dist, "404.html"),
   documentFor({
     key: "notFound",
     lang: "de",
     path: "/404",
-    title: get("de", "meta.notFound.title"),
-    description: get("de", "meta.notFound.description"),
+    title: `${get("de", "notFound.title")} · ${get("en", "notFound.title")} – Silvra`,
+    description: `${get("de", "meta.notFound.description")} ${get("en", "meta.notFound.description")}`,
     og: "home",
     ogAlt: get("de", "meta.notFound.ogAlt"),
     structuredData: [],
+    both: true,
   }),
 );
 

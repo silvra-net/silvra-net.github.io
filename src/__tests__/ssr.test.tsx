@@ -135,4 +135,26 @@ describe("the not-found page", () => {
     expect(html).toContain('href="/en/messenger/"');
     expect(html).not.toContain('href="/messenger/"');
   });
+
+  // 404.html is the one file Pages serves for every unknown address, and without JavaScript
+  // nothing can tell /en/xyz from /xyz; so the build writes it in both languages, each part
+  // marked with its language and leading back into its own half of the site.
+  it("is built in both languages for a reader without JavaScript", () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const html = render("/404", { bothLanguages: true });
+    expect(errors).not.toHaveBeenCalled();
+    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+    expect(text(h1)).toContain(get("de", "notFound.title"));
+    expect(h1).toMatch(new RegExp(`lang="en"[^>]*>\\s*${get("en", "notFound.title")}`));
+    for (const lang of LANGS) {
+      const part = html.match(new RegExp(`<div class="nf-lang" lang="${lang}">([\\s\\S]*?)</div></div>`))?.[1] ?? "";
+      expect(text(part)).toContain(get(lang, "notFound.body"));
+      expect(text(part)).toContain(get(lang, "notFound.cta"));
+      for (const key of ["home", "messenger", "helix"] as const) {
+        expect(part).toContain(`href="${ROUTES.find((r) => r.key === key)![lang]}"`);
+      }
+    }
+    // Only the build asks for both; the browser draws one language.
+    expect(render("/404")).not.toContain("nf-both");
+  });
 });

@@ -2028,6 +2028,38 @@ p {
 .page-hero-body .lead {
   color: rgba(238, 240, 233, 0.82);
 }
+/* The not-found page as built (404.html): the one file every unknown address gets, read without
+   JavaScript in German and in English alike, so it says everything in both, side by side. The
+   English line of the heading steps back so the heading still reads as one. */
+.page-hero-body h1 .nf-alt {
+  display: block;
+  color: var(--muted);
+}
+.nf-both {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+  margin-top: 32px;
+}
+.nf-lang {
+  padding-top: 20px;
+  border-top: 1px solid var(--line-2);
+}
+.nf-tag {
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin: 0 0 12px;
+}
+.nf-lang .lead {
+  margin: 0 0 24px;
+}
+@media (max-width: 900px) {
+  .nf-both {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ---------- product openings ---------- */
 

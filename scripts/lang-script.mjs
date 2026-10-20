@@ -20,7 +20,8 @@
 //
 // The not-found page is not redirected: it has no counterpart. The script leaves its decision on
 // <html data-lang-pref>, and src/main.tsx renders the not-found page in that language; until it
-// has, a not-found page built in the other language is held back (<html data-lang-wait>).
+// has, the page as built — in both languages, for a reader without JavaScript — is held back
+// (<html data-lang-wait>).
 
 import { readFileSync } from "node:fs";
 
@@ -98,9 +99,10 @@ export function langScript() {
           html.style.visibility = "hidden";
           location.replace(english[path] + location.search + hash);
         } else if (!page && html.getAttribute("data-prerendered") && html.getAttribute("data-prerendered") !== lang) {
-          // The not-found page is built once, in German. Where it is to be read in English, it
-          // stays hidden until the bundle has drawn it again (src/main.tsx), rather than showing
-          // the German one first; and never for long, should the bundle not arrive.
+          // The not-found page is built once, in both languages, for a reader without JavaScript.
+          // Here it stays hidden until the bundle has drawn it again in the one language chosen
+          // (src/main.tsx), rather than showing both first; and never for long, should the bundle
+          // not arrive.
           html.setAttribute("data-lang-wait", "");
           html.style.visibility = "hidden";
           setTimeout(function () {

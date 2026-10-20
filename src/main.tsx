@@ -23,8 +23,9 @@ const lang: Lang = page ? page.lang : notFound;
 // A prerendered page carries its markup, the route it was rendered for and the language it was
 // rendered in; it is hydrated, so nothing on screen is thrown away and redrawn. Markup for another
 // route or another language is replaced instead: a host that answers an unknown path with the home
-// page, the not-found page (built once, in German) shown in English, or an empty root (the dev
-// server). The not-found page is rendered for any path that is not a page, hence "*".
+// page, the not-found page (built once, in both languages, for a reader without JavaScript), or
+// an empty root (the dev server). The not-found page is rendered for any path that is not a page,
+// hence "*".
 const route = root.dataset.route;
 const matches = route === "*" ? !page : route !== undefined && pagePath(route) === pagePath(pathname);
 const hydrate = root.hasChildNodes() && matches && html.dataset.prerendered === lang;
@@ -41,8 +42,8 @@ const app = (
 
 if (hydrate) ReactDOM.hydrateRoot(root, app);
 else {
-  // Drawn at once, and only then shown: the head script holds back a not-found page built in the
-  // other language (<html data-lang-wait>), so its German version never flashes up first.
+  // Drawn at once, and only then shown: the head script holds back the not-found page as built
+  // (<html data-lang-wait>), so its two-language version never flashes up first.
   const fresh = ReactDOM.createRoot(root);
   flushSync(() => fresh.render(app));
   if (html.hasAttribute("data-lang-wait")) {
