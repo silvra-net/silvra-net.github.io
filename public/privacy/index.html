@@ -224,12 +224,14 @@ section p a { padding-block: 2px; }
       <span>Silvra</span>
     </a>
     <!-- As in the app's header: the same page in each language, the current one marked, each
-         name starting with the code on screen. -->
+         name starting with the code on screen. The head script stores the language clicked here.
+         The German page is asked for by name (#de, its article), so the head script keeps it
+         German even where storage is blocked. -->
     <div class="lang" role="group" aria-label="Sprache wechseln" data-only="de">
       <a href="/privacy/" lang="de" hreflang="de" aria-label="DE – Deutsch" aria-current="true">DE</a><a href="/en/privacy/" lang="en" hreflang="en" aria-label="EN – English">EN</a>
     </div>
     <div class="lang" role="group" aria-label="Switch language" data-only="en">
-      <a href="/privacy/" lang="de" hreflang="de" aria-label="DE – Deutsch">DE</a><a href="/en/privacy/" lang="en" hreflang="en" aria-label="EN – English" aria-current="true">EN</a>
+      <a href="/privacy/#de" lang="de" hreflang="de" aria-label="DE – Deutsch">DE</a><a href="/en/privacy/" lang="en" hreflang="en" aria-label="EN – English" aria-current="true">EN</a>
     </div>
   </div>
 </header>

@@ -32,9 +32,6 @@ export const ROUTES = table as Route[];
 /** The pages the app renders itself. */
 export const APP_ROUTES = ROUTES.filter((r) => !r.static);
 
-/** The visitor's stored language choice: the head script reads it, the language switch writes it. */
-export const LANG_KEY = "silvra-lang";
-
 /** A path without its trailing slash. Pages answers and links every page as /page/, the dev server
  *  and an old bookmark may say /page; both are the same page. */
 export const pagePath = (pathname: string) => pathname.replace(/\/+$/, "") || "/";
@@ -65,11 +62,3 @@ export function counterpart(pathname: string, lang: Lang): string {
   return routeOf(pathname)?.route[lang] ?? pathFor("home", lang);
 }
 
-/** Keep a language the visitor chose, so the head script does not overrule it on the next visit. */
-export function rememberLang(lang: Lang): void {
-  try {
-    localStorage.setItem(LANG_KEY, lang);
-  } catch {
-    /* storage blocked: the choice still holds for every page reached by a link from here */
-  }
-}

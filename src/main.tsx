@@ -1,4 +1,5 @@
 import React from "react";
+import { flushSync } from "react-dom";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
@@ -39,7 +40,16 @@ const app = (
 );
 
 if (hydrate) ReactDOM.hydrateRoot(root, app);
-else ReactDOM.createRoot(root).render(app);
+else {
+  // Drawn at once, and only then shown: the head script holds back a not-found page built in the
+  // other language (<html data-lang-wait>), so its German version never flashes up first.
+  const fresh = ReactDOM.createRoot(root);
+  flushSync(() => fresh.render(app));
+  if (html.hasAttribute("data-lang-wait")) {
+    html.removeAttribute("data-lang-wait");
+    html.style.visibility = "";
+  }
+}
 // The bundle is running: from here the reveals are driven by their own observers, so the
 // stylesheet's timed fallback (for a bundle that never arrives) stands down.
 html.classList.add("app");

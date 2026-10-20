@@ -294,6 +294,20 @@ function onlyLang(html, lang) {
   return html.replaceAll(` data-only="${lang}"`, "");
 }
 
+/** What the source says only about itself: the comment on how it is split, and the rule that
+ *  hides its English half on the dev server. Neither means anything in a page of one language. */
+function withoutSourceNotes(html) {
+  const notes = [
+    /<!-- The source of both privacy pages[\s\S]*?-->\n/,
+    /\n\/\* The build removes every element meant for the other language[\s\S]*?\[data-only="en"\] \{ display: none; \}/,
+  ];
+  for (const note of notes) {
+    if (!note.test(html)) throw new Error(`prerender: the privacy source has changed, ${note} is gone`);
+    html = html.replace(note, "");
+  }
+  return html;
+}
+
 /** In the English page, links to German pages lead to their English counterparts. The language
  *  pair (the links with hreflang) is left as written: it names both on purpose. */
 function localLinks(html, lang) {
@@ -305,7 +319,7 @@ function localLinks(html, lang) {
 }
 
 for (const lang of LANGS) {
-  let html = localLinks(onlyLang(privacySource, lang), lang);
+  let html = localLinks(onlyLang(withoutSourceNotes(privacySource), lang), lang);
   const text = (re) => {
     const hit = html.match(re);
     if (!hit) throw new Error(`prerender: the privacy page has no ${re}`);
@@ -338,7 +352,7 @@ for (const lang of LANGS) {
 }
 rmSync(join(dist, "privacy", "fonts"), { recursive: true, force: true });
 
-// The redirect pages from public/ carry an inline script or none, and talk to nothing at all.
+// The redirect pages from public/ each carry an inline script, and talk to nothing at all.
 for (const page of ["explorer", "datenschutz", "kontakt"]) {
   const file = join(dist, page, "index.html");
   if (!existsSync(file)) throw new Error(`prerender: ${file} is missing`);

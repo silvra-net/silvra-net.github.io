@@ -1309,7 +1309,7 @@
           "Status wird nie allein über Farbe vermittelt, sondern immer auch mit Symbol und Wort.",
           "Die verschlüsselt wirkenden Zeichen im Hintergrund der Startseite und der Messenger-Seite sind Dekoration und für Screenreader ausgeblendet; was sie zeigen, steht im Text.",
           "Jede Seite steht als fertiges HTML bereit und ist auch ohne JavaScript lesbar; Überschriften, Landmarken und Sprache sind ausgezeichnet.",
-          "Jede Seite gibt es auf Deutsch und auf Englisch, jede unter ihrer eigenen Adresse. Beim ersten Besuch folgt die Sprache der Einstellung Ihres Browsers; der Sprachwechsel DE/EN in der Kopfzeile führt zur selben Seite in der anderen Sprache – auch ohne JavaScript –, und Ihre Wahl bleibt erhalten.",
+          "Jede Seite gibt es auf Deutsch und auf Englisch, jede unter ihrer eigenen Adresse. Beim ersten Besuch folgt die Sprache der Einstellung Ihres Browsers; der Sprachwechsel DE/EN in der Kopfzeile führt zur selben Seite in der anderen Sprache, auch ohne JavaScript. Ihre Wahl merkt sich Ihr Browser, sofern er lokales Speichern erlaubt.",
           "Die Seite lässt sich auf 400 % vergrößern und bis 320 Pixel Breite nutzen, ohne seitlich zu scrollen."
         ]
       },

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n";
-import { LANGS, counterpart, rememberLang, routeOf } from "../lib/routes";
+import { LANGS, counterpart, routeOf } from "../lib/routes";
 import type { RouteKey } from "../lib/routes";
 import { setTheme } from "../theme";
 import Icon from "./Icon";
@@ -133,7 +133,9 @@ function MotionToggle({ labelled = false }: { labelled?: boolean }) {
  * Both languages side by side, current one marked — rather than a control showing the other one.
  * Each is a link to this same page in that language, so it works without JavaScript, and a
  * search engine sees the two versions linked to each other. Choosing one also stores it, so the
- * head script never sends the visitor back to the language they just left.
+ * head script never sends the visitor back to the language they just left. The head script
+ * (scripts/lang-script.mjs) does the storing, for every link in a .lang group, so it holds before
+ * the app has loaded and on the static privacy pages too.
  */
 function LanguageSwitcher() {
   const { lang, t } = useI18n();
@@ -154,7 +156,6 @@ function LanguageSwitcher() {
           hrefLang={l}
           aria-label={`${l.toUpperCase()} – ${l === "de" ? "Deutsch" : "English"}`}
           aria-current={l === lang ? "true" : undefined}
-          onClick={() => rememberLang(l)}
         >
           {l.toUpperCase()}
         </Link>
@@ -255,8 +256,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   // The open menu covers the page: the page must not scroll under it or take focus, Escape must
-  // close it, Tab must cycle between the menu and its button, and focus must go into it and come
-  // back to the button afterwards.
+  // close it, Tab must cycle through the menu and the header above it (the language pair and the
+  // menu button stay there, in sight), and focus must go into it and come back to the button
+  // afterwards.
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -272,12 +274,18 @@ export default function Layout({ children }: { children: ReactNode }) {
         return;
       }
       if (e.key !== "Tab" || !menu.current) return;
-      const items = menu.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+      const focusable = "a[href], button:not([disabled])";
+      // Only what is on screen: the header hides its wide-screen links and buttons on a phone.
+      const items = [
+        ...(btn?.closest("header")?.querySelectorAll<HTMLElement>(focusable) ?? []),
+        ...menu.current.querySelectorAll<HTMLElement>(focusable),
+      ].filter((el) => el.getClientRects().length > 0);
+      const first = items[0];
       const last = items[items.length - 1];
       if (!e.shiftKey && document.activeElement === last) {
         e.preventDefault();
-        btn?.focus();
-      } else if (e.shiftKey && document.activeElement === btn) {
+        first?.focus();
+      } else if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last?.focus();
       }

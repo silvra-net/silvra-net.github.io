@@ -48,12 +48,16 @@ for (const theme of THEMES) {
       });
       const page = await ctx.newPage();
       page.on("console", (m) => {
-        if (m.type() === "error") problems.push(`${theme}/${vp.name} console: ${m.text()}`);
+        if (m.type() === "error") problems.push(`${theme}/${vp.name}/${lang} console: ${m.text()}`);
       });
-      page.on("pageerror", (e) => problems.push(`${theme}/${vp.name} pageerror: ${e.message}`));
+      page.on("pageerror", (e) => problems.push(`${theme}/${vp.name}/${lang} pageerror: ${e.message}`));
 
-      for (const path of ROUTES.map((r) => r[lang])) {
+      for (const route of ROUTES) {
+        const path = route[lang];
         await page.goto(BASE + path, { waitUntil: "load" });
+        // A shot of the page the head script sent the browser to would be filed under the wrong one.
+        const landed = new URL(page.url()).pathname;
+        if (landed !== new URL(BASE + path).pathname) throw new Error(`shots: ${locale} ${path} was redirected to ${landed}`);
 
         // Walk the page so lazy images load and Reveal fires; then return to the top for the shot.
         await page.evaluate(async () => {
@@ -69,8 +73,7 @@ for (const theme of THEMES) {
         // and only the timer makes the lower sections visible.
         await page.waitForTimeout(3500);
 
-        const name = path === "/" ? "home" : path.slice(1, -1).replace(/\//g, "-") || "home";
-        await page.screenshot({ path: `${OUT}/${theme}-${vp.name}-${lang}-${name}.png`, fullPage: true });
+        await page.screenshot({ path: `${OUT}/${theme}-${vp.name}-${lang}-${route.key}.png`, fullPage: true });
         count++;
 
         // A page wider than its viewport is a layout bug, not a style choice.

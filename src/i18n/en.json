@@ -1309,7 +1309,7 @@
           "Status is never conveyed by colour alone, always with a symbol and a word as well.",
           "The encrypted-looking characters behind the home page and the messenger page are decoration and hidden from screen readers; what they show is said in the text.",
           "Every page is delivered as finished HTML and readable without JavaScript; headings, landmarks and language are marked up.",
-          "Every page exists in German and in English, each at its own address. On a first visit the language follows your browser’s setting; the DE/EN switch in the header leads to the same page in the other language — without JavaScript too — and your choice is kept.",
+          "Every page exists in German and in English, each at its own address. On a first visit the language follows your browser’s setting; the DE/EN switch in the header leads to the same page in the other language, without JavaScript too. Your browser remembers your choice if it allows local storage.",
           "The site can be zoomed to 400% and used down to 320 pixels wide without scrolling sideways."
         ]
       },
