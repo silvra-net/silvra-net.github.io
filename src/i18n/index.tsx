@@ -39,8 +39,18 @@ interface I18n {
 
 const Ctx = createContext<I18n | null>(null);
 
+/**
+ * True only while the build renders 404.html (src/entry-server.tsx). GitHub Pages answers every
+ * unknown address with that one file, and without JavaScript nothing can tell whether the address
+ * was under /en/; so the file says everything twice — the page (src/pages/NotFound.tsx) and the
+ * header and footer around it (src/components/Layout.tsx) — in German and in English. With
+ * JavaScript the page is drawn again in the one language the visitor reads (src/main.tsx), and
+ * this stays false.
+ */
+export const BothLanguages = createContext(false);
+
 /** A string in a language named outright rather than the one on screen: for the one page that is
- *  built to speak both (the not-found page, see src/pages/NotFound.tsx). */
+ *  built to speak both. */
 export function phrase(lang: Lang, path: string): string {
   const hit = lookup(DICTS[lang], path) ?? lookup(DICTS.de, path);
   return typeof hit === "string" ? hit : path;

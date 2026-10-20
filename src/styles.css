@@ -745,6 +745,11 @@ p {
   align-items: center;
   gap: 8px;
 }
+/* No menu between them on the not-found page as built in both languages (Layout.tsx): the tools
+   still keep to the right. */
+.brand + .header-tools {
+  margin-left: auto;
+}
 .explorer-link {
   display: inline-flex;
   align-items: center;
@@ -3175,6 +3180,23 @@ p {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
+/* The not-found page as built in both languages (Layout.tsx): the columns once per language, one
+   row each, and the stamp in both, one line each. */
+.footer-cols.footer-cols--both {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+.footer-lang-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.footer-eu-en {
+  display: block;
+}
+.footer-intro .footer-independent + .footer-independent {
+  margin-top: 2px;
+}
 .footer-col h2 {
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.14em;
@@ -3344,7 +3366,8 @@ p {
   .stack-algos {
     grid-template-columns: minmax(0, 1fr);
   }
-  .footer-cols {
+  .footer-cols,
+  .footer-lang-cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

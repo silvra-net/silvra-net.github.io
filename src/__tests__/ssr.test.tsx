@@ -157,4 +157,24 @@ describe("the not-found page", () => {
     // Only the build asks for both; the browser draws one language.
     expect(render("/404")).not.toContain("nf-both");
   });
+
+  it("has a header and footer in both languages too", () => {
+    const html = render("/404", { bothLanguages: true }).replace(/\bhrefLang=/g, "hreflang=");
+    // No menu in one language only, and neither language marked as the current one.
+    expect(html).not.toContain('class="site-nav"');
+    expect(html).not.toMatch(/class="lang-btn active"|aria-current="true"/);
+    const skip = html.match(/<a class="skip-link"[^>]*>([\s\S]*?)<\/a>/)?.[1] ?? "";
+    expect(text(skip)).toContain(get("de", "nav.skip"));
+    expect(skip).toMatch(new RegExp(`lang="en">[^<]*${get("en", "nav.skip")}`));
+    const footer = html.slice(html.indexOf("<footer"));
+    for (const lang of LANGS) {
+      expect(text(footer)).toContain(get(lang, "footer.description"));
+      expect(text(footer)).toContain(get(lang, "footer.independent"));
+      const part = footer.match(new RegExp(`<div class="footer-lang" lang="${lang}">([\\s\\S]*?)</div></div></div>`))?.[1] ?? "";
+      expect(text(part)).toContain(get(lang, "footer.impressum"));
+      for (const key of ["messenger", "helix", "mission", "contact", "impressum", "accessibility", "privacy"] as const) {
+        expect(part).toContain(`href="${ROUTES.find((r) => r.key === key)![lang]}"`);
+      }
+    }
+  });
 });
